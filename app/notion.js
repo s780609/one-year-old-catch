@@ -6,19 +6,25 @@ export default async function Notion() {
     database_id: process.env.NOTION_DATABASE_ID,
   });
 
-  console.log("pages", pages.results[1]);
+  // console.log(
+  //   "AAAA ===> ",
+  //   pages.results[1].properties.Name.title[0].plain_text
+  // );
 
-//   console.log("pages.results[0].properties ===> ", pages.results[0].properties);
+  // console.log(
+  //   "BBBB ===> ",
+  //   pages.results[1].properties.Frame.rich_text[0].plain_text
+  // );
 
-//   console.log(
-//     "pages.results[0].properties.Name ===> ",
-//     pages.results[0].properties.Name
-//   );
+  // console.log(
+  //   "pages.results[0].properties.Name ===> ",
+  //   pages.results[1].properties.Name
+  // );
 
-//   console.log(
-//     "pages.results[0].properties.Count ===> ",
-//     pages.results[0].properties.Count
-//   );
+  // console.log(
+  //   "pages.results[0].properties.Count ===> ",
+  //   pages.results[1].properties.Count
+  // );
 
-  return <>notion database</>;
+  return <>notion database: {pages.results[1].properties.Count.number}</>;
 }
