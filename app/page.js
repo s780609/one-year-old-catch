@@ -1,11 +1,14 @@
-"use client";
-
 import image001 from "./assets/001.jpg";
 import { Selector } from "./components/Selector";
+import Notion from "./notion";
 
 export default function Home() {
+  // secret_ncYAsw7jhMuk0KZqZSirQW0TR9gmbQHFwgOgredrdYL
+  // https://www.notion.so/c8c86ea0abfb44e5a12020f0c496946e?v=3ec69812129f49a58c8a6d92192d9cd2&pvs=4
+
   return (
     <main className="">
+      <Notion></Notion>
       <div className="grid grid-cols-8">
         <Selector src={image001} title={"急救箱"}></Selector>
         <Selector src={image001} title={"算盤"}></Selector>
