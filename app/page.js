@@ -1,16 +1,37 @@
+import { Client } from "@notionhq/client";
+
 import image001 from "./assets/001.jpg";
 import { Selector } from "./components/Selector";
-import Notion from "./notion";
+import UpdateNotion from "./components/UpdateNotion";
 
-export default function Home() {
-  // secret_ncYAsw7jhMuk0KZqZSirQW0TR9gmbQHFwgOgredrdYL
-  // https://www.notion.so/c8c86ea0abfb44e5a12020f0c496946e?v=3ec69812129f49a58c8a6d92192d9cd2&pvs=4
+export default async function Home() {
+  const myName = "myName";
+
+  const notion = new Client({ auth: process.env.NOTION_TOKEN });
+  const pages = await notion.databases.query({
+    database_id: process.env.NOTION_DATABASE_ID,
+  });
+
+  //console.log("pages ===> ", pages.results[0].id);
 
   return (
     <main className="">
-      <Notion></Notion>
+      <UpdateNotion></UpdateNotion>
       <div className="grid grid-cols-8">
-        <Selector src={image001} title={"急救箱"}></Selector>
+        {pages.results.map((page, index) => {
+          return (
+            <Selector
+              result={pages.results[index]}
+              myName={myName}
+              src={image001}
+            ></Selector>
+          );
+        })}
+        {/* <Selector
+          result={pages.results[0]}
+          myName={myName}
+          src={image001}
+        ></Selector>
         <Selector src={image001} title={"算盤"}></Selector>
         <Selector src={image001} title={"相機"}></Selector>
         <Selector src={image001} title={"金幣"}></Selector>
@@ -27,7 +48,7 @@ export default function Home() {
         <Selector src={image001} title={"博士帽"}></Selector>
         <Selector src={image001} title={"場記板"}></Selector>
         <Selector src={image001} title={"黑板"}></Selector>
-        <Selector src={image001} title={"三角尺"}></Selector>
+        <Selector src={image001} title={"三角尺"}></Selector> */}
       </div>
     </main>
   );
