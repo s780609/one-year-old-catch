@@ -21,6 +21,7 @@ export default async function Home() {
         {pages.results.map((page, index) => {
           return (
             <Selector
+              key={index}
               result={pages.results[index]}
               myName={myName}
               src={image001}
