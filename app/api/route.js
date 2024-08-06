@@ -31,7 +31,7 @@ export async function PATCH(request) {
   }
 
   const notion = new Client({ auth: process.env.NOTION_TOKEN });
-  const pages = await notion.pages.update({
+  const page = await notion.pages.update({
     page_id: requestBody.pageId,
     properties: {
       Frame: {
@@ -48,7 +48,7 @@ export async function PATCH(request) {
     },
   });
 
-  console.log("pages ===> ", pages);
+  //console.log("pages ===> ", pages);
 
-  return NextResponse.json({ message: pages }, { status: 200 });
+  return NextResponse.json({ result: page }, { status: 200 });
 }

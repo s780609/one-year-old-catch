@@ -6,16 +6,18 @@ import axios from "axios";
 
 export function Selector({ result, myName, src, onClick }) {
   const [count, setCount] = useState(0);
+  const [data, setData] = useState(result);
 
   const plus = async () => {
-    let plaiText = result.properties.Frame.rich_text[0].plain_text;
+    console.log("data ===> ", data);
+    let plaiText = data.properties.Frame.rich_text[0].plain_text;
 
-    console.log(result.properties.Frame.rich_text);
+    //console.log(result.properties.Frame.rich_text);
 
     if (!plaiText) {
       plaiText = "";
     }
-
+    console.log("plaiText ===> ", plaiText);
     try {
       // Make a POST request to the Notion API to update the database
       const response = await axios.patch(
@@ -29,8 +31,7 @@ export function Selector({ result, myName, src, onClick }) {
         }
       );
 
-      // Handle the response
-      console.log(response.data);
+      setData(response.data.result);
     } catch (error) {
       console.error(error);
     }
