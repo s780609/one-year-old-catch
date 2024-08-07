@@ -14,7 +14,7 @@ export default function RenderSelectors({ items, pages }) {
 
   useEffect(() => {
     if (count >= 3) {
-      alert("選完囉，來看結果吧");
+      alert("選完囉，來看結果吧🪄");
 
       router.push("/result", { scroll: false });
     }
@@ -24,6 +24,7 @@ export default function RenderSelectors({ items, pages }) {
     <>
       {nameCheck || (
         <div className="flex flex-col h-full text-center text-3xl my-2">
+          <div>🚂🚀🍺🍕🧱🔨⚒️🧙🚓⛴️🪣🪠🌈</div>
           <div>欣予抓周猜猜看</div>
           <div>投票選你猜的欣予會抓的目標，每人三票</div>
           <div>投票前，先告訴我你是誰</div>
@@ -56,6 +57,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[0]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -64,6 +66,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[1]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -72,6 +75,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[2]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -80,6 +84,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[3]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -88,6 +93,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[4]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -96,6 +102,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[5]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -104,6 +111,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[6]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -112,6 +120,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[7]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -120,6 +129,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[8]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -128,6 +138,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[9]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -136,6 +147,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[10]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -144,6 +156,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[11]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -152,6 +165,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[12]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -160,6 +174,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[13]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -168,6 +183,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[14]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -176,6 +192,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[15]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -184,6 +201,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[16]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -192,6 +210,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[17]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
           <Selector
             myName={myName}
@@ -200,6 +219,7 @@ export default function RenderSelectors({ items, pages }) {
             title={items[18]}
             count={count}
             setCount={setCount}
+            diabled={count >= 3}
           ></Selector>
         </div>
       )}
