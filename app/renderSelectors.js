@@ -50,7 +50,7 @@ export default function RenderSelectors({ items, pages }) {
             </button>
           </div>
           <div className="flex justify-center w-full">
-            <div className="w-1/3">
+            <div className="md:w-1/3 w-5/6">
               <ImageLoader src={image001}></ImageLoader>
             </div>
           </div>
