@@ -229,6 +229,15 @@ export default function RenderSelectors({ items, pages }) {
             setCount={setCount}
             diabled={count >= 3}
           ></Selector>
+          <Selector
+            myName={myName}
+            src={image001}
+            data={pages.results[0]}
+            title={items[19]}
+            count={count}
+            setCount={setCount}
+            diabled={count >= 3}
+          ></Selector>
         </div>
       )}
     </>
