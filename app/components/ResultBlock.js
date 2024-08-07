@@ -34,7 +34,7 @@ export default function ResultBlock({ data, title }) {
         );
       }
 
-      return <>{render}</>;
+      return <span key={index + "_" + result.count}>{render}</span>;
     });
   };
 
@@ -49,31 +49,31 @@ export default function ResultBlock({ data, title }) {
       return "bg-violet-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 3) {
-      return "bg-orange-500 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-orange-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 4) {
-      return "bg-indigo-500 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-indigo-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 5) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 6) {
-      return "bg-blue-700 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-blue-700 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 7) {
-      return "bg-blue-800 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-blue-800 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 8) {
-      return "bg-blue-900 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-blue-900 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 9) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 10) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
     if (index === 11) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1";
+      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
     }
   };
 

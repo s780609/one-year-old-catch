@@ -15,9 +15,11 @@ export default function RenderSelectors({ items, pages }) {
 
   useEffect(() => {
     if (count >= 3) {
-      alert("選完囉，來看結果吧🪄");
+      setTimeout(() => {
+        alert("選完囉，來看結果吧🪄");
 
-      router.push("/result", { scroll: false });
+        router.push("/result", { scroll: false });
+      }, 400);
     }
   }, [count]);
 
