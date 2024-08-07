@@ -7,7 +7,7 @@ export async function GET(request) {
     database_id: process.env.NOTION_DATABASE_ID,
   });
 
-  return NextResponse.json({ message: pages }, { status: 200 });
+  return NextResponse.json(pages, { status: 200 });
 }
 
 export async function PATCH(request) {
