@@ -1,5 +1,3 @@
-import "server-only";
-
 import { Client } from "@notionhq/client";
 import RenderResultBlock from "./renderResultBlock";
 
@@ -8,11 +6,6 @@ export default async function Result() {
   const pages = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID,
   });
-
-  let arr = [];
-  for (let i = 0; i <= 18; i++) {
-    arr.push(i);
-  }
 
   return (
     <>

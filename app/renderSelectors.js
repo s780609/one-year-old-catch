@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Selector } from "./components/Selector";
 import image001 from "./assets/001.jpg";
 import { useRouter } from "next/navigation";
+import { ImageLoader } from "./components/ImageLoader";
 
 export default function RenderSelectors({ items, pages }) {
   const router = useRouter();
@@ -45,6 +46,11 @@ export default function RenderSelectors({ items, pages }) {
             >
               確定
             </button>
+          </div>
+          <div className="flex justify-center w-full">
+            <div className="w-1/3">
+              <ImageLoader src={image001}></ImageLoader>
+            </div>
           </div>
         </div>
       )}
