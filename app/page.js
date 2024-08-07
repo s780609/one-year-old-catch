@@ -3,8 +3,6 @@ import { Client } from "@notionhq/client";
 import RenderSelectors from "./renderSelectors";
 
 export default async function Home() {
-  const myName = "myName";
-
   const notion = new Client({ auth: process.env.NOTION_TOKEN });
   const pages = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID,

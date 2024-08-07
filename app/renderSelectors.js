@@ -24,8 +24,8 @@ export default function RenderSelectors({ items, pages }) {
     <>
       {nameCheck || (
         <div className="flex flex-col h-full text-center text-3xl my-2">
-          <div>歡迎來到許欣予的抓周活動</div>
-          <div>先來投票選你猜的欣予選擇的目標，每人三票</div>
+          <div>欣予抓周猜猜看</div>
+          <div>投票選你猜的欣予會抓的目標，每人三票</div>
           <div>投票前，先告訴我你是誰</div>
           <div>
             <input
