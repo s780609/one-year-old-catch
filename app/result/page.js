@@ -1,4 +1,3 @@
-import Notion from "../notion";
 import { ResultBlock } from "../components/ResultBlock";
 
 export default function Result() {
@@ -9,12 +8,8 @@ export default function Result() {
 
   return (
     <>
-      <Notion></Notion>
-      <div className="grid grid-cols-8">
-        {arr.map((index) => {
-          return <ResultBlock key={index} index={index}></ResultBlock>;
-        })}
-        {/* <ResultBlock title={"急救箱"}></ResultBlock>
+      <div className="grid md:grid-cols-8 grid-cols-2">
+        <ResultBlock title={"急救箱"}></ResultBlock>
         <ResultBlock title={"算盤"}></ResultBlock>
         <ResultBlock title={"相機"}></ResultBlock>
         <ResultBlock title={"金幣"}></ResultBlock>
@@ -31,7 +26,7 @@ export default function Result() {
         <ResultBlock title={"博士帽"}></ResultBlock>
         <ResultBlock title={"場記板"}></ResultBlock>
         <ResultBlock title={"黑板"}></ResultBlock>
-        <ResultBlock title={"三角尺"}></ResultBlock> */}
+        <ResultBlock title={"三角尺"}></ResultBlock>
       </div>
     </>
   );
