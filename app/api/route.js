@@ -31,10 +31,32 @@ export async function PATCH(request) {
   }
 
   const notion = new Client({ auth: process.env.NOTION_TOKEN });
+
+  if (requestBody.propName === "手槍") {
+    const page = await notion.pages.update({
+      page_id: requestBody.pageId,
+      properties: {
+        手槍: {
+          type: "rich_text",
+          rich_text: [
+            {
+              type: "text",
+              text: {
+                content: requestBody.text,
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    return NextResponse.json({ result: page }, { status: 200 });
+  }
+
   const page = await notion.pages.update({
     page_id: requestBody.pageId,
     properties: {
-      Frame: {
+      [requestBody.propName]: {
         type: "rich_text",
         rich_text: [
           {
@@ -47,8 +69,6 @@ export async function PATCH(request) {
       },
     },
   });
-
-  //console.log("pages ===> ", pages);
 
   return NextResponse.json({ result: page }, { status: 200 });
 }
