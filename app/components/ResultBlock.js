@@ -80,6 +80,9 @@ export default function ResultBlock({ data, title }) {
   return (
     <>
       <div className="w-full px-2 py-2 my-5">
+        <div className="text-center text-xl bg-blue-200">
+          得票數: {results.length}
+        </div>
         <div className="text-center text-xl bg-blue-400">{title}</div>
         <div className="w-full border-2 min-h-60 text-wrap">
           {Array.isArray(results) && renderResult(results)}
