@@ -1,17 +1,21 @@
-import "server-only";
+"use client";
 
-import { Client } from "@notionhq/client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export async function ResultBlock({ index, title }) {
-  const notion = new Client({ auth: process.env.NOTION_TOKEN });
-  const pages = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
+export function ResultBlock({ data, title }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    setTimeout(() => {
+      router.refresh();
+    }, 1000);
   });
 
   let results = ["NO results"];
 
-  if (pages.results[0] && pages.results[0].properties[title]) {
-    results = pages.results[0].properties[title].rich_text[0]?.plain_text;
+  if (data && data.properties[title]) {
+    results = data.properties[title].rich_text[0]?.plain_text;
     results = results?.split(",");
     if (Array.isArray(results)) {
       results = results.reduce((prev, curr, index) => {
@@ -26,7 +30,6 @@ export async function ResultBlock({ index, title }) {
         return prev;
       }, []);
     }
-    //console.log("results ===> ", results);
   }
 
   const renderResult = (results) => {
@@ -37,23 +40,14 @@ export async function ResultBlock({ index, title }) {
       for (let i = 0; i < result.count; i++) {
         render.push(
           <>
-            <span className={className}>{result.name}</span>{" "}
+            <span key={index + "_" + result.count} className={className}>
+              {result.name}
+            </span>{" "}
           </>
         );
       }
 
       return <>{render}</>;
-
-      // let className = `bg-sky-${index + 5}00`;
-      // className += " px-2 py-1 rounded m-1";
-
-      // return (
-      //   <>
-      //     <span key={index} className={className}>
-      //       {result}
-      //     </span>{" "}
-      //   </>
-      // );
     });
   };
 
