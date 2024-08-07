@@ -1,18 +1,5 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-
-export function ResultBlock({ data, title }) {
-  const router = useRouter();
-
-  useEffect(() => {
-    setTimeout(() => {
-      router.refresh();
-    }, 1000);
-  });
-
-  let results = ["NO results"];
+export default function ResultBlock({ data, title }) {
+  let results = ["No results"];
 
   if (data && data.properties[title]) {
     results = data.properties[title].rich_text[0]?.plain_text;
