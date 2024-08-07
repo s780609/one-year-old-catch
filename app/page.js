@@ -28,6 +28,7 @@ export default async function Home() {
     "相機",
     "調色盤",
     "特斯拉",
+    "未知",
   ];
 
   return (
