@@ -57,7 +57,7 @@ export default function RenderSelectors({ items, pages }) {
         </div>
       )}
       {nameCheck && (
-        <div className="grid md:grid-cols-8 grid-cols-2">
+        <div className="grid md:grid-cols-10 grid-cols-2">
           <Selector
             myName={myName}
             src={image001}

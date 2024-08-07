@@ -27,7 +27,7 @@ export default function Result() {
   return (
     <>
       {pages && (
-        <div className="grid md:grid-cols-8 grid-cols-2">
+        <div className="grid md:grid-cols-10 grid-cols-2">
           <ResultBlock data={pages.results[0]} title={"急救箱"}></ResultBlock>
           <ResultBlock data={pages.results[0]} title={"算盤"}></ResultBlock>
           <ResultBlock data={pages.results[0]} title={"相機"}></ResultBlock>
