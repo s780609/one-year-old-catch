@@ -87,7 +87,9 @@ export default function ResultBlock({ data, title }) {
         <div className="text-center text-xl bg-blue-200">
           得票數: {voteResult}
         </div>
-        <div className="text-center text-xl bg-blue-400">{title}</div>
+        <div className="text-center text-xl text-white bg-blue-500">
+          {title}
+        </div>
         <div className="w-full border-2 min-h-60 text-wrap">
           {Array.isArray(results) && renderResult(results)}
         </div>
