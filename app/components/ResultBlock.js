@@ -1,9 +1,13 @@
 export default function ResultBlock({ data, title }) {
   let results = ["No results"];
+  let voteResult = 0;
 
   if (data && data.properties[title]) {
     results = data.properties[title].rich_text[0]?.plain_text;
     results = results?.split(",");
+
+    voteResult = results.length;
+
     if (Array.isArray(results)) {
       results = results.reduce((prev, curr, index) => {
         prev = prev || [];
@@ -81,7 +85,7 @@ export default function ResultBlock({ data, title }) {
     <>
       <div className="w-full px-2 py-2 my-5">
         <div className="text-center text-xl bg-blue-200">
-          得票數: {results?.length}
+          得票數: {results ? results?.length : 0}
         </div>
         <div className="text-center text-xl bg-blue-400">{title}</div>
         <div className="w-full border-2 min-h-60 text-wrap">
