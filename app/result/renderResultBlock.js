@@ -19,7 +19,7 @@ export default function RenderResultBlock({ pages }) {
       <ResultBlock data={pages.results[0]} title={"急救箱"}></ResultBlock>
       <ResultBlock data={pages.results[0]} title={"算盤"}></ResultBlock>
       <ResultBlock data={pages.results[0]} title={"相機"}></ResultBlock>
-      <ResultBlock data={pages.results[0]} title={"金幣"}></ResultBlock>
+      <ResultBlock data={pages.results[0]} title={"十萬元大紅包"}></ResultBlock>
       <ResultBlock data={pages.results[0]} title={"鎚子"}></ResultBlock>
       <ResultBlock data={pages.results[0]} title={"樂器"}></ResultBlock>
       <ResultBlock data={pages.results[0]} title={"鍵盤"}></ResultBlock>
@@ -35,6 +35,7 @@ export default function RenderResultBlock({ pages }) {
       <ResultBlock data={pages.results[0]} title={"黑板"}></ResultBlock>
       <ResultBlock data={pages.results[0]} title={"三角尺"}></ResultBlock>
       <ResultBlock data={pages.results[0]} title={"特斯拉"}></ResultBlock>
+      <ResultBlock data={pages.results[0]} title={"未知"}></ResultBlock>
     </>
   );
 }
