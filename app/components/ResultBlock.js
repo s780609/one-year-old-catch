@@ -1,4 +1,6 @@
-export default function ResultBlock({ data, title }) {
+import { ImageLoader } from "../components/ImageLoader";
+
+export default function ResultBlock({ data, title, imageSrc }) {
   let results = ["No results"];
   let voteResult = 0;
 
@@ -81,14 +83,24 @@ export default function ResultBlock({ data, title }) {
 
   return (
     <>
-      <div className="w-full px-2 py-2 my-5">
+      <div className="w-full px-2 py-2 mt-2">
+        <div className="h-24">
+          <ImageLoader
+            src={imageSrc}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "6rem",
+              objectFit: "contain",
+            }}
+          ></ImageLoader>
+        </div>
         <div className="text-center text-xl bg-blue-200">
           得票數: {voteResult}
         </div>
         <div className="text-center text-xl text-white bg-blue-500">
           {title}
         </div>
-        <div className="w-full border-2 min-h-60 text-wrap">
+        <div className="w-full border-2 min-h-48 text-wrap">
           {Array.isArray(results) && renderResult(results)}
         </div>
       </div>

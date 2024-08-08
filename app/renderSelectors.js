@@ -26,7 +26,7 @@ import 飛機 from "./assets/飛機.jpg";
 import 相機 from "./assets/相機.jpg";
 import 調色盤 from "./assets/調色盤.jpg";
 import 特斯拉 from "./assets/特斯拉.jpg";
-import Vtuber from "./assets/Vtuber.png";
+import Vtuber from "./assets/Vtuber.jpg";
 
 export default function RenderSelectors({ items, pages }) {
   const router = useRouter();
