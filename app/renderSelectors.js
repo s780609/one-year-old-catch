@@ -5,6 +5,7 @@ import { Selector } from "./components/Selector";
 import image001 from "./assets/001.jpg";
 import { useRouter } from "next/navigation";
 import { ImageLoader } from "./components/ImageLoader";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function RenderSelectors({ items, pages }) {
   const router = useRouter();
@@ -16,7 +17,13 @@ export default function RenderSelectors({ items, pages }) {
   useEffect(() => {
     if (count >= 3) {
       setTimeout(() => {
-        alert("選完囉，來看結果吧🪄");
+        toast("選完囉，來看結果吧", {
+          icon: "🍺",
+          style: {
+            borderRadius: "10px",
+            background: "#f0e0be",
+          },
+        });
 
         router.push("/result", { scroll: false });
       }, 400);
@@ -25,9 +32,24 @@ export default function RenderSelectors({ items, pages }) {
 
   return (
     <>
+      <Toaster></Toaster>
+      {count >= 3 && (
+        <>
+          <div className="text-center">
+            <button
+              onClick={() => {
+                router.push("/result", { scroll: false });
+              }}
+              className="bg-green-500 text-white text-3xl rounded py-1 px-2 my-2"
+            >
+              去看結果
+            </button>
+          </div>
+        </>
+      )}
       {nameCheck || (
         <div className="flex flex-col h-full text-center text-3xl my-2">
-          <div>🚂🚀🍺🍕🧱🔨⚒️🧙🚓⛴️🪣🪠🌈</div>
+          <div>🚂🚀🍺🍕🧱🔨⚒️🧙🚓⛴️🛋️🛏️⛱️❄️🔥🌈</div>
           <div>欣予抓周猜猜看</div>
           <div>投票選你猜的欣予會抓的目標，每人三票</div>
           <div>投票前，先告訴我你是誰</div>
