@@ -30,11 +30,9 @@ export default function ResultBlock({ data, title }) {
       var render = [];
       for (let i = 0; i < result.count; i++) {
         render.push(
-          <>
-            <span key={index + "_" + result.count} className={className}>
-              {result.name}
-            </span>{" "}
-          </>
+          <span key={result.count + Math.random()} className={className}>
+            {result.name}{" "}
+          </span>
         );
       }
 
