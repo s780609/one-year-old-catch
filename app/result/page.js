@@ -38,7 +38,7 @@ export default function Result() {
           <ResultBlock data={pages.results[0]} title={"相機"}></ResultBlock>
           <ResultBlock
             data={pages.results[0]}
-            title={"十萬元大紅包"}
+            title={"阿公阿嬤的禮物"}
           ></ResultBlock>
           <ResultBlock data={pages.results[0]} title={"鎚子"}></ResultBlock>
           <ResultBlock data={pages.results[0]} title={"樂器"}></ResultBlock>
@@ -55,7 +55,7 @@ export default function Result() {
           <ResultBlock data={pages.results[0]} title={"黑板"}></ResultBlock>
           <ResultBlock data={pages.results[0]} title={"三角尺"}></ResultBlock>
           <ResultBlock data={pages.results[0]} title={"特斯拉"}></ResultBlock>
-          <ResultBlock data={pages.results[0]} title={"未知"}></ResultBlock>
+          <ResultBlock data={pages.results[0]} title={"Vtuber"}></ResultBlock>
         </div>
       )}
     </>

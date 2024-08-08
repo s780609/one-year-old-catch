@@ -15,7 +15,7 @@ export default async function Home() {
     "鎚子",
     "書",
     "鍵盤",
-    "金幣",
+    "阿公阿嬤的禮物",
     "麥克風",
     "算盤",
     "板手",
@@ -28,7 +28,7 @@ export default async function Home() {
     "相機",
     "調色盤",
     "特斯拉",
-    "未知",
+    "Vtuber",
   ];
 
   return (

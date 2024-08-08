@@ -2,10 +2,31 @@
 
 import { useState, useEffect } from "react";
 import { Selector } from "./components/Selector";
-import image001 from "./assets/001.jpg";
 import { useRouter } from "next/navigation";
 import { ImageLoader } from "./components/ImageLoader";
 import toast, { Toaster } from "react-hot-toast";
+
+import image001 from "./assets/001.jpg";
+import 手槍 from "./assets/手槍.jpg";
+import 三角尺 from "./assets/三角尺.jpg";
+import 黑板 from "./assets/黑板.jpg";
+import 鎚子 from "./assets/鎚子.jpg";
+import 書 from "./assets/書.jpg";
+import 鍵盤 from "./assets/鍵盤.jpg";
+import 阿公阿嬤的禮物 from "./assets/阿公阿嬤的禮物.jpg";
+import 麥克風 from "./assets/麥克風.jpg";
+import 算盤 from "./assets/算盤.jpg";
+import 板手 from "./assets/板手.jpg";
+import 場記板 from "./assets/場記板.jpg";
+import 博士帽 from "./assets/博士帽.jpg";
+import 急救箱 from "./assets/急救箱.jpg";
+import 廚師帽 from "./assets/廚師帽.jpg";
+import 樂器 from "./assets/樂器.jpg";
+import 飛機 from "./assets/飛機.jpg";
+import 相機 from "./assets/相機.jpg";
+import 調色盤 from "./assets/調色盤.jpg";
+import 特斯拉 from "./assets/特斯拉.jpg";
+import Vtuber from "./assets/Vtuber.png";
 
 export default function RenderSelectors({ items, pages }) {
   const router = useRouter();
@@ -82,7 +103,7 @@ export default function RenderSelectors({ items, pages }) {
         <div className="grid md:grid-cols-10 grid-cols-2">
           <Selector
             myName={myName}
-            src={image001}
+            src={手槍}
             data={pages.results[0]}
             title={items[0]}
             count={count}
@@ -91,7 +112,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={三角尺}
             data={pages.results[0]}
             title={items[1]}
             count={count}
@@ -100,7 +121,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={黑板}
             data={pages.results[0]}
             title={items[2]}
             count={count}
@@ -109,7 +130,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={鎚子}
             data={pages.results[0]}
             title={items[3]}
             count={count}
@@ -118,7 +139,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={書}
             data={pages.results[0]}
             title={items[4]}
             count={count}
@@ -127,7 +148,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={鍵盤}
             data={pages.results[0]}
             title={items[5]}
             count={count}
@@ -136,7 +157,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={阿公阿嬤的禮物}
             data={pages.results[0]}
             title={items[6]}
             count={count}
@@ -145,7 +166,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={麥克風}
             data={pages.results[0]}
             title={items[7]}
             count={count}
@@ -154,7 +175,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={算盤}
             data={pages.results[0]}
             title={items[8]}
             count={count}
@@ -163,7 +184,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={板手}
             data={pages.results[0]}
             title={items[9]}
             count={count}
@@ -172,7 +193,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={場記板}
             data={pages.results[0]}
             title={items[10]}
             count={count}
@@ -181,7 +202,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={博士帽}
             data={pages.results[0]}
             title={items[11]}
             count={count}
@@ -190,7 +211,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={急救箱}
             data={pages.results[0]}
             title={items[12]}
             count={count}
@@ -199,7 +220,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={廚師帽}
             data={pages.results[0]}
             title={items[13]}
             count={count}
@@ -208,7 +229,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={樂器}
             data={pages.results[0]}
             title={items[14]}
             count={count}
@@ -217,7 +238,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={飛機}
             data={pages.results[0]}
             title={items[15]}
             count={count}
@@ -226,7 +247,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={相機}
             data={pages.results[0]}
             title={items[16]}
             count={count}
@@ -235,7 +256,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={調色盤}
             data={pages.results[0]}
             title={items[17]}
             count={count}
@@ -244,7 +265,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={特斯拉}
             data={pages.results[0]}
             title={items[18]}
             count={count}
@@ -253,7 +274,7 @@ export default function RenderSelectors({ items, pages }) {
           ></Selector>
           <Selector
             myName={myName}
-            src={image001}
+            src={Vtuber}
             data={pages.results[0]}
             title={items[19]}
             count={count}
