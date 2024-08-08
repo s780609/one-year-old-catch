@@ -16,17 +16,17 @@ export default function RenderSelectors({ items, pages }) {
 
   useEffect(() => {
     if (count >= 3) {
-      setTimeout(() => {
-        toast("選完囉，來看結果吧", {
-          icon: "🍺",
-          style: {
-            borderRadius: "10px",
-            background: "#f0e0be",
-          },
-        });
+      toast("選完囉，來看結果吧", {
+        icon: "🍺",
+        style: {
+          borderRadius: "10px",
+          background: "#f0e0be",
+        },
+      });
 
+      setTimeout(() => {
         router.push("/result", { scroll: false });
-      }, 400);
+      }, 1.5 * 1000);
     }
   }, [count]);
 
