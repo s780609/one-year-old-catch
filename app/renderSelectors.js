@@ -51,6 +51,10 @@ export default function RenderSelectors({ items, pages }) {
     }
   }, [count]);
 
+  useEffect(() => {
+    console.log("myName ===> ", myName);
+  }, [myName]);
+
   return (
     <>
       <Toaster></Toaster>
@@ -73,13 +77,212 @@ export default function RenderSelectors({ items, pages }) {
           <div>🚂🚀🍺🍕🧱🔨⚒️🧙🚓⛴️🛋️🛏️⛱️❄️🔥🌈</div>
           <div>欣予抓周猜猜看</div>
           <div>投票選你猜的欣予會抓的目標，每人三票</div>
-          <div>投票前，先告訴我你是誰</div>
+          <div>投票前，先說一下你是誰</div>
+          <div className="flex justify-center">
+            <div className="grid grid-cols-4">
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                五股阿公
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                五股阿嬤
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                北投阿公
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                北投阿嬤
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                乾阿公
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                乾阿嬤
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                小榆姑姑
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                小莆叔叔
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                彥廷舅舅
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                大姑婆
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                小姑婆
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                姨婆
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                大叔叔
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                大阿敬
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                大欣欣姑姑
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                昉昉姑姑
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                阿暐叔叔
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                美麗姑姑
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                培涓阿北
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                洋溢阿北
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                惠瑩姑姑
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                玉嬋姑姑
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                自強阿北
+              </button>
+              <button
+                onClick={(e) => {
+                  setMyName(e.target.innerText);
+                }}
+                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
+              >
+                瑩芳姑姑
+              </button>
+            </div>
+          </div>
           <div>
             <input
               className="border-2 w-full md:w-1/2"
               placeholder="輸入你的名字或稱謂"
+              key={myName}
               defaultValue={myName}
-              onChange={(e) => setMyName(e.target.value)}
+              onChange={(e) => {
+                setMyName(e.target.value);
+              }}
             ></input>
           </div>
           <div>
@@ -87,7 +290,7 @@ export default function RenderSelectors({ items, pages }) {
               onClick={() => {
                 setNameCheck(true);
               }}
-              className="bg-blue-500 text-white rounded py-1 px-2 my-2"
+              className="bg-blue-500 text-white rounded py-1 px-2 my-2 md:w-1/4 w-1/2"
             >
               確定
             </button>
