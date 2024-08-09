@@ -278,8 +278,7 @@ export default function RenderSelectors({ items, pages }) {
             <input
               className="border-2 w-full md:w-1/2"
               placeholder="輸入你的名字或稱謂"
-              key={myName}
-              defaultValue={myName}
+              value={myName}
               onChange={(e) => {
                 setMyName(e.target.value);
               }}
