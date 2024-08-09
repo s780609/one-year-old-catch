@@ -285,13 +285,23 @@ export default function RenderSelectors({ items, pages }) {
             ></input>
           </div>
           <div>
+            <div>
+              <button
+                onClick={() => {
+                  router.push("/result", { scroll: false });
+                }}
+                className="bg-green-500 text-white rounded py-1 px-2 my-2 md:w-1/4 w-1/2"
+              >
+                想先看結果
+              </button>
+            </div>
             <button
               onClick={() => {
                 setNameCheck(true);
               }}
               className="bg-blue-500 text-white rounded py-1 px-2 my-2 md:w-1/4 w-1/2"
             >
-              確定
+              去投票
             </button>
           </div>
           <div className="flex justify-center w-full">
