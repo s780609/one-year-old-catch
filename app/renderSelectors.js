@@ -182,7 +182,7 @@ export default function RenderSelectors({ items, pages }) {
                 }}
                 className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
               >
-                大叔叔
+                大叔公
               </button>
               <button
                 onClick={(e) => {
@@ -190,7 +190,7 @@ export default function RenderSelectors({ items, pages }) {
                 }}
                 className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
               >
-                大阿敬
+                大金婆
               </button>
               <button
                 onClick={(e) => {
