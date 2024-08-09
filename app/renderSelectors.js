@@ -277,7 +277,7 @@ export default function RenderSelectors({ items, pages }) {
           <div>
             <input
               className="border-2 w-full md:w-1/2"
-              placeholder="輸入你的名字或稱謂"
+              placeholder="上面沒有你的話，請自行輸入"
               value={myName}
               onChange={(e) => {
                 setMyName(e.target.value);
