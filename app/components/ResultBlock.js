@@ -1,12 +1,14 @@
 import { ImageLoader } from "../components/ImageLoader";
 
 export default function ResultBlock({ data, title, imageSrc }) {
-  let results = ["No results"];
+  let results = [];
   let voteResult = 0;
 
   if (data && data.properties[title]) {
     results = data.properties[title].rich_text[0]?.plain_text;
     results = results?.split(",");
+
+    results = results?.filter((result) => result);
 
     voteResult = results?.length ?? 0;
 
@@ -26,6 +28,12 @@ export default function ResultBlock({ data, title, imageSrc }) {
   }
 
   const renderResult = (results) => {
+    if (!Array.isArray(results)) {
+      return <></>;
+    }
+
+    results = results.filter((result) => result.name);
+
     return results.map((result, index) => {
       const className = getClassName(index);
 
