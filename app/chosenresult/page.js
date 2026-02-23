@@ -1,84 +1,51 @@
 "use client";
 
-import axios from "axios";
-import { useEffect, useState } from "react";
+const MEDAL_EMOJI = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"];
+const BG_COLORS = [
+  "from-yellow-400 to-amber-500",
+  "from-gray-300 to-gray-400",
+  "from-orange-400 to-amber-600",
+  "from-pink-200 to-pink-300",
+  "from-blue-200 to-blue-300",
+];
 
 export default function ChosenResult() {
-  const [voteResult, setVoteResult] = useState();
-  const [voteResultRender, setVoteResultRender] = useState([
-    { name: "", order: "" },
-  ]);
-
-  useEffect(() => {
-    getChosenResult();
-  }, []);
-
-  const getChosenResult = async () => {
-    try {
-      const response = await axios.get(`/api`);
-
-      const data = response.data;
-
-      let newVoteResult = {};
-
-      for (let index = 0; index < data.results.length; index++) {
-        const tempResult = data.results[index];
-        const tempProps = tempResult.properties;
-        if (tempProps.Name.title[0].plain_text === "選擇結果") {
-          newVoteResult = tempResult;
-        }
-      }
-
-      setVoteResult(newVoteResult);
-
-      const porps = newVoteResult.properties;
-
-      let tempVoteResultRender = [];
-      var propsKeyName = Object.keys(porps);
-
-      for (let index = 0; index < propsKeyName.length; index++) {
-        const keyName = propsKeyName[index];
-
-        if (
-          porps[keyName].rich_text &&
-          porps[keyName].rich_text.length > 0 &&
-          porps[keyName].rich_text[0]?.plain_text
-        ) {
-          tempVoteResultRender.push({
-            name: keyName,
-            order: porps[keyName].rich_text[0].plain_text,
-          });
-        }
-      }
-
-      tempVoteResultRender.sort((a, b) => {
-        return a.order - b.order;
-      });
-
-      setVoteResultRender(tempVoteResultRender);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const chosenResults = [
+    { order: 1, name: "鍵盤" },
+    { order: 2, name: "算盤" },
+    { order: 3, name: "麥克風" },
+    { order: 4, name: "Vtuber" },
+    { order: 5, name: "阿公阿嬤的禮物" },
+  ];
 
   return (
-    <>
-      <div className="flex flex-col justify-center text-center">
-        <div className="text-2xl">欣予選擇結果</div>
-        {voteResultRender.map((item, index) => {
-          return (
-            <div key={index} className="text-2xl">
-              {item.order}. {item.name}
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+      <div className="text-5xl mb-4 float-animation">🎉</div>
+      <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text
+                     bg-gradient-to-r from-pink-500 via-red-400 to-orange-400 mb-2">
+        欣予抓周結果
+      </h1>
+      <p className="text-gray-500 mb-6">寶寶實際選擇的順序</p>
+
+      <div className="w-full max-w-md space-y-3">
+        {chosenResults.map((item, index) => (
+          <div
+            key={item.order}
+            className={`bg-gradient-to-r ${BG_COLORS[index]} rounded-2xl p-4 flex items-center gap-4
+                        shadow-md card-hover ${index === 0 ? "scale-105 shadow-lg" : ""}`}
+          >
+            <span className="text-3xl">{MEDAL_EMOJI[index]}</span>
+            <div>
+              <p className={`font-black text-xl ${index < 3 ? "text-white" : "text-gray-700"}`}>
+                {item.name}
+              </p>
+              <p className={`text-sm ${index < 3 ? "text-white/80" : "text-gray-500"}`}>
+                第 {item.order} 順位
+              </p>
             </div>
-          );
-        })}
-        {/* 📌 這裡用註解紀錄一下 免得以後notion database消失 */}
-        {/* <div className="text-2xl">1. 鍵盤</div>
-        <div className="text-2xl">2. 算盤</div>
-        <div className="text-2xl">3. 麥克風</div>
-        <div className="text-2xl">4. Vtuber</div>
-        <div className="text-2xl">5. 阿公阿嬤的禮物</div> */}
+          </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 }

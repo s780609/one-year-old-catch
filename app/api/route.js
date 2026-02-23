@@ -1,109 +1,38 @@
-import { Client } from "@notionhq/client";
 import { NextResponse } from "next/server";
+import sql from "@/lib/db";
 
-export async function GET(request) {
-  const notion = new Client({ auth: process.env.NOTION_TOKEN });
-  const pages = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
-  });
+// GET: 取得投票排行和所有投票紀錄（給結果頁用）
+export async function GET() {
+  try {
+    // 取得所有物品及其得票數
+    const items = await sql`
+      SELECT name, vote_count FROM vote_items ORDER BY vote_count DESC, name
+    `;
 
-  return NextResponse.json(pages, { status: 200 });
-}
+    // 取得所有投票紀錄（誰投了什麼）
+    const votes = await sql`
+      SELECT voter_name, item_name, voted_at FROM votes ORDER BY voted_at DESC
+    `;
 
-export async function PATCH(request) {
-  const requestBody = await request.json();
+    // 整理成每個物品對應的投票者列表（與舊版 Notion 格式相容）
+    const itemVoters = {};
+    for (const item of items) {
+      itemVoters[item.name] = {
+        vote_count: item.vote_count,
+        voters: votes
+          .filter((v) => v.item_name === item.name)
+          .map((v) => v.voter_name),
+      };
+    }
 
-  // 刪除資料
-  if (requestBody.operation?.toUpperCase() === "DELETE") {
-    console.log("requestBody.operation ===> ", requestBody.operation);
-    return deleteData(requestBody);
+    return NextResponse.json({
+      success: true,
+      items: itemVoters,
+      ranking: items,
+      votes,
+    });
+  } catch (error) {
+    console.error("查詢失敗:", error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
-
-  if (!requestBody) {
-    return NextResponse.json({ message: "request is null" }, { status: 400 });
-  }
-
-  if (!requestBody.pageId) {
-    return NextResponse.json({ message: "pageId is null" }, { status: 400 });
-  }
-
-  const notion = new Client({ auth: process.env.NOTION_TOKEN });
-  const pages = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
-  });
-
-  let plainText =
-    pages.results[0].properties[requestBody.propName].rich_text[0]?.plain_text;
-
-  if (plainText) {
-    plainText += "," + requestBody.text;
-  } else {
-    plainText = requestBody.text;
-  }
-
-  const page = await notion.pages.update({
-    page_id: requestBody.pageId,
-    properties: {
-      [requestBody.propName]: {
-        type: "rich_text",
-        rich_text: [
-          {
-            type: "text",
-            text: {
-              content: plainText,
-            },
-          },
-        ],
-      },
-    },
-  });
-
-  return NextResponse.json({ result: page }, { status: 200 });
-}
-
-async function deleteData(requestBody) {
-  if (!requestBody) {
-    return NextResponse.json({ message: "request is null" }, { status: 400 });
-  }
-
-  if (!requestBody.pageId) {
-    return NextResponse.json({ message: "pageId is null" }, { status: 400 });
-  }
-
-  const notion = new Client({ auth: process.env.NOTION_TOKEN });
-  const pages = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
-  });
-
-  let plainText =
-    pages.results[0].properties[requestBody.propName].rich_text[0]?.plain_text;
-
-  if (!plainText) {
-    return NextResponse.json({ message: "plainText is null" }, { status: 400 });
-  }
-
-  const textArray = plainText.split(",");
-
-  textArray.splice(textArray.indexOf(requestBody.text), 1);
-
-  const newTextArray = textArray.join(",");
-
-  const page = await notion.pages.update({
-    page_id: requestBody.pageId,
-    properties: {
-      [requestBody.propName]: {
-        type: "rich_text",
-        rich_text: [
-          {
-            type: "text",
-            text: {
-              content: newTextArray,
-            },
-          },
-        ],
-      },
-    },
-  });
-
-  return NextResponse.json({ result: page }, { status: 200 });
 }

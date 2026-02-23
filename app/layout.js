@@ -1,17 +1,14 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata = {
-  title: "欣予抓周",
-  description: "欣予抓周猜猜看",
+  title: "🎂 欣予抓周猜猜看",
+  description: "欣予抓周猜猜看 — 猜猜寶寶會選什麼？",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="zh-TW">
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

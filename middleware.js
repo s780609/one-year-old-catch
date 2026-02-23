@@ -1,0 +1,37 @@
+import { NextResponse } from "next/server";
+
+// 需要登入才能存取的路徑
+const PROTECTED_PATHS = ["/test-neondb", "/api/test-neondb"];
+
+export function middleware(request) {
+  const { pathname } = request.nextUrl;
+
+  // 只保護指定路徑
+  const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
+  if (!isProtected) return NextResponse.next();
+
+  // 登入 API 不需要驗證（否則無法登入）
+  if (pathname === "/api/admin/login") return NextResponse.next();
+
+  // 檢查 cookie
+  const token = request.cookies.get("admin_token")?.value;
+  if (!token || token !== process.env.ADMIN_PASSWORD) {
+    // API 路徑回 401 JSON
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { success: false, error: "未授權，請先登入" },
+        { status: 401 }
+      );
+    }
+    // 頁面路徑導向登入頁
+    const loginUrl = new URL("/admin/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/test-neondb/:path*", "/api/test-neondb/:path*"],
+};

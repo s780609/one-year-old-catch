@@ -2,14 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: 'FAMILY_NAME';
-    font-style: NORMAL_OR_ITALIC;
-    font-weight: NUMERIC_WEIGHT_VALUE;
-    src: url(https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap) format('woff2');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+
+:root {
+  --warm-cream: #FFF8F0;
+  --warm-peach: #FFE8D6;
+  --warm-coral: #FF8A80;
+  --warm-gold: #FFB74D;
+  --warm-pink: #F48FB1;
+  --deep-rose: #E91E63;
 }
 
 body {
-    font-family: 'FAMILY_NAME', sans-serif;
-    font-weight: bold;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 500;
+  background: linear-gradient(135deg, var(--warm-cream) 0%, var(--warm-peach) 50%, #FFDAB9 100%);
+  min-height: 100vh;
+}
+
+/* 自訂卡片懸浮效果 */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* 投票按鈕脈動動畫 */
+@keyframes gentle-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+.pulse-gentle {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+/* 漂浮撒花動畫 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* 已投票卡片的光暈 */
+.voted-glow {
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.4), 0 0 40px rgba(76, 175, 80, 0.1);
+}
+
+/* 選中按鈕的打勾動畫 */
+@keyframes check-bounce {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.check-animate {
+  animation: check-bounce 0.4s ease-out;
 }
