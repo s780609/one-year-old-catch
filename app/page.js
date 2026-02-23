@@ -1,13 +1,6 @@
-import { Client } from "@notionhq/client";
-
 import RenderSelectors from "./renderSelectors";
 
 export default async function Home() {
-  const notion = new Client({ auth: process.env.NOTION_TOKEN });
-  const pages = await notion.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID,
-  });
-
   const items = [
     "手槍",
     "三角尺",
@@ -32,8 +25,8 @@ export default async function Home() {
   ];
 
   return (
-    <main className="h-screen">
-      <RenderSelectors items={items} pages={pages}></RenderSelectors>
+    <main className="min-h-screen">
+      <RenderSelectors items={items}></RenderSelectors>
     </main>
   );
 }

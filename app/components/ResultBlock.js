@@ -1,117 +1,73 @@
 import { ImageLoader } from "../components/ImageLoader";
 
-export default function ResultBlock({ data, title, imageSrc }) {
-  let results = [];
-  let voteResult = 0;
+const VOTER_COLORS = [
+  "bg-pink-400", "bg-orange-400", "bg-violet-400", "bg-sky-400",
+  "bg-emerald-400", "bg-amber-400", "bg-rose-400", "bg-indigo-400",
+  "bg-teal-400", "bg-fuchsia-400", "bg-cyan-400", "bg-lime-500",
+];
 
-  if (data && data.properties[title]) {
-    results = data.properties[title].rich_text[0]?.plain_text;
-    results = results?.split(",");
-
-    results = results?.filter((result) => result);
-
-    voteResult = results?.length ?? 0;
-
-    if (Array.isArray(results)) {
-      results = results.reduce((prev, curr, index) => {
-        prev = prev || [];
-
-        if (prev.find((item) => item.name === curr) === undefined) {
-          prev.push({ name: curr, count: 1 });
-        } else {
-          prev.find((item) => item.name === curr).count++;
-        }
-
-        return prev;
-      }, []);
+export default function ResultBlock({ title, imageSrc, voteCount, voters }) {
+  // 統計每個投票者（同一人可能出現多次）
+  const voterCounts = [];
+  if (Array.isArray(voters)) {
+    for (const name of voters) {
+      if (!name) continue;
+      const existing = voterCounts.find((v) => v.name === name);
+      if (existing) {
+        existing.count++;
+      } else {
+        voterCounts.push({ name, count: 1 });
+      }
     }
   }
 
-  const renderResult = (results) => {
-    if (!Array.isArray(results)) {
-      return <></>;
-    }
-
-    results = results.filter((result) => result.name);
-
-    return results.map((result, index) => {
-      const className = getClassName(index);
-
-      var render = [];
-      for (let i = 0; i < result.count; i++) {
-        render.push(
-          <span key={result.count + Math.random()} className={className}>
-            {result.name}{" "}
-          </span>
-        );
-      }
-
-      return <span key={index + "_" + result.count}>{render}</span>;
-    });
-  };
-
-  const getClassName = (index) => {
-    if (index === 0) {
-      return "bg-sky-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 1) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 2) {
-      return "bg-violet-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 3) {
-      return "bg-orange-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 4) {
-      return "bg-indigo-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 5) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 6) {
-      return "bg-blue-700 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 7) {
-      return "bg-blue-800 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 8) {
-      return "bg-blue-900 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 9) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 10) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-    if (index === 11) {
-      return "bg-blue-500 text-white rounded py-1 px-1 ml-1 mb-1 inline-block";
-    }
-  };
-
   return (
-    <>
-      <div className="w-full px-2 py-2 mt-2">
-        <div className="h-24">
-          <ImageLoader
-            src={imageSrc}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "6rem",
-              objectFit: "contain",
-            }}
-          ></ImageLoader>
-        </div>
-        <div className="text-center text-xl bg-blue-200">
-          得票數: {voteResult}
-        </div>
-        <div className="text-center text-xl text-white bg-blue-500">
-          {title}
-        </div>
-        <div className="w-full border-2 min-h-48 text-wrap">
-          {Array.isArray(results) && renderResult(results)}
-        </div>
+    <div className="rounded-2xl overflow-hidden bg-white shadow-md card-hover">
+      {/* 圖片 */}
+      <div className="aspect-square bg-gradient-to-b from-gray-50 to-gray-100 p-2 flex items-center justify-center">
+        <ImageLoader
+          src={imageSrc}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain",
+          }}
+        />
       </div>
-    </>
+
+      {/* 名稱 + 票數 */}
+      <div className="bg-gradient-to-r from-pink-500 to-orange-400 text-white px-3 py-2
+                      flex items-center justify-between">
+        <span className="font-bold text-sm truncate">{title}</span>
+        <span className="bg-white/25 rounded-full px-2 py-0.5 text-xs font-bold whitespace-nowrap">
+          {voteCount} 票
+        </span>
+      </div>
+
+      {/* 投票者列表 */}
+      <div className="p-2 min-h-[4rem]">
+        {voterCounts.length === 0 ? (
+          <p className="text-gray-300 text-xs text-center py-2">尚無人投票</p>
+        ) : (
+          <div className="flex flex-wrap gap-1">
+            {voterCounts.map((voter, index) => {
+              const colorClass = VOTER_COLORS[index % VOTER_COLORS.length];
+              const tags = [];
+              for (let i = 0; i < voter.count; i++) {
+                tags.push(
+                  <span
+                    key={`${voter.name}_${i}`}
+                    className={`${colorClass} text-white text-xs rounded-full px-2 py-0.5 font-medium`}
+                  >
+                    {voter.name}
+                  </span>
+                );
+              }
+              return tags;
+            })}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

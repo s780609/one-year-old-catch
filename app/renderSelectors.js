@@ -28,20 +28,39 @@ import 調色盤 from "./assets/調色盤.jpg";
 import 特斯拉 from "./assets/特斯拉.jpg";
 import Vtuber from "./assets/Vtuber.jpg";
 
-export default function RenderSelectors({ items, pages }) {
+const imageMap = {
+  手槍, 三角尺, 黑板, 鎚子, 書,
+  鍵盤, 阿公阿嬤的禮物, 麥克風, 算盤, 板手,
+  場記板, 博士帽, 急救箱, 廚師帽, 樂器,
+  飛機, 相機, 調色盤, 特斯拉, Vtuber,
+};
+
+export default function RenderSelectors({ items }) {
   const router = useRouter();
 
   const [myName, setMyName] = useState();
   const [count, setCount] = useState(0);
   const [nameCheck, setNameCheck] = useState(false);
+  const [votedItems, setVotedItems] = useState([]);
+
+  const familyNames = [
+    "五股阿公", "五股阿嬤", "北投阿公", "北投阿嬤",
+    "乾阿公", "乾阿嬤", "小榆姑姑", "小莆叔叔",
+    "彥廷舅舅", "大姑婆", "小姑婆", "姨婆",
+    "大叔公", "大金婆", "大欣欣姑姑", "昉昉姑姑",
+    "阿暐叔叔", "美麗姑姑", "培涓阿北", "洋溢阿北",
+    "惠瑩姑姑", "玉嬋姑姑", "自強阿北", "瑩芳姑姑",
+  ];
 
   useEffect(() => {
     if (count >= 3) {
-      toast("選完囉，來看結果吧", {
+      toast("選完囉，來看結果吧 🎉", {
         icon: "🍺",
         style: {
-          borderRadius: "10px",
-          background: "#f0e0be",
+          borderRadius: "12px",
+          background: "#4CAF50",
+          color: "#fff",
+          fontWeight: "bold",
         },
       });
 
@@ -57,442 +76,156 @@ export default function RenderSelectors({ items, pages }) {
 
   return (
     <>
-      <Toaster></Toaster>
+      <Toaster position="top-center" />
+
+      {/* ===== 投票完成橫幅 ===== */}
       {count >= 3 && (
-        <>
-          <div className="text-center">
-            <button
-              onClick={() => {
-                router.push("/result", { scroll: false });
-              }}
-              className="bg-green-500 text-white text-3xl rounded py-1 px-2 my-2"
-            >
-              去看結果
-            </button>
-          </div>
-        </>
+        <div className="sticky top-0 z-50 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 text-center shadow-lg">
+          <p className="text-lg mb-2">🎉 投票完成！</p>
+          <button
+            onClick={() => router.push("/result", { scroll: false })}
+            className="bg-white text-green-700 font-bold py-2 px-6 rounded-full
+                       hover:bg-green-50 transition-all shadow-md"
+          >
+            去看結果 →
+          </button>
+        </div>
       )}
-      {nameCheck || (
-        <div className="flex flex-col h-full text-center text-3xl my-2">
-          <div>🚂🚀🍺🍕🧱🔨⚒️🧙🚓⛴️🛋️🛏️⛱️❄️🔥🌈</div>
-          <div>欣予抓周猜猜看</div>
-          <div>投票選你猜的欣予會抓的目標，每人三票</div>
-          <div>投票前，先說一下你是誰</div>
-          <div className="flex justify-center">
-            <div className="grid grid-cols-4">
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                五股阿公
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                五股阿嬤
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                北投阿公
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                北投阿嬤
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                乾阿公
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                乾阿嬤
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                小榆姑姑
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                小莆叔叔
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                彥廷舅舅
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                大姑婆
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                小姑婆
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                姨婆
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                大叔公
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                大金婆
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                大欣欣姑姑
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                昉昉姑姑
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                阿暐叔叔
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                美麗姑姑
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                培涓阿北
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                洋溢阿北
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                惠瑩姑姑
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                玉嬋姑姑
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                自強阿北
-              </button>
-              <button
-                onClick={(e) => {
-                  setMyName(e.target.innerText);
-                }}
-                className="bg-sky-400 text-white px-2 py-1 my-1 mx-1 rounded"
-              >
-                瑩芳姑姑
-              </button>
+
+      {/* ===== 選人介面 ===== */}
+      {!nameCheck && (
+        <div className="flex flex-col items-center min-h-screen px-4 py-6">
+          {/* 標題區 */}
+          <div className="text-center mb-6">
+            <div className="text-5xl mb-3 float-animation">🎂</div>
+            <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text
+                           bg-gradient-to-r from-pink-500 via-red-400 to-orange-400">
+              欣予抓周猜猜看
+            </h1>
+            <p className="text-gray-600 mt-2 text-base md:text-lg">
+              猜猜寶寶會選什麼？每人可以投 <span className="text-pink-500 font-bold">3</span> 票
+            </p>
+          </div>
+
+          {/* 寶寶照片 */}
+          <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white shadow-xl mb-6">
+            <ImageLoader
+              src={image001}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              priority={true}
+              sizes="224px"
+            />
+          </div>
+
+          {/* 選人卡片 */}
+          <div className="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-5 mb-4">
+            <h2 className="text-center text-lg font-bold text-gray-700 mb-3">
+              👋 先告訴我你是誰
+            </h2>
+            <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+              {familyNames.map((name) => (
+                <button
+                  key={name}
+                  onClick={() => setMyName(name)}
+                  className={`py-2 px-1 rounded-xl text-sm font-medium transition-all
+                    ${myName === name
+                      ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white shadow-md scale-105"
+                      : "bg-white text-gray-700 border border-gray-200 hover:border-pink-300 hover:bg-pink-50"
+                    }`}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+
+            {/* 自行輸入 */}
+            <div className="mt-3">
+              <input
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200
+                           focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100
+                           bg-white text-gray-700 placeholder-gray-400 text-center"
+                placeholder="上面沒有你？請在這裡輸入名字"
+                value={myName || ""}
+                onChange={(e) => setMyName(e.target.value)}
+              />
             </div>
           </div>
-          <div>
-            <input
-              className="border-2 w-full md:w-1/2"
-              placeholder="上面沒有你的話，請自行輸入"
-              value={myName}
-              onChange={(e) => {
-                setMyName(e.target.value);
-              }}
-            ></input>
-          </div>
-          <div>
-            <div>
-              <button
-                onClick={() => {
-                  router.push("/result", { scroll: false });
-                }}
-                className="bg-green-500 text-white rounded py-1 px-2 my-2 md:w-1/4 w-1/2"
-              >
-                想先看結果
-              </button>
-            </div>
+
+          {/* 按鈕區 */}
+          <div className="flex flex-col items-center gap-3 w-full max-w-sm">
             <button
               onClick={() => {
+                if (!myName?.trim()) {
+                  toast.error("請先選擇或輸入你的名字");
+                  return;
+                }
                 setNameCheck(true);
               }}
-              className="bg-blue-500 text-white rounded py-1 px-2 my-2 md:w-1/4 w-1/2"
+              disabled={!myName?.trim()}
+              className={`w-full py-3.5 rounded-xl font-bold text-lg shadow-lg transition-all
+                ${myName?.trim()
+                  ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white hover:shadow-xl hover:scale-[1.02] pulse-gentle"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
             >
-              去投票
+              🗳️ 去投票
             </button>
-          </div>
-          <div className="flex justify-center w-full">
-            <div className="md:w-1/3 w-5/6">
-              <ImageLoader src={image001}></ImageLoader>
-            </div>
+            <button
+              onClick={() => router.push("/result", { scroll: false })}
+              className="text-gray-500 hover:text-pink-500 transition-colors text-sm underline underline-offset-2"
+            >
+              我想先偷看結果 👀
+            </button>
           </div>
         </div>
       )}
+
+      {/* ===== 投票介面 ===== */}
       {nameCheck && (
-        <div className="grid md:grid-cols-10 grid-cols-2">
-          <Selector
-            myName={myName}
-            src={手槍}
-            data={pages.results[0]}
-            title={items[0]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={三角尺}
-            data={pages.results[0]}
-            title={items[1]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={黑板}
-            data={pages.results[0]}
-            title={items[2]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={鎚子}
-            data={pages.results[0]}
-            title={items[3]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={書}
-            data={pages.results[0]}
-            title={items[4]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={鍵盤}
-            data={pages.results[0]}
-            title={items[5]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={阿公阿嬤的禮物}
-            data={pages.results[0]}
-            title={items[6]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={麥克風}
-            data={pages.results[0]}
-            title={items[7]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={算盤}
-            data={pages.results[0]}
-            title={items[8]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={板手}
-            data={pages.results[0]}
-            title={items[9]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={場記板}
-            data={pages.results[0]}
-            title={items[10]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={博士帽}
-            data={pages.results[0]}
-            title={items[11]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={急救箱}
-            data={pages.results[0]}
-            title={items[12]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={廚師帽}
-            data={pages.results[0]}
-            title={items[13]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={樂器}
-            data={pages.results[0]}
-            title={items[14]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={飛機}
-            data={pages.results[0]}
-            title={items[15]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={相機}
-            data={pages.results[0]}
-            title={items[16]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={調色盤}
-            data={pages.results[0]}
-            title={items[17]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={特斯拉}
-            data={pages.results[0]}
-            title={items[18]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
-          <Selector
-            myName={myName}
-            src={Vtuber}
-            data={pages.results[0]}
-            title={items[19]}
-            count={count}
-            setCount={setCount}
-            diabled={count >= 3}
-          ></Selector>
+        <div className="pb-8">
+          {/* 頂部狀態列 */}
+          <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-pink-100 py-3 px-4 shadow-sm">
+            <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500 text-sm">投票者：</span>
+                <span className="font-bold text-pink-500">{myName}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                      ${i <= count
+                        ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white"
+                        : "bg-gray-200 text-gray-400"
+                      }`}
+                  >
+                    {i <= count ? "✓" : i}
+                  </div>
+                ))}
+                <span className="ml-2 text-sm text-gray-500">{count}/3</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 投票卡片網格 */}
+          <div className="max-w-screen-xl mx-auto px-3 pt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              {items.map((item) => (
+                <Selector
+                  key={item}
+                  myName={myName}
+                  src={imageMap[item]}
+                  title={item}
+                  count={count}
+                  setCount={setCount}
+                  disabled={count >= 3}
+                  votedItems={votedItems}
+                  setVotedItems={setVotedItems}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </>
