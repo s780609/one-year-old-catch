@@ -8,11 +8,12 @@ export function ImageLoader({
   sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw",
 }) {
   return (
-    <div className="w-full relative">
+    <div className="w-full h-full relative overflow-hidden">
       <Image
         src={src}
         alt={alt}
-        style={style}
+        fill
+        style={{ objectFit: "contain", ...style }}
         placeholder="blur"
         quality={75}
         sizes={sizes}

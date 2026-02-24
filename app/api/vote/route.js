@@ -135,6 +135,13 @@ export async function DELETE(request) {
     const voterName = searchParams.get("voter");
     const itemName = searchParams.get("item");
 
+    // ===== 重置全部投票 =====
+    if (searchParams.get("reset") === "all") {
+      await sql(`DELETE FROM votes`);
+      await sql(`UPDATE vote_items SET vote_count = 0`);
+      return NextResponse.json({ success: true, message: "已清除所有投票紀錄並重置票數" });
+    }
+
     if (!voterName || !itemName) {
       return NextResponse.json(
         { success: false, error: "voter 和 item 參數為必填" },

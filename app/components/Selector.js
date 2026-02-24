@@ -1,68 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { ImageLoader } from "./ImageLoader";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export function Selector({
   myName,
   src,
   title,
   count,
-  setCount,
   disabled,
   votedItems,
-  setVotedItems,
+  onVote,
+  onCancel,
+  isVoting,
 }) {
-  const [loading, setLoading] = useState(false);
   const hasVoted = votedItems.includes(title);
-
-  const plus = async () => {
-    try {
-      setLoading(true);
-
-      const res = await fetch("/api/vote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ voterName: myName, itemName: title }),
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        setCount(count + 1);
-        setVotedItems([...votedItems, title]);
-      } else {
-        toast.error(data.error);
-      }
-    } catch (error) {
-      toast.error("投票失敗: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteData = async () => {
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `/api/vote?voter=${encodeURIComponent(myName)}&item=${encodeURIComponent(title)}`,
-        { method: "DELETE" }
-      );
-      const data = await res.json();
-
-      if (data.success) {
-        setCount(count - 1);
-        setVotedItems(votedItems.filter((i) => i !== title));
-      } else {
-        toast.error(data.error);
-      }
-    } catch (error) {
-      toast.error("取消失敗: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const Spinner = () => (
     <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
@@ -113,27 +65,26 @@ export function Selector({
           <button
             onClick={() => {
               if (!myName) { alert("請輸入你的名字"); return; }
-              if (count >= 3) { toast.error("已投滿 3 票"); return; }
-              plus();
+              onVote(title);
             }}
-            disabled={loading || disabled}
+            disabled={disabled}
             className={`w-full py-2 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 transition-all
               ${disabled
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-gradient-to-r from-pink-500 to-orange-400 text-white hover:shadow-md hover:scale-[1.02] active:scale-95"
               }`}
           >
-            {loading ? <Spinner /> : "🗳️ 選這個"}
+            {isVoting ? <Spinner /> : "🗳️ 選這個"}
           </button>
         ) : (
           <button
-            onClick={deleteData}
-            disabled={loading}
+            onClick={() => onCancel(title)}
+            disabled={isVoting}
             className="w-full py-2 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5
                        bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-500
                        transition-all active:scale-95"
           >
-            {loading ? <Spinner /> : "↩ 取消投票"}
+            {isVoting ? <Spinner /> : "↩ 取消投票"}
           </button>
         )}
       </div>

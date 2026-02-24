@@ -7,9 +7,17 @@ export const dynamic = "force-dynamic";
 // GET: 取得投票排行和所有投票紀錄（給結果頁用）
 export async function GET() {
   try {
-    // 取得所有物品及其得票數
+    // 直接用 votes 表 COUNT，不依賴 vote_items.vote_count（避免不同步）
     const items = await sql`
-      SELECT name, vote_count FROM vote_items ORDER BY vote_count DESC, name
+      SELECT vi.name,
+             COALESCE(vc.real_count, 0)::int AS vote_count
+      FROM vote_items vi
+      LEFT JOIN (
+        SELECT item_name, COUNT(*) AS real_count
+        FROM votes
+        GROUP BY item_name
+      ) vc ON vi.name = vc.item_name
+      ORDER BY vote_count DESC, vi.name
     `;
 
     // 取得所有投票紀錄（誰投了什麼）
@@ -17,7 +25,7 @@ export async function GET() {
       SELECT voter_name, item_name, voted_at FROM votes ORDER BY voted_at DESC
     `;
 
-    // 整理成每個物品對應的投票者列表（與舊版 Notion 格式相容）
+    // 整理成每個物品對應的投票者列表
     const itemVoters = {};
     for (const item of items) {
       itemVoters[item.name] = {
@@ -33,6 +41,12 @@ export async function GET() {
       items: itemVoters,
       ranking: items,
       votes,
+    }, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "CDN-Cache-Control": "no-store",
+        "Vercel-CDN-Cache-Control": "no-store",
+      },
     });
   } catch (error) {
     console.error("查詢失敗:", error);

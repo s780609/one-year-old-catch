@@ -273,6 +273,30 @@ export default function TestNeonDBPage() {
     }
   };
 
+  // ============ 重置投票 ============
+  const handleResetVotes = async () => {
+    if (!confirm("⚠️ 確定要清除所有投票紀錄嗎？\n\n這會：\n1. 刪除 votes 表所有投票紀錄\n2. 將 vote_items 所有 vote_count 歸零\n\n此操作無法復原！")) return;
+    if (!confirm("再次確認：真的要清除嗎？")) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/vote?reset=all", { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        showMsg("✅ 已清除所有投票紀錄，票數已歸零");
+        if (selectedTable === "votes" || selectedTable === "vote_items") {
+          selectTable(selectedTable);
+        }
+      } else {
+        showMsg(data.error, true);
+      }
+    } catch (err) {
+      showMsg(err.message, true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // ---- 欄位編輯輔助 ----
   const addColumn = () => {
     setNewColumns([
@@ -322,6 +346,23 @@ export default function TestNeonDBPage() {
                        rounded-lg text-sm transition-colors"
           >
             登出
+          </button>
+        </div>
+
+        {/* 重置投票按鈕 */}
+        <div className="mb-4 p-4 bg-red-950/40 border border-red-900/50 rounded-xl flex items-center justify-between">
+          <div>
+            <h3 className="text-red-400 font-bold text-sm">🗑️ 重置投票</h3>
+            <p className="text-red-400/60 text-xs mt-0.5">清除 votes 所有紀錄，vote_items 票數歸零</p>
+          </div>
+          <button
+            onClick={handleResetVotes}
+            disabled={loading}
+            className="px-4 py-2 bg-red-700 hover:bg-red-600 text-white
+                       rounded-lg text-sm font-medium transition-colors
+                       disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            清除所有投票
           </button>
         </div>
 
