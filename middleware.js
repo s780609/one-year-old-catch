@@ -13,9 +13,10 @@ export function middleware(request) {
   // 登入 API 不需要驗證（否則無法登入）
   if (pathname === "/api/admin/login") return NextResponse.next();
 
-  // 檢查 cookie
+  // 檢查 cookie（比對獨立 token，不暴露密碼）
   const token = request.cookies.get("admin_token")?.value;
-  if (!token || token !== process.env.ADMIN_PASSWORD) {
+  const expectedToken = process.env.ADMIN_TOKEN || "fallback-token";
+  if (!token || token !== expectedToken) {
     // API 路徑回 401 JSON
     if (pathname.startsWith("/api/")) {
       return NextResponse.json(
