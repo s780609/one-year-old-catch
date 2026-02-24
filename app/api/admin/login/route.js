@@ -18,9 +18,10 @@ export async function POST(request) {
       );
     }
 
-    // 密碼正確 → 設定 cookie
+    // 密碼正確 → 用獨立 token 設定 cookie（不存明文密碼）
+    const token = process.env.ADMIN_TOKEN || "fallback-token";
     const response = NextResponse.json({ success: true });
-    response.cookies.set("admin_token", password, {
+    response.cookies.set("admin_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

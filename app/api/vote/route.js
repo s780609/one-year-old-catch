@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import sql from "@/lib/db";
+import { checkOrigin } from "@/lib/checkOrigin";
 
 // POST: 投票
 // body: { voterName: "五股阿公", itemName: "手槍" }
 export async function POST(request) {
+  const originError = checkOrigin(request);
+  if (originError) return originError;
+
   try {
     const { voterName, itemName } = await request.json();
 
@@ -130,6 +134,9 @@ export async function GET(request) {
 // DELETE: 取消投票（撤回一票）
 // body: { voterName: "五股阿公", itemName: "手槍" }
 export async function DELETE(request) {
+  const originError = checkOrigin(request);
+  if (originError) return originError;
+
   try {
     const { searchParams } = new URL(request.url);
     const voterName = searchParams.get("voter");

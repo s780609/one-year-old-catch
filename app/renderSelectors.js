@@ -56,6 +56,43 @@ export default function RenderSelectors({ items }) {
 
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdownNumber, setCountdownNumber] = useState(5);
+  const [checkingVotes, setCheckingVotes] = useState(false);
+
+  // 進入投票頁面時，檢查此投票者是否已投過票
+  useEffect(() => {
+    if (!nameCheck || !myName?.trim()) return;
+
+    const checkPreviousVotes = async () => {
+      setCheckingVotes(true);
+      try {
+        const res = await fetch(
+          `/api/vote?voter=${encodeURIComponent(myName)}&t=${Date.now()}`,
+          { cache: "no-store" }
+        );
+        const data = await res.json();
+        if (data.success && data.votedCount > 0) {
+          setCount(data.votedCount);
+          countRef.current = data.votedCount;
+          setVotedItems(data.votedItems);
+          toast(`歡迎回來！你已經投了 ${data.votedCount}/3 票`, {
+            icon: "📋",
+            style: {
+              borderRadius: "12px",
+              background: "#3B82F6",
+              color: "#fff",
+              fontWeight: "bold",
+            },
+          });
+        }
+      } catch (error) {
+        console.error("檢查投票紀錄失敗:", error);
+      } finally {
+        setCheckingVotes(false);
+      }
+    };
+
+    checkPreviousVotes();
+  }, [nameCheck, myName]);
 
   useEffect(() => {
     if (count >= 3) {
@@ -339,6 +376,18 @@ export default function RenderSelectors({ items }) {
             )}
           </div>
 
+          {/* 檢查投票紀錄中 */}
+          {checkingVotes && (
+            <div className="flex items-center justify-center py-6 gap-2 text-pink-500">
+              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              <span className="font-medium">正在載入你的投票紀錄...</span>
+            </div>
+          )}
+
           {/* 投票卡片網格 */}
           <div className="max-w-screen-xl mx-auto px-3 pt-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -349,7 +398,7 @@ export default function RenderSelectors({ items }) {
                   src={imageMap[item]}
                   title={item}
                   count={count}
-                  disabled={count >= 3 || isVoting}
+                  disabled={count >= 3 || isVoting || checkingVotes}
                   votedItems={votedItems}
                   onVote={handleVote}
                   onCancel={handleCancelVote}
