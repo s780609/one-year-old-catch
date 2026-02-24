@@ -57,6 +57,8 @@ export default function RenderSelectors({ items }) {
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdownNumber, setCountdownNumber] = useState(5);
   const [checkingVotes, setCheckingVotes] = useState(false);
+  const [showAlreadyVoted, setShowAlreadyVoted] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   // 進入投票頁面時，檢查此投票者是否已投過票
   useEffect(() => {
@@ -71,18 +73,25 @@ export default function RenderSelectors({ items }) {
         );
         const data = await res.json();
         if (data.success && data.votedCount > 0) {
-          setCount(data.votedCount);
-          countRef.current = data.votedCount;
-          setVotedItems(data.votedItems);
-          toast(`歡迎回來！你已經投了 ${data.votedCount}/3 票`, {
-            icon: "📋",
-            style: {
-              borderRadius: "12px",
-              background: "#3B82F6",
-              color: "#fff",
-              fontWeight: "bold",
-            },
-          });
+          if (data.votedCount >= 3) {
+            // 已投滿，顯示選擇畫面
+            setVotedItems(data.votedItems);
+            setShowAlreadyVoted(true);
+          } else {
+            // 還沒投滿，恢復狀態繼續投
+            setCount(data.votedCount);
+            countRef.current = data.votedCount;
+            setVotedItems(data.votedItems);
+            toast(`歡迎回來！你已經投了 ${data.votedCount}/3 票`, {
+              icon: "📋",
+              style: {
+                borderRadius: "12px",
+                background: "#3B82F6",
+                color: "#fff",
+                fontWeight: "bold",
+              },
+            });
+          }
         }
       } catch (error) {
         console.error("檢查投票紀錄失敗:", error);
@@ -133,6 +142,31 @@ export default function RenderSelectors({ items }) {
   useEffect(() => {
     countRef.current = count;
   }, [count]);
+
+  // 重新投票（清除此人的全部票）
+  const handleRevote = useCallback(async () => {
+    setIsResetting(true);
+    try {
+      const res = await fetch(
+        `/api/vote?voter=${encodeURIComponent(myName)}&reset=voter`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setCount(0);
+        countRef.current = 0;
+        setVotedItems([]);
+        setShowAlreadyVoted(false);
+        toast.success("已清除投票，重新開始吧！");
+      } else {
+        toast.error(data.error || "重置失敗");
+      }
+    } catch (error) {
+      toast.error("重置失敗: " + error.message);
+    } finally {
+      setIsResetting(false);
+    }
+  }, [myName]);
 
   // 投票（帶鎖）
   const handleVote = useCallback(async (itemName) => {
@@ -186,6 +220,68 @@ export default function RenderSelectors({ items }) {
   return (
     <>
       <Toaster position="top-center" />
+
+      {/* ===== 已投過票選擇畫面 ===== */}
+      {showAlreadyVoted && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center
+                        bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700
+                        countdown-overlay">
+          <div className="text-center px-6 max-w-sm">
+            <div className="text-6xl mb-4">🗳️</div>
+            <h2 className="text-white text-2xl md:text-3xl font-black mb-2">
+              {myName}，你已經投過囉！
+            </h2>
+            <p className="text-white/70 mb-2 text-sm">你投了：</p>
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {votedItems.map((item) => (
+                <span
+                  key={item}
+                  className="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => router.push("/result", { scroll: false })}
+                className="w-full py-3.5 rounded-xl font-bold text-lg
+                           bg-white text-indigo-700 hover:bg-indigo-50
+                           shadow-lg transition-all hover:scale-[1.02]"
+              >
+                🏆 去看結果
+              </button>
+              <button
+                onClick={handleRevote}
+                disabled={isResetting}
+                className="w-full py-3.5 rounded-xl font-bold text-lg
+                           bg-white/10 text-white border-2 border-white/30
+                           hover:bg-white/20 transition-all
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           flex items-center justify-center gap-2"
+              >
+                {isResetting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    清除中...
+                  </>
+                ) : (
+                  "🔄 我要重新投票"
+                )}
+              </button>
+            </div>
+
+            <p className="text-white/40 text-xs mt-4">
+              重新投票會清除你之前的 3 票
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ===== 倒數計時全螢幕過場 ===== */}
       {showCountdown && (

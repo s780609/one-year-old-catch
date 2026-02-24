@@ -149,6 +149,31 @@ export async function DELETE(request) {
       return NextResponse.json({ success: true, message: "已清除所有投票紀錄並重置票數" });
     }
 
+    // ===== 清除某人的全部投票（重新投票用）=====
+    if (searchParams.get("reset") === "voter" && voterName) {
+      // 先查出此人投了哪些
+      const myVotes = await sql(
+        `SELECT item_name FROM votes WHERE voter_name = $1`,
+        [voterName]
+      );
+      if (myVotes.length === 0) {
+        return NextResponse.json({ success: true, message: "此人沒有投票紀錄" });
+      }
+      // 刪除投票紀錄
+      await sql(`DELETE FROM votes WHERE voter_name = $1`, [voterName]);
+      // 更新每個物品的得票數
+      for (const v of myVotes) {
+        await sql(
+          `UPDATE vote_items SET vote_count = vote_count - 1 WHERE name = $1`,
+          [v.item_name]
+        );
+      }
+      return NextResponse.json({
+        success: true,
+        message: `已清除 ${voterName} 的 ${myVotes.length} 筆投票`,
+      });
+    }
+
     if (!voterName || !itemName) {
       return NextResponse.json(
         { success: false, error: "voter 和 item 參數為必填" },
