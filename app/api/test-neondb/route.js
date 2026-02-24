@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import sql from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 // ============ GET ============
 // ?action=tables          → 列出所有使用者資料表
 // ?action=columns&table=x → 取得某表的欄位

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import sql from "@/lib/db";
 
+// 禁用 Vercel 靜態快取，確保每次都從資料庫拿最新資料
+export const dynamic = "force-dynamic";
+
 // GET: 取得投票排行和所有投票紀錄（給結果頁用）
 export async function GET() {
   try {

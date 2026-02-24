@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import sql from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 // GET: 執行建表 + 塞入初始物品資料
 export async function GET() {
   try {
