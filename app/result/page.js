@@ -54,7 +54,7 @@ export default function Result() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("/api");
+      const res = await fetch(`/api?t=${Date.now()}`, { cache: "no-store" });
       const data = await res.json();
       if (data.success) {
         setItemsData(data.items);

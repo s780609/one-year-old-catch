@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Selector } from "./components/Selector";
 import { useRouter } from "next/navigation";
 import { ImageLoader } from "./components/ImageLoader";
@@ -42,6 +42,8 @@ export default function RenderSelectors({ items }) {
   const [count, setCount] = useState(0);
   const [nameCheck, setNameCheck] = useState(false);
   const [votedItems, setVotedItems] = useState([]);
+  const [isVoting, setIsVoting] = useState(false);
+  const countRef = useRef(0);
 
   const familyNames = [
     "五股阿公", "五股阿嬤", "北投阿公", "北投阿嬤",
@@ -90,8 +92,58 @@ export default function RenderSelectors({ items }) {
     return () => clearTimeout(timer);
   }, [showCountdown, countdownNumber]);
 
+  // 同步 countRef
   useEffect(() => {
-    console.log("myName ===> ", myName);
+    countRef.current = count;
+  }, [count]);
+
+  // 投票（帶鎖）
+  const handleVote = useCallback(async (itemName) => {
+    if (countRef.current >= 3) {
+      toast.error("已投滿 3 票");
+      return;
+    }
+    setIsVoting(true);
+    try {
+      const res = await fetch("/api/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ voterName: myName, itemName }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCount((prev) => prev + 1);
+        setVotedItems((prev) => [...prev, itemName]);
+      } else {
+        toast.error(data.error);
+      }
+    } catch (error) {
+      toast.error("投票失敗: " + error.message);
+    } finally {
+      setIsVoting(false);
+    }
+  }, [myName]);
+
+  // 取消投票（帶鎖）
+  const handleCancelVote = useCallback(async (itemName) => {
+    setIsVoting(true);
+    try {
+      const res = await fetch(
+        `/api/vote?voter=${encodeURIComponent(myName)}&item=${encodeURIComponent(itemName)}`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setCount((prev) => prev - 1);
+        setVotedItems((prev) => prev.filter((i) => i !== itemName));
+      } else {
+        toast.error(data.error);
+      }
+    } catch (error) {
+      toast.error("取消失敗: " + error.message);
+    } finally {
+      setIsVoting(false);
+    }
   }, [myName]);
 
   return (
@@ -248,28 +300,43 @@ export default function RenderSelectors({ items }) {
       {nameCheck && (
         <div className="pb-8">
           {/* 頂部狀態列 */}
-          <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-pink-100 py-3 px-4 shadow-sm">
-            <div className="max-w-screen-xl mx-auto flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-gray-500 text-sm">投票者：</span>
-                <span className="font-bold text-pink-500">{myName}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
-                      ${i <= count
-                        ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white"
-                        : "bg-gray-200 text-gray-400"
-                      }`}
-                  >
-                    {i <= count ? "✓" : i}
-                  </div>
-                ))}
-                <span className="ml-2 text-sm text-gray-500">{count}/3</span>
+          <div className="sticky top-0 z-40">
+            <div className="bg-white/90 backdrop-blur-md border-b border-pink-100 py-3 px-4 shadow-sm">
+              <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-500 text-sm">投票者：</span>
+                  <span className="font-bold text-pink-500">{myName}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all
+                        ${i <= count
+                          ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white"
+                          : "bg-gray-200 text-gray-400"
+                        }`}
+                    >
+                      {i <= count ? "✓" : i}
+                    </div>
+                  ))}
+                  <span className="ml-2 text-sm text-gray-500">{count}/3</span>
+                </div>
               </div>
             </div>
+
+            {/* 投票中提示條 */}
+            {isVoting && (
+              <div className="bg-gradient-to-r from-pink-500 to-orange-400 text-white text-center
+                              py-1.5 text-sm font-medium flex items-center justify-center gap-2 shadow-md">
+                <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                投票送出中，請稍候...
+              </div>
+            )}
           </div>
 
           {/* 投票卡片網格 */}
@@ -282,10 +349,11 @@ export default function RenderSelectors({ items }) {
                   src={imageMap[item]}
                   title={item}
                   count={count}
-                  setCount={setCount}
-                  disabled={count >= 3}
+                  disabled={count >= 3 || isVoting}
                   votedItems={votedItems}
-                  setVotedItems={setVotedItems}
+                  onVote={handleVote}
+                  onCancel={handleCancelVote}
+                  isVoting={isVoting}
                 />
               ))}
             </div>
