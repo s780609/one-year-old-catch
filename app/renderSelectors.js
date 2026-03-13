@@ -6,7 +6,16 @@ import { useRouter } from "next/navigation";
 import { ImageLoader } from "./components/ImageLoader";
 import toast, { Toaster } from "react-hot-toast";
 
-import image001 from "./assets/001.jpg";
+import 秧予1 from "./assets/秧予/秧予_IMG_1937.jpeg";
+import 秧予2 from "./assets/秧予/秧予_IMG_1938.jpeg";
+import 秧予3 from "./assets/秧予/秧予_IMG_2032.jpeg";
+import 秧予4 from "./assets/秧予/秧予_IMG_2033.jpeg";
+import 秧予5 from "./assets/秧予/秧予_IMG_2034.jpeg";
+import 秧予6 from "./assets/秧予/秧予_IMG_1499.jpeg";
+import 秧予7 from "./assets/秧予/秧予_IMG_1928.jpeg";
+import 秧予8 from "./assets/秧予/秧予_IMG_1940.jpeg";
+import 秧予9 from "./assets/秧予/秧予_IMG_1966.jpeg";
+import 秧予10 from "./assets/秧予/秧予_IMG_2047.jpeg";
 import 手槍 from "./assets/手槍.jpg";
 import 三角尺 from "./assets/三角尺.jpg";
 import 黑板 from "./assets/黑板.jpg";
@@ -44,6 +53,18 @@ export default function RenderSelectors({ items }) {
   const [votedItems, setVotedItems] = useState([]);
   const [isVoting, setIsVoting] = useState(false);
   const countRef = useRef(0);
+
+  const babyPhotos = [秧予1, 秧予2, 秧予3, 秧予4, 秧予5, 秧予6, 秧予7, 秧予8, 秧予9, 秧予10];
+  const [currentPhoto, setCurrentPhoto] = useState(0);
+
+  // 照片自動輪播
+  useEffect(() => {
+    if (nameCheck) return;
+    const timer = setInterval(() => {
+      setCurrentPhoto((prev) => (prev + 1) % babyPhotos.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [nameCheck, babyPhotos.length]);
 
   const familyNames = [
     "五股阿公", "五股阿嬤", "北投阿公", "北投阿嬤",
@@ -348,22 +369,42 @@ export default function RenderSelectors({ items }) {
           <div className="text-center mb-6">
             <div className="text-5xl mb-3 float-animation">🎂</div>
             <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text
-                           bg-gradient-to-r from-pink-500 via-red-400 to-orange-400">
-              欣予抓周猜猜看
+                           bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400">
+              秧予抓周猜猜看
             </h1>
             <p className="text-gray-600 mt-2 text-base md:text-lg">
-              猜猜寶寶會選什麼？每人可以投 <span className="text-pink-500 font-bold">3</span> 票
+              猜猜寶寶會選什麼？每人可以投 <span className="text-teal-500 font-bold">3</span> 票
             </p>
           </div>
 
-          {/* 寶寶照片 */}
-          <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white shadow-xl mb-6">
-            <ImageLoader
-              src={image001}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              priority={true}
-              sizes="224px"
-            />
+          {/* 寶寶照片輪播 */}
+          <div className="relative w-52 h-52 md:w-60 md:h-60 mb-6">
+            {babyPhotos.map((photo, i) => (
+              <div
+                key={i}
+                className={`absolute inset-0 rounded-full overflow-hidden border-4 border-white shadow-xl
+                  transition-all duration-700 ease-in-out
+                  ${i === currentPhoto ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+              >
+                <ImageLoader
+                  src={photo}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  priority={i === 0}
+                  sizes="240px"
+                />
+              </div>
+            ))}
+            {/* 照片指示點 */}
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {babyPhotos.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPhoto(i)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300
+                    ${i === currentPhoto ? "bg-teal-500 w-4" : "bg-gray-300 hover:bg-gray-400"}`}
+                />
+              ))}
+            </div>
           </div>
 
           {/* 選人卡片 */}
