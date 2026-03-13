@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import image001 from "../assets/欣予/欣予001.jpg";
 
 const MEDAL_EMOJI = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"];
 const BG_COLORS = [
@@ -27,19 +29,52 @@ const VOTER_COLORS = [
 // ========================
 // 📦 所有抓周紀錄放這裡
 // 最新的放第一筆，舊的往後排
+// 新增活動時，複製下方範本並填入資料
 // ========================
 const allEvents = [
+  // ── 範本 ─────────────────────────────────────────────────────
+  // {
+  //   id: 2,
+  //   title: "秧予抓周",
+  //   date: "2026-??-??",       // 填活動日期
+  //   baby: "秧予",
+  //   photo: null,               // 填入 import 進來的照片，例如 imageYangYu
+  //   theme: {                   // 主題配色（可自訂）
+  //     gradient: "from-emerald-400 to-teal-500",
+  //     badge: "bg-emerald-100 text-emerald-700",
+  //     activeTab: "from-emerald-500 to-teal-400",
+  //     photoBorder: "ring-emerald-300",
+  //     voteBadge: "bg-emerald-100 text-emerald-600",
+  //     voteCard: "bg-emerald-50 border-emerald-200",
+  //   },
+  //   results: [
+  //     { order: 1, name: "???" },
+  //   ],
+  //   votes: {},
+  // },
+  // ────────────────────────────────────────────────────────────
   {
     id: 1,
     title: "欣予抓周",
-    date: "2024-08-21",
+    date: "2024/8/10（六）下午 2:00~5:00",
+    birthday: "2023/08/21",
     baby: "欣予",
+    photo: image001,
+    attendees: ["北投阿公", "北投阿嬤", "五股阿公", "五股阿嬤", "乾阿嬤", "惠瑩姑姑", "大姑婆"],
+    theme: {
+      gradient: "from-pink-400 to-orange-400",
+      badge: "bg-pink-100 text-pink-700",
+      activeTab: "from-pink-500 to-orange-400",
+      photoBorder: "ring-pink-300",
+      voteBadge: "bg-pink-100 text-pink-600",
+      voteCard: "bg-pink-50 border-pink-200",
+    },
     // 寶寶實際抓的順序
     results: [
       { order: 1, name: "鍵盤" },
       { order: 2, name: "算盤" },
       { order: 3, name: "麥克風" },
-      { order: 4, name: "特斯拉" },
+      { order: 4, name: "Vtuber（愛醬的紙箱）" },
       { order: 5, name: "阿公阿嬤的禮物" },
     ],
     // 投票紀錄（每個物品被誰投了）
@@ -81,6 +116,8 @@ export default function ChosenResult() {
         .sort((a, b) => b.count - a.count)
     : [];
 
+  const theme = currentEvent?.theme;
+
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8">
       <div className="text-5xl mb-4 float-animation">🎉</div>
@@ -97,48 +134,116 @@ export default function ChosenResult() {
             <button
               key={event.id}
               onClick={() => { setSelectedEventId(event.id); setShowVotes(false); }}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all
                 ${selectedEventId === event.id
-                  ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white shadow-md scale-105"
+                  ? `bg-gradient-to-r ${event.theme.activeTab} text-white shadow-lg scale-105`
                   : "bg-white text-gray-600 border border-gray-200 hover:border-pink-300 hover:bg-pink-50"
                 }`}
             >
-              {event.title}
+              {event.baby}
             </button>
           ))}
         </div>
       )}
 
-      {/* 活動資訊 */}
+      {/* 活動資訊 + 照片 */}
       {currentEvent && (
         <>
-          <div className="text-center mb-4">
-            <h2 className="text-xl font-bold text-gray-700">{currentEvent.title}</h2>
-            <p className="text-sm text-gray-400">{currentEvent.date}</p>
-          </div>
-
-          {/* 🏆 抓周結果 */}
-          <div className="w-full max-w-md space-y-3 mb-8">
-            {currentEvent.results.map((item, index) => (
-              <div
-                key={item.order}
-                className={`bg-gradient-to-r ${BG_COLORS[index] || "from-gray-100 to-gray-200"} rounded-2xl p-4 flex items-center gap-4
-                            shadow-md card-hover ${index === 0 ? "scale-105 shadow-lg" : ""}`}
-              >
-                <span className="text-3xl">{MEDAL_EMOJI[index] || `${index + 1}`}</span>
-                <div>
-                  <p className={`font-black text-xl ${index < 3 ? "text-white" : "text-gray-700"}`}>
-                    {item.name}
-                  </p>
-                  <p className={`text-sm ${index < 3 ? "text-white/80" : "text-gray-500"}`}>
-                    第 {item.order} 順位
-                  </p>
-                </div>
+          <div className="flex flex-col items-center mb-6">
+            {/* 寶寶照片 */}
+            {currentEvent.photo && (
+              <div className={`relative mb-4 rounded-full overflow-hidden ring-4 ${theme.photoBorder} shadow-xl`}
+                   style={{ width: 160, height: 160 }}>
+                <Image
+                  src={currentEvent.photo}
+                  alt={currentEvent.baby}
+                  fill
+                  className="object-cover"
+                  sizes="160px"
+                />
               </div>
-            ))}
+            )}
+            <h2 className={`text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r ${theme.gradient}`}>
+              {currentEvent.title}
+            </h2>
+            <p className="text-sm text-gray-400 mt-1">🎂 生日：{currentEvent.birthday}</p>
+            <p className="text-sm text-gray-400 mt-0.5">📅 活動：{currentEvent.date}</p>
+
+            {/* 參加者 */}
+            {currentEvent.attendees && currentEvent.attendees.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-1.5 mt-3 max-w-sm">
+                <span className="text-xs text-gray-400 w-full text-center mb-1">📍 參加者</span>
+                {currentEvent.attendees.map((name) => (
+                  <span key={name} className={`text-xs px-2.5 py-1 rounded-full font-medium ${theme.badge}`}>
+                    {name}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* 🗳️ 投票紀錄展開按鈕 */}
+          {/* � 寶寶實際抓周結果 */}
+          <div className="w-full max-w-md mb-8">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-2xl">🍼</span>
+              <h3 className="text-lg font-black text-gray-700">寶寶實際抓的順序</h3>
+            </div>
+            <div className="space-y-3">
+              {currentEvent.results.map((item, index) => (
+                <div
+                  key={item.order}
+                  className={`bg-gradient-to-r ${BG_COLORS[index] || "from-gray-100 to-gray-200"} rounded-2xl p-4 flex items-center gap-4
+                              shadow-md card-hover ${index === 0 ? "scale-105 shadow-lg" : ""}`}
+                >
+                  <span className="text-3xl">{MEDAL_EMOJI[index] || `${index + 1}`}</span>
+                  <div>
+                    <p className={`font-black text-xl ${index < 3 ? "text-white" : "text-gray-700"}`}>
+                      {item.name}
+                    </p>
+                    <p className={`text-sm ${index < 3 ? "text-white/80" : "text-gray-500"}`}>
+                      第 {item.order} 順位
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 🗳️ 投票排行榜 TOP 5 */}
+          {sortedVotes.length > 0 && (
+            <div className="w-full max-w-md mb-8">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">🗳️</span>
+                <h3 className="text-lg font-black text-gray-700">投票排行榜 TOP 5</h3>
+              </div>
+              <div className="space-y-3">
+                {sortedVotes.slice(0, 5).map((item, index) => {
+                  const isChosen = currentEvent.results.some((r) => r.name === item.name);
+                  return (
+                    <div
+                      key={item.name}
+                      className={`rounded-2xl p-4 flex items-center gap-4 shadow-md card-hover
+                        ${isChosen
+                          ? "bg-gradient-to-r from-amber-100 to-yellow-100 border-2 border-amber-300"
+                          : "bg-white border border-gray-100"
+                        }`}
+                    >
+                      <span className="text-3xl">{MEDAL_EMOJI[index] || `${index + 1}`}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          {isChosen && <span className="text-sm">⭐</span>}
+                          <p className="font-black text-lg text-gray-800">{item.name}</p>
+                        </div>
+                        <p className="text-sm text-gray-500">{item.count} 票</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* 📋 完整投票紀錄展開按鈕 */}
           {currentEvent.votes && (
             <>
               <button
@@ -148,7 +253,7 @@ export default function ChosenResult() {
                            hover:bg-pink-50 shadow-sm flex items-center gap-2"
               >
                 <span>{showVotes ? "🔽" : "▶️"}</span>
-                {showVotes ? "收起投票紀錄" : "查看當時投票紀錄"}
+                {showVotes ? "收起完整投票明細" : "查看完整投票明細"}
               </button>
 
               {showVotes && (
@@ -163,7 +268,7 @@ export default function ChosenResult() {
                         key={item.name}
                         className={`rounded-xl p-3 shadow-sm border transition-all
                           ${isChosen
-                            ? "bg-pink-50 border-pink-200"
+                            ? `${theme.voteCard}`
                             : "bg-white border-gray-100"
                           }`}
                       >
@@ -173,7 +278,7 @@ export default function ChosenResult() {
                             <span className="font-bold text-gray-800">{item.name}</span>
                           </div>
                           <span className={`text-sm font-bold px-2 py-0.5 rounded-full
-                            ${item.count > 0 ? "bg-pink-100 text-pink-600" : "bg-gray-100 text-gray-400"}`}>
+                            ${item.count > 0 ? theme.voteBadge : "bg-gray-100 text-gray-400"}`}>
                             {item.count} 票
                           </span>
                         </div>
