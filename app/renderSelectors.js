@@ -13,9 +13,11 @@ import 秧予4 from "./assets/秧予/秧予_IMG_2033.jpeg";
 import 秧予5 from "./assets/秧予/秧予_IMG_2034.jpeg";
 import 秧予6 from "./assets/秧予/秧予_IMG_1499.jpeg";
 import 秧予7 from "./assets/秧予/秧予_IMG_1928.jpeg";
-import 秧予8 from "./assets/秧予/秧予_IMG_1940.jpeg";
 import 秧予9 from "./assets/秧予/秧予_IMG_1966.jpeg";
 import 秧予10 from "./assets/秧予/秧予_IMG_2047.jpeg";
+import 秧予11 from "./assets/秧予/秧予_IMG_0999.jpg";
+import 秧予12 from "./assets/秧予/秧予_IMG_1799.jpeg";
+import 秧予13 from "./assets/秧予/秧予_IMG_1885.jpeg";
 import 手槍 from "./assets/手槍.jpg";
 import 三角尺 from "./assets/三角尺.jpg";
 import 黑板 from "./assets/黑板.jpg";
@@ -54,17 +56,45 @@ export default function RenderSelectors({ items }) {
   const [isVoting, setIsVoting] = useState(false);
   const countRef = useRef(0);
 
-  const babyPhotos = [秧予1, 秧予2, 秧予3, 秧予4, 秧予5, 秧予6, 秧予7, 秧予8, 秧予9, 秧予10];
+  // 輪播項目：照片用 { type: 'image', src }，影片用 { type: 'video', src }
+  const carouselItems = [
+    { type: 'image', src: 秧予11 },
+    { type: 'image', src: 秧予12 },
+    { type: 'image', src: 秧予13 },
+    { type: 'video', src: '/秧予_吃1.mp4' },
+    { type: 'image', src: 秧予1 },
+    { type: 'image', src: 秧予2 },
+    { type: 'image', src: 秧予3 },
+    { type: 'image', src: 秧予4 },
+    { type: 'image', src: 秧予5 },
+    { type: 'image', src: 秧予6 },
+    { type: 'image', src: 秧予7 },
+    { type: 'image', src: 秧予9 },
+    { type: 'image', src: 秧予10 },
+  ];
   const [currentPhoto, setCurrentPhoto] = useState(0);
+  const videoRef = useRef(null);
 
-  // 照片自動輪播
+  // 照片/影片自動輪播
   useEffect(() => {
     if (nameCheck) return;
+    const current = carouselItems[currentPhoto];
+    // 影片播放時停留久一點 (6 秒)，照片 3 秒
+    const delay = current?.type === 'video' ? 6000 : 3000;
     const timer = setInterval(() => {
-      setCurrentPhoto((prev) => (prev + 1) % babyPhotos.length);
-    }, 3000);
+      setCurrentPhoto((prev) => (prev + 1) % carouselItems.length);
+    }, delay);
     return () => clearInterval(timer);
-  }, [nameCheck, babyPhotos.length]);
+  }, [nameCheck, carouselItems.length, currentPhoto]);
+
+  // 切換到影片時播放，離開時暫停
+  useEffect(() => {
+    const current = carouselItems[currentPhoto];
+    if (current?.type === 'video' && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [currentPhoto]);
 
   const familyNames = [
     "五股阿公", "五股阿嬤", "北投阿公", "北投阿嬤",
@@ -73,6 +103,8 @@ export default function RenderSelectors({ items }) {
     "大叔公", "大金婆", "大欣欣姑姑", "昉昉姑姑",
     "阿暐叔叔", "美麗姑姑", "培涓阿北", "洋溢阿北",
     "惠瑩姑姑", "玉嬋姑姑", "自強阿北", "瑩芳姑姑",
+    "曉茹阿姆", "涵涵姑姑", "雯雯姑姑", "依晨姊姊",
+    "彤彤姊姊",
   ];
 
   const [showCountdown, setShowCountdown] = useState(false);
@@ -377,31 +409,49 @@ export default function RenderSelectors({ items }) {
             </p>
           </div>
 
-          {/* 寶寶照片輪播 */}
+          {/* 寶寶照片/影片輪播 */}
           <div className="relative w-52 h-52 md:w-60 md:h-60 mb-6">
-            {babyPhotos.map((photo, i) => (
+            {carouselItems.map((item, i) => (
               <div
                 key={i}
                 className={`absolute inset-0 rounded-full overflow-hidden border-4 border-white shadow-xl
                   transition-all duration-700 ease-in-out
                   ${i === currentPhoto ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
               >
-                <ImageLoader
-                  src={photo}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  priority={i === 0}
-                  sizes="240px"
-                />
+                {item.type === 'video' ? (
+                  <video
+                    ref={i === currentPhoto ? videoRef : null}
+                    src={item.src}
+                    muted
+                    loop
+                    playsInline
+                    autoPlay={i === currentPhoto}
+                    className="w-full h-full object-cover"
+                    onLoadedData={(e) => {
+                      if (i === currentPhoto) e.target.play();
+                    }}
+                  />
+                ) : (
+                  <ImageLoader
+                    src={item.src}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    priority={i === 0}
+                    sizes="240px"
+                  />
+                )}
               </div>
             ))}
-            {/* 照片指示點 */}
+            {/* 指示點 */}
             <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {babyPhotos.map((_, i) => (
+              {carouselItems.map((item, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentPhoto(i)}
                   className={`w-2 h-2 rounded-full transition-all duration-300
-                    ${i === currentPhoto ? "bg-teal-500 w-4" : "bg-gray-300 hover:bg-gray-400"}`}
+                    ${i === currentPhoto
+                      ? (item.type === 'video' ? "bg-pink-500 w-4" : "bg-teal-500 w-4")
+                      : "bg-gray-300 hover:bg-gray-400"
+                    }`}
                 />
               ))}
             </div>
