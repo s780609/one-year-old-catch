@@ -96,6 +96,20 @@ export default function RenderSelectors({ items }) {
     }
   }, [currentPhoto]);
 
+  // 開場動畫：顯示描述和蛋糕 ICON，之後消失
+  useEffect(() => {
+    if (nameCheck) {
+      setShowIntro(false);
+      return;
+    }
+    const fadeTimer = setTimeout(() => setIntroFading(true), 2500);
+    const hideTimer = setTimeout(() => setShowIntro(false), 3500);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [nameCheck]);
+
   const familyNames = [
     "五股阿公", "五股阿嬤", "北投阿公", "北投阿嬤",
     "乾阿公", "乾阿嬤", "小榆姑姑", "小莆叔叔",
@@ -112,6 +126,21 @@ export default function RenderSelectors({ items }) {
   const [checkingVotes, setCheckingVotes] = useState(false);
   const [showAlreadyVoted, setShowAlreadyVoted] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [introFading, setIntroFading] = useState(false);
+  const [nameConfirmed, setNameConfirmed] = useState(false);
+  const nameTimerRef = useRef(null);
+
+  // 選擇名字後 2 秒顯示確認
+  useEffect(() => {
+    if (nameTimerRef.current) clearTimeout(nameTimerRef.current);
+    if (myName?.trim()) {
+      nameTimerRef.current = setTimeout(() => setNameConfirmed(true), 2000);
+    } else {
+      setNameConfirmed(false);
+    }
+    return () => { if (nameTimerRef.current) clearTimeout(nameTimerRef.current); };
+  }, [myName]);
 
   // 進入投票頁面時，檢查此投票者是否已投過票
   useEffect(() => {
@@ -394,21 +423,27 @@ export default function RenderSelectors({ items }) {
         </div>
       )}
 
-      {/* ===== 選人介面 ===== */}
-      {!nameCheck && (
-        <div className="flex flex-col items-center min-h-screen px-4 py-6">
-          {/* 標題區 */}
-          <div className="text-center mb-6">
-            <div className="text-5xl mb-3 float-animation">🎂</div>
-            <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text
-                           bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400">
+      {/* ===== 開場動畫 ===== */}
+      {!nameCheck && showIntro && (
+        <div className={`fixed inset-0 z-[100] flex items-center justify-center
+                        bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500
+                        transition-opacity duration-1000
+                        ${introFading ? "opacity-0" : "opacity-100"}`}>
+          <div className="text-center px-6 intro-content">
+            <div className="text-7xl md:text-8xl mb-6 float-animation">🎂</div>
+            <h1 className="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-lg">
               秧予抓周猜猜看
             </h1>
-            <p className="text-gray-600 mt-2 text-base md:text-lg">
-              猜猜寶寶會選什麼？每人可以投 <span className="text-teal-500 font-bold">3</span> 票
+            <p className="text-white/90 text-lg md:text-xl">
+              猜猜寶寶會選什麼？每人可以投 <span className="font-bold text-yellow-200">3</span> 票
             </p>
           </div>
+        </div>
+      )}
 
+      {/* ===== 選人介面 ===== */}
+      {!nameCheck && !showIntro && (
+        <div className="flex flex-col items-center min-h-screen px-4 py-6">
           {/* 寶寶照片/影片輪播 */}
           <div className="relative w-52 h-52 md:w-60 md:h-60 mb-6">
             {carouselItems.map((item, i) => (
@@ -457,65 +492,101 @@ export default function RenderSelectors({ items }) {
             </div>
           </div>
 
-          {/* 選人卡片 */}
-          <div className="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-5 mb-4">
-            <h2 className="text-center text-lg font-bold text-gray-700 mb-3">
-              👋 先告訴我你是誰
-            </h2>
-            <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-              {familyNames.map((name) => (
+          {/* 下方內容 */}
+          <div className="w-full flex flex-col items-center fade-in-up">
+            {/* 標題 */}
+            <div className="text-center mb-4">
+              <h1 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text
+                             bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400">
+                🎂 秧予抓周猜猜看
+              </h1>
+              <p className="text-gray-600 mt-1 text-sm md:text-base">
+                猜猜寶寶會選什麼？每人可以投 <span className="text-teal-500 font-bold">3</span> 票
+              </p>
+            </div>
+
+            {/* 選人卡片 */}
+            {!nameConfirmed ? (
+              <div className="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-5 mb-4">
+                <h2 className="text-center text-lg font-bold text-gray-700 mb-3">
+                  👋 你是秧予的 ❓
+                </h2>
+                <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+                  {familyNames.map((name) => (
+                    <button
+                      key={name}
+                      onClick={() => setMyName(name)}
+                      className={`py-2 px-1 rounded-xl text-sm font-medium transition-all
+                        ${myName === name
+                          ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white shadow-md scale-105"
+                          : "bg-white text-gray-700 border border-gray-200 hover:border-pink-300 hover:bg-pink-50"
+                        }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+
+                {/* 自行輸入 */}
+                <div className="mt-3">
+                  <input
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200
+                               focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100
+                               bg-white text-gray-700 placeholder-gray-400 text-center"
+                    placeholder="上面沒有你？請在這裡輸入名字"
+                    value={myName || ""}
+                    onChange={(e) => { setMyName(e.target.value); setNameConfirmed(false); }}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-5 mb-4 fade-in-up">
+                <div className="text-center">
+                  <div className="text-4xl mb-3">🤗</div>
+                  <h2 className="text-xl md:text-2xl font-black text-gray-700">
+                    你是秧予的 <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-orange-400">{myName}</span> 嗎？
+                  </h2>
+                </div>
+              </div>
+            )}
+
+            {/* 按鈕區 */}
+            <div className="flex flex-col items-center gap-3 w-full max-w-sm">
+              <button
+                onClick={() => {
+                  if (!myName?.trim()) {
+                    toast.error("請先選擇或輸入你的名字");
+                    return;
+                  }
+                  setNameCheck(true);
+                }}
+                disabled={!myName?.trim()}
+                className={`w-full py-3.5 rounded-xl font-bold text-lg shadow-lg transition-all
+                  ${myName?.trim()
+                    ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white hover:shadow-xl hover:scale-[1.02] pulse-gentle"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+              >
+                🗳️ 是，去投票
+              </button>
+              {nameConfirmed && (
                 <button
-                  key={name}
-                  onClick={() => setMyName(name)}
-                  className={`py-2 px-1 rounded-xl text-sm font-medium transition-all
-                    ${myName === name
-                      ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white shadow-md scale-105"
-                      : "bg-white text-gray-700 border border-gray-200 hover:border-pink-300 hover:bg-pink-50"
-                    }`}
+                  onClick={() => { setMyName(""); setNameConfirmed(false); }}
+                  className="w-full py-2.5 rounded-xl font-bold text-sm
+                             bg-white text-gray-500 border border-gray-200
+                             hover:bg-red-50 hover:text-red-500 hover:border-red-300
+                             transition-all active:scale-95"
                 >
-                  {name}
+                  😅 不是，我選錯了！
                 </button>
-              ))}
+              )}
+              <button
+                onClick={() => router.push("/result", { scroll: false })}
+                className="text-gray-500 hover:text-pink-500 transition-colors text-sm underline underline-offset-2"
+              >
+                我想先偷看結果 👀
+              </button>
             </div>
-
-            {/* 自行輸入 */}
-            <div className="mt-3">
-              <input
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200
-                           focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100
-                           bg-white text-gray-700 placeholder-gray-400 text-center"
-                placeholder="上面沒有你？請在這裡輸入名字"
-                value={myName || ""}
-                onChange={(e) => setMyName(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* 按鈕區 */}
-          <div className="flex flex-col items-center gap-3 w-full max-w-sm">
-            <button
-              onClick={() => {
-                if (!myName?.trim()) {
-                  toast.error("請先選擇或輸入你的名字");
-                  return;
-                }
-                setNameCheck(true);
-              }}
-              disabled={!myName?.trim()}
-              className={`w-full py-3.5 rounded-xl font-bold text-lg shadow-lg transition-all
-                ${myName?.trim()
-                  ? "bg-gradient-to-r from-pink-500 to-orange-400 text-white hover:shadow-xl hover:scale-[1.02] pulse-gentle"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                }`}
-            >
-              🗳️ 去投票
-            </button>
-            <button
-              onClick={() => router.push("/result", { scroll: false })}
-              className="text-gray-500 hover:text-pink-500 transition-colors text-sm underline underline-offset-2"
-            >
-              我想先偷看結果 👀
-            </button>
           </div>
         </div>
       )}
