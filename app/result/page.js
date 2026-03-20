@@ -185,7 +185,9 @@ export default function Result() {
 function PodiumCard({ rank, item, imageMap }) {
   const isFirst = rank === 1;
   const heightClass = isFirst ? "pb-6" : "pb-3";
-  const imgSize = isFirst ? "w-24 h-24 md:w-32 md:h-32" : "w-18 h-18 md:w-24 md:h-24";
+  const imgSize = isFirst
+    ? "w-[80%] max-w-32 aspect-square"
+    : "w-[70%] max-w-24 aspect-square";
   const textSize = isFirst ? "text-lg md:text-xl" : "text-sm md:text-base";
   const voteSize = isFirst ? "text-3xl md:text-4xl" : "text-xl md:text-2xl";
   const gradientClass = PODIUM_STYLE[rank - 1];
@@ -197,7 +199,7 @@ function PodiumCard({ rank, item, imageMap }) {
         {medal}
       </div>
 
-      <div className={`${imgSize} rounded-2xl overflow-hidden bg-white/10 border-2
+      <div className={`${imgSize} rounded-2xl overflow-hidden bg-white/10 border-2 relative
                        ${rank === 1 ? "border-yellow-400" : rank === 2 ? "border-gray-300" : "border-amber-600"}
                        shadow-lg mb-3 flex items-center justify-center p-1.5`}>
         {imageMap[item.name] && (
