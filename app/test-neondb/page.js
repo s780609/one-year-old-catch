@@ -42,6 +42,9 @@ export default function TestNeonDBPage() {
   const [editingRow, setEditingRow] = useState(null);
   const [editValues, setEditValues] = useState({});
 
+  // vote_items 名稱清單（chosen_items 用）
+  const [voteItemNames, setVoteItemNames] = useState([]);
+
   // ---- 訊息 ----
   const showMsg = (text, isError = false) => {
     setMessage({ text, isError });
@@ -94,6 +97,15 @@ export default function TestNeonDBPage() {
         setInsertValues(init);
       }
       if (rowData.success) setRows(rowData.data);
+
+      // chosen_items 時載入 vote_items 名稱
+      if (tableName === "chosen_items") {
+        const vRes = await fetch(`${API}?action=data&table=vote_items`);
+        const vData = await vRes.json();
+        if (vData.success) setVoteItemNames(vData.data.map((r) => r.name));
+      } else {
+        setVoteItemNames([]);
+      }
     } catch (err) {
       showMsg(err.message, true);
     } finally {
@@ -105,6 +117,7 @@ export default function TestNeonDBPage() {
   function isAutoColumn(col) {
     return (
       col.column_default?.startsWith("nextval") ||
+      col.column_default?.startsWith("now()") ||
       col.data_type === "serial" ||
       col.data_type === "bigserial"
     );
@@ -392,6 +405,16 @@ export default function TestNeonDBPage() {
             📋 資料管理
           </button>
           <button
+            onClick={() => setTab("chosen")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              tab === "chosen"
+                ? "bg-amber-600 text-white"
+                : "bg-gray-800 text-gray-400 hover:text-white"
+            }`}
+          >
+            🍼 抓周紀錄
+          </button>
+          <button
             onClick={() => setTab("create-table")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               tab === "create-table"
@@ -402,6 +425,9 @@ export default function TestNeonDBPage() {
             ➕ 建立 Table
           </button>
         </div>
+
+        {/* ==================== 抓周紀錄管理 ==================== */}
+        {tab === "chosen" && <ChosenManager showMsg={showMsg} />}
 
         {/* ==================== 建立 Table ==================== */}
         {tab === "create-table" && (
@@ -562,9 +588,47 @@ export default function TestNeonDBPage() {
                   <div className="flex flex-wrap gap-3 items-end">
                     {columns
                       .filter((c) => !isAutoColumn(c))
-                      .map((c) => (
+                      .map((c) => {
+                        const isChosenTable = selectedTable === "chosen_items";
+                        const usedOrders = isChosenTable ? rows.map((r) => r.item_order) : [];
+                        const usedNames = isChosenTable ? rows.map((r) => r.item_name) : [];
+
+                        return (
                         <div key={c.column_name}>
                           <label className="block text-xs text-gray-500 mb-1">{c.column_name}</label>
+                          {isChosenTable && c.column_name === "item_order" ? (
+                            <select
+                              value={insertValues[c.column_name] || ""}
+                              onChange={(e) =>
+                                setInsertValues({ ...insertValues, [c.column_name]: e.target.value })
+                              }
+                              className="w-40 px-2 py-1.5 bg-gray-800 border border-gray-700 rounded text-sm
+                                         focus:outline-none focus:border-blue-500"
+                            >
+                              <option value="">-- 順位 --</option>
+                              {[1, 2, 3, 4, 5]
+                                .filter((n) => !usedOrders.includes(n))
+                                .map((n) => (
+                                  <option key={n} value={n}>第 {n} 順位</option>
+                                ))}
+                            </select>
+                          ) : isChosenTable && c.column_name === "item_name" && voteItemNames.length > 0 ? (
+                            <select
+                              value={insertValues[c.column_name] || ""}
+                              onChange={(e) =>
+                                setInsertValues({ ...insertValues, [c.column_name]: e.target.value })
+                              }
+                              className="w-40 px-2 py-1.5 bg-gray-800 border border-gray-700 rounded text-sm
+                                         focus:outline-none focus:border-blue-500"
+                            >
+                              <option value="">-- 選擇物品 --</option>
+                              {voteItemNames
+                                .filter((name) => !usedNames.includes(name))
+                                .map((name) => (
+                                  <option key={name} value={name}>{name}</option>
+                                ))}
+                            </select>
+                          ) : (
                           <input
                             type="text"
                             value={insertValues[c.column_name] || ""}
@@ -575,8 +639,10 @@ export default function TestNeonDBPage() {
                             className="w-40 px-2 py-1.5 bg-gray-800 border border-gray-700 rounded text-sm
                                        focus:outline-none focus:border-blue-500"
                           />
+                          )}
                         </div>
-                      ))}
+                        );
+                      })}
                     <button
                       type="submit"
                       disabled={loading}
@@ -621,6 +687,21 @@ export default function TestNeonDBPage() {
                               {columns.map((c) => (
                                 <td key={c.column_name} className="px-4 py-2.5 whitespace-nowrap">
                                   {isEditing && !isAutoColumn(c) ? (
+                                    selectedTable === "chosen_items" && c.column_name === "item_name" && voteItemNames.length > 0 ? (
+                                      <select
+                                        value={editValues[c.column_name] ?? ""}
+                                        onChange={(e) =>
+                                          setEditValues({ ...editValues, [c.column_name]: e.target.value })
+                                        }
+                                        className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-sm
+                                                   focus:outline-none focus:border-blue-500"
+                                      >
+                                        <option value="">-- 選擇物品 --</option>
+                                        {voteItemNames.map((name) => (
+                                          <option key={name} value={name}>{name}</option>
+                                        ))}
+                                      </select>
+                                    ) : (
                                     <input
                                       type="text"
                                       value={editValues[c.column_name] ?? ""}
@@ -630,6 +711,7 @@ export default function TestNeonDBPage() {
                                       className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-sm
                                                  focus:outline-none focus:border-blue-500"
                                     />
+                                    )
                                   ) : (
                                     <span className="text-gray-300">
                                       {row[c.column_name] === null ? (
@@ -704,6 +786,184 @@ export default function TestNeonDBPage() {
             )}
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ==================== 抓周紀錄管理元件 ==================== */
+const VOTE_ITEMS = [
+  "手槍", "三角尺", "黑板", "鎚子", "書",
+  "鍵盤", "阿公阿嬤的禮物", "麥克風", "算盤", "板手",
+  "場記板", "博士帽", "急救箱", "廚師帽", "樂器",
+  "飛機", "相機", "調色盤", "特斯拉", "Vtuber",
+];
+
+const ORDER_LABELS = ["第 1 個抓", "第 2 個抓", "第 3 個抓", "第 4 個抓", "第 5 個抓"];
+const ORDER_EMOJI = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"];
+
+function ChosenManager({ showMsg }) {
+  const [items, setItems] = useState([null, null, null, null, null]); // index 0~4 對應 order 1~5
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(null); // 正在儲存的 order
+
+  const fetchChosen = async () => {
+    try {
+      const res = await fetch("/api/chosen");
+      const data = await res.json();
+      if (data.success) {
+        const arr = [null, null, null, null, null];
+        data.items.forEach((r) => {
+          arr[r.item_order - 1] = r.item_name;
+        });
+        setItems(arr);
+      }
+    } catch (err) {
+      showMsg(err.message, true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchChosen(); }, []);
+
+  const handleSelect = async (order, itemName) => {
+    // 清除選擇
+    if (!itemName) {
+      setSaving(order);
+      try {
+        const res = await fetch(`/api/chosen?order=${order}`, { method: "DELETE" });
+        const data = await res.json();
+        if (data.success) {
+          const updated = [...items];
+          updated[order - 1] = null;
+          setItems(updated);
+          showMsg(`✅ 已清除第 ${order} 順位`);
+        } else {
+          showMsg(data.error, true);
+        }
+      } catch (err) {
+        showMsg(err.message, true);
+      } finally {
+        setSaving(null);
+      }
+      return;
+    }
+
+    setSaving(order);
+    try {
+      const res = await fetch("/api/chosen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item_order: order, item_name: itemName }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        const updated = [...items];
+        updated[order - 1] = itemName;
+        setItems(updated);
+        showMsg(`✅ ${data.message}`);
+      } else {
+        showMsg(data.error, true);
+      }
+    } catch (err) {
+      showMsg(err.message, true);
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  const handleClearAll = async () => {
+    if (!confirm("確定要清除所有抓周紀錄嗎？")) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/chosen?order=all", { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        setItems([null, null, null, null, null]);
+        showMsg("✅ 已清除所有抓周紀錄");
+      } else {
+        showMsg(data.error, true);
+      }
+    } catch (err) {
+      showMsg(err.message, true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center py-12 text-gray-500">載入中...</div>;
+  }
+
+  // 已被選過的物品（其他順位已選的不能重複選）
+  const usedItems = items.filter(Boolean);
+
+  return (
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            🍼 寶寶即時抓周紀錄
+          </h2>
+          <p className="text-gray-400 text-sm mt-1">選擇寶寶依序抓取的物品（最多 5 個）</p>
+        </div>
+        <button
+          onClick={handleClearAll}
+          className="px-4 py-2 bg-red-900/30 text-red-400 hover:bg-red-900/60
+                     rounded-lg text-sm transition-colors"
+        >
+          全部清除
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        {ORDER_LABELS.map((label, i) => {
+          const order = i + 1;
+          const current = items[i];
+          const isSaving = saving === order;
+
+          return (
+            <div
+              key={order}
+              className={`flex items-center gap-4 p-4 rounded-xl border transition-all
+                ${current
+                  ? "bg-amber-900/20 border-amber-700/50"
+                  : "bg-gray-800/50 border-gray-700/50"
+                }`}
+            >
+              <span className="text-3xl w-10 text-center">{ORDER_EMOJI[i]}</span>
+              <div className="flex-1">
+                <p className="text-sm text-gray-400 mb-2">{label}</p>
+                <select
+                  value={current || ""}
+                  onChange={(e) => handleSelect(order, e.target.value)}
+                  disabled={isSaving}
+                  className={`w-full px-3 py-2 rounded-lg text-sm transition-colors
+                    focus:outline-none focus:border-amber-500
+                    ${current
+                      ? "bg-amber-800/30 border border-amber-600/50 text-amber-200"
+                      : "bg-gray-700 border border-gray-600 text-gray-300"
+                    }
+                    ${isSaving ? "opacity-50 cursor-wait" : ""}`}
+                >
+                  <option value="">-- 尚未選擇 --</option>
+                  {VOTE_ITEMS.map((item) => {
+                    const usedByOther = usedItems.includes(item) && item !== current;
+                    return (
+                      <option key={item} value={item} disabled={usedByOther}>
+                        {item}{usedByOther ? "（已選）" : ""}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              {current && (
+                <span className="text-amber-400 font-bold text-lg hidden sm:block">{current}</span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
