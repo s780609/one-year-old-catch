@@ -38,11 +38,22 @@ export function Selector({
       {/* ── 圖片區 ── */}
       <div className="relative aspect-[3/4] overflow-hidden
                       bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50">
-        <ImageLoader
-          src={src}
-          style={{ objectFit: "contain" }}
-          sizes="(max-width: 640px) 48vw, 25vw"
-        />
+        {typeof src === "string" && src.endsWith(".mp4") ? (
+          <video
+            src={src}
+            muted
+            loop
+            autoPlay
+            playsInline
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <ImageLoader
+            src={src}
+            style={{ objectFit: "contain" }}
+            sizes="(max-width: 640px) 48vw, 25vw"
+          />
+        )}
 
         {/* 已投票：綠色半透明遮罩 */}
         {hasVoted && (

@@ -27,20 +27,18 @@ import 飛機 from "../assets/飛機.jpg";
 import 相機 from "../assets/相機.jpg";
 import 調色盤 from "../assets/調色盤.jpg";
 import 特斯拉 from "../assets/特斯拉.jpg";
-import Vtuber from "../assets/Vtuber.jpg";
-
 export const imageMap = {
   手槍, 三角尺, 黑板, 鎚子, 書,
   鍵盤, 阿公阿嬤的禮物, 麥克風, 算盤, 板手,
   場記板, 博士帽, 急救箱, 廚師帽, 樂器,
-  飛機, 相機, 調色盤, 特斯拉, Vtuber,
+  飛機, 相機, 調色盤, 特斯拉, Vtuber: "/投票物件/Vtuber.mp4",
 };
 
 export const familyNames = [
   "五股阿公", "五股阿嬤", "北投阿公", "北投阿嬤",
   "乾阿公", "乾阿嬤", "小榆姑姑", "小莆叔叔",
   "彥廷舅舅", "大姑婆", "小姑婆", "姨婆",
-  "大叔公", "大金婆", "大欣欣姑姑", "昉昉姑姑",
+  "大叔公", "大嬸婆", "大欣欣姑姑", "昉昉姑姑",
   "阿暐叔叔", "美麗姑姑", "培涓阿北", "洋溢阿北",
   "惠瑩姑姑", "玉嬋姑姑", "自強阿北", "瑩芳姑姑",
   "曉茹阿姆", "涵涵姑姑", "雯雯姑姑", "依晨姊姊",
@@ -48,11 +46,11 @@ export const familyNames = [
 ];
 
 export const carouselItems = [
-  { type: "video", src: "/秧予_吃1.mp4" },
+  { type: "video", src: "/秧予/秧予_吃1.mp4" },
   { type: "image", src: 秧予11 },
   { type: "image", src: 秧予12 },
   { type: "image", src: 秧予13 },
-  { type: "video", src: "/秧予_吃2.mp4" },
+  { type: "video", src: "/秧予/秧予_吃2.mp4" },
   { type: "image", src: 秧予1 },
   { type: "image", src: 秧予3 },
   { type: "image", src: 秧予5 },
