@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import image001 from "../assets/欣予/欣予001.jpg";
 
 const MEDAL_EMOJI = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"];
@@ -398,12 +399,26 @@ function PastEventDetail({ event }) {
 
 /* ========== 主頁面 ========== */
 export default function ChosenResult() {
+  const router = useRouter();
   const [tab, setTab] = useState("live");
   const [selectedEventId, setSelectedEventId] = useState(allEvents[0].id);
   const currentEvent = allEvents.find((e) => e.id === selectedEventId);
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8">
+      {/* 回排行榜按鈕 */}
+      <div className="w-full max-w-lg mb-2 flex justify-start">
+        <button
+          onClick={() => router.push("/result")}
+          aria-label="返回排行榜頁面"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold
+                     bg-white text-gray-600 border border-gray-200 shadow-sm
+                     hover:border-pink-300 hover:bg-pink-50 transition-all"
+        >
+          ← 回排行榜
+        </button>
+      </div>
+
       <div className="text-5xl mb-4 float-animation">🎉</div>
       <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text
                      bg-gradient-to-r from-pink-500 via-red-400 to-orange-400 mb-2">
