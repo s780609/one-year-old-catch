@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
 // OPENAI_API_KEY must be set in your environment variables
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error("Missing environment variable: OPENAI_API_KEY");
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });

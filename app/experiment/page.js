@@ -10,21 +10,27 @@ export default function ExperimentPage() {
   const [error, setError] = useState("");
   const fileInputRef = useRef(null);
 
-  function handleImageChange(e) {
-    const file = e.target.files?.[0];
+  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+  function loadImageFile(file) {
     if (!file) return;
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setError("不支援的圖片格式，請上傳 JPEG、PNG、GIF 或 WebP 圖片。");
+      return;
+    }
+    setError("");
     const reader = new FileReader();
     reader.onload = (ev) => setImage(ev.target.result);
     reader.readAsDataURL(file);
   }
 
+  function handleImageChange(e) {
+    loadImageFile(e.target.files?.[0]);
+  }
+
   function handleDrop(e) {
     e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setImage(ev.target.result);
-    reader.readAsDataURL(file);
+    loadImageFile(e.dataTransfer.files?.[0]);
   }
 
   async function handleSubmit(e) {
@@ -40,13 +46,16 @@ export default function ExperimentPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt, image }),
       });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `HTTP ${res.status}`);
+      }
       const data = await res.json();
       if (data.success) {
         setResult(data.result);
       } else {
         setError(data.error || "Unknown error");
-      }
-    } catch (err) {
+      }    } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
