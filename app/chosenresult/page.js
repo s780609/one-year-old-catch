@@ -436,7 +436,7 @@ export default function ChosenResult() {
               : "bg-white text-gray-600 border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
             }`}
         >
-          🗳️ 即時投票結果
+          秧予抓周結果
         </button>
         <button
           onClick={() => setTab("past")}
