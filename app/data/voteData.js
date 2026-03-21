@@ -27,11 +27,18 @@ import 飛機 from "../assets/飛機.jpg";
 import 相機 from "../assets/相機.jpg";
 import 調色盤 from "../assets/調色盤.jpg";
 import 特斯拉 from "../assets/特斯拉.jpg";
+import VtuberImg from "../assets/Vtuber.jpg";
 export const imageMap = {
   手槍, 三角尺, 黑板, 鎚子, 書,
   鍵盤, 阿公阿嬤的禮物, 麥克風, 算盤, 板手,
   場記板, 博士帽, 急救箱, 廚師帽, 樂器,
   飛機, 相機, 調色盤, 特斯拉, Vtuber: "/投票物件/Vtuber.mp4",
+};
+
+// AI 圖片生成用的靜態圖（Vtuber 投票用 mp4，但 AI 生成需要 jpg）
+export const aiImageMap = {
+  ...imageMap,
+  Vtuber: VtuberImg,
 };
 
 export const familyNames = [

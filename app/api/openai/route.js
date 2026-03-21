@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-// OPENAI_API_KEY must be set in your environment variables
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error("Missing environment variable: OPENAI_API_KEY");
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("Missing environment variable: OPENAI_API_KEY");
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: "https://api.x.ai/v1",
+  });
 }
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 export async function POST(request) {
   try {
+    const openai = getOpenAIClient();
     const { prompt, image } = await request.json();
 
     if (!prompt) {
@@ -37,7 +39,7 @@ export async function POST(request) {
     ];
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "grok-3-latest",
       messages,
     });
 

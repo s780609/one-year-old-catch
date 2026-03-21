@@ -1,6 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { ImageLoader } from "./ImageLoader";
+import { AiImageModal } from "./AiImageModal";
+import { buildPrompt } from "../data/itemPromptMap";
+import { aiImageMap } from "../data/voteData";
 
 const Spinner = () => (
   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -21,6 +25,7 @@ export function Selector({
   onCancel,
   isVoting,
 }) {
+  const [showAiModal, setShowAiModal] = useState(false);
   const hasVoted = votedItems.includes(title);
   const isDisabledUnvoted = disabled && !hasVoted;
 
@@ -85,7 +90,7 @@ export function Selector({
       </div>
 
       {/* ── 操作按鈕 ── */}
-      <div className="px-2.5 pb-2.5 bg-white">
+      <div className="px-2.5 pb-2.5 bg-white space-y-1.5">
         {!hasVoted ? (
           <button
             onClick={() => {
@@ -113,7 +118,30 @@ export function Selector({
             {isVoting ? <Spinner /> : <><span>↩</span> 取消</>}
           </button>
         )}
+
+        {/* AI 圖片生成按鈕 */}
+        {buildPrompt(title) && (
+          <button
+            onClick={() => setShowAiModal(true)}
+            className="w-full h-9 rounded-xl text-[12px] font-bold flex items-center justify-center gap-1
+                       bg-gradient-to-r from-purple-500 to-blue-500 text-white
+                       hover:from-purple-600 hover:to-blue-600
+                       active:scale-95 shadow-sm shadow-purple-200 transition-all"
+          >
+            ✨ AI 看未來
+          </button>
+        )}
       </div>
+
+      {/* AI 圖片 Modal */}
+      {showAiModal && (
+        <AiImageModal
+          title={title}
+          prompt={buildPrompt(title)}
+          itemImageSrc={aiImageMap[title] || src}
+          onClose={() => setShowAiModal(false)}
+        />
+      )}
     </div>
   );
 }
