@@ -162,3 +162,14 @@ body {
 .name-confirm-fill {
   animation: name-confirm-fill 1.2s ease-out forwards;
 }
+
+/* YouTube 風格的頁面載入進度條 */
+@keyframes top-loading-bar {
+  0% { width: 0%; opacity: 1; }
+  60% { width: 75%; }
+  90% { width: 90%; }
+  100% { width: 90%; opacity: 1; }
+}
+.top-loading-bar {
+  animation: top-loading-bar 2.5s ease-out forwards;
+}
