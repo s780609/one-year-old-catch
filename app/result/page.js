@@ -45,6 +45,7 @@ export default function Result() {
   const [totalVotes, setTotalVotes] = useState(0);
 
   useEffect(() => {
+    router.prefetch("/chosenresult");
     fetchData();
     const intervalId = setInterval(fetchData, 5000);
     return () => clearInterval(intervalId);
