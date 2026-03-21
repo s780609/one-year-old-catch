@@ -113,7 +113,7 @@ export default function Result() {
                              font-bold py-2 px-4 rounded-full text-sm
                              hover:shadow-lg hover:shadow-amber-500/30 hover:scale-105 transition-all"
                 >
-                  🎯 抓周結果
+                  秧予抓的結果
                 </button>
               </div>
             </div>
