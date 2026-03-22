@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 import photo1 from "../assets/秧予/秧予_IMG_0999.jpg";
 import photo2 from "../assets/秧予/秧予_IMG_1499.jpeg";
@@ -11,14 +15,63 @@ import photo8 from "../assets/秧予/秧予_IMG_2032.jpeg";
 import photo9 from "../assets/秧予/秧予_IMG_2034.jpeg";
 import photo10 from "../assets/秧予/秧予_IMG_2047.jpeg";
 
-export const metadata = {
-  title: "🎀 秧予一歲抓周派對邀請函",
-  description: "誠摯邀請您和家人一起來同樂♡ 秧予一歲生日抓周派對",
-};
-
 const photos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8, photo9, photo10];
 
 export default function InvitationPage() {
+  const [rsvpName, setRsvpName] = useState("");
+  const [rsvpCount, setRsvpCount] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [rsvpList, setRsvpList] = useState([]);
+  const [totalAttendees, setTotalAttendees] = useState(0);
+  const [loadingList, setLoadingList] = useState(true);
+
+  const fetchRsvp = useCallback(async () => {
+    try {
+      const res = await fetch("/api/rsvp");
+      const json = await res.json();
+      if (json.success) {
+        setRsvpList(json.data);
+        setTotalAttendees(json.totalAttendees);
+      }
+    } catch {
+      // 靜默處理
+    } finally {
+      setLoadingList(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRsvp();
+  }, [fetchRsvp]);
+
+  async function handleRsvpSubmit(e) {
+    e.preventDefault();
+    if (!rsvpName.trim()) {
+      toast.error("請填寫您的身份！");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/rsvp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: rsvpName.trim(), num_attendees: rsvpCount }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        toast.success("已成功回覆！期待見到您 💗");
+        setRsvpName("");
+        setRsvpCount(1);
+        await fetchRsvp();
+      } else {
+        toast.error(json.error || "回覆失敗，請稍後再試");
+      }
+    } catch {
+      toast.error("網路錯誤，請稍後再試");
+    } finally {
+      setSubmitting(false);
+    }
+  }
   return (
     <main
       style={{
@@ -27,6 +80,7 @@ export default function InvitationPage() {
         fontFamily: "'Noto Serif TC', 'serif'",
       }}
     >
+      <Toaster position="top-center" />
       {/* 裝飾花邊頂部 */}
       <div
         style={{
@@ -264,6 +318,240 @@ export default function InvitationPage() {
               愛你們的 秧予爸媽 敬上 💗
             </p>
           </div>
+        </div>
+
+        {/* RSVP 回覆表單 */}
+        <div
+          style={{
+            background: "rgba(255,255,255,0.85)",
+            backdropFilter: "blur(8px)",
+            borderRadius: "24px",
+            padding: "clamp(24px, 6vw, 40px)",
+            boxShadow: "0 8px 40px rgba(236,72,153,0.15), 0 2px 8px rgba(0,0,0,0.06)",
+            border: "1.5px solid rgba(249,168,212,0.5)",
+            marginBottom: "40px",
+          }}
+        >
+          <h2
+            style={{
+              textAlign: "center",
+              fontSize: "clamp(18px, 4.5vw, 24px)",
+              fontWeight: "900",
+              color: "#be185d",
+              letterSpacing: "0.08em",
+              marginBottom: "24px",
+            }}
+          >
+            💌 線上回覆出席
+          </h2>
+          <form onSubmit={handleRsvpSubmit}>
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "clamp(14px, 3vw, 16px)",
+                  fontWeight: "700",
+                  color: "#9d174d",
+                  marginBottom: "8px",
+                }}
+              >
+                我是小秧秧的…
+              </label>
+              <input
+                type="text"
+                value={rsvpName}
+                onChange={(e) => setRsvpName(e.target.value)}
+                placeholder="例如：姑姑、阿公阿嬤、表哥…"
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  borderRadius: "12px",
+                  border: "1.5px solid rgba(249,168,212,0.7)",
+                  fontSize: "clamp(14px, 3vw, 16px)",
+                  color: "#4a1942",
+                  background: "#fff9fb",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+            <div style={{ marginBottom: "24px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "clamp(14px, 3vw, 16px)",
+                  fontWeight: "700",
+                  color: "#9d174d",
+                  marginBottom: "8px",
+                }}
+              >
+                參加人數
+              </label>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={rsvpCount}
+                onChange={(e) => setRsvpCount(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                style={{
+                  width: "120px",
+                  padding: "12px 16px",
+                  borderRadius: "12px",
+                  border: "1.5px solid rgba(249,168,212,0.7)",
+                  fontSize: "clamp(14px, 3vw, 16px)",
+                  color: "#4a1942",
+                  background: "#fff9fb",
+                  outline: "none",
+                }}
+              />
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <button
+                type="submit"
+                disabled={submitting}
+                style={{
+                  background: submitting
+                    ? "#f9a8d4"
+                    : "linear-gradient(135deg, #ec4899, #f59e0b)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "14px",
+                  padding: "14px 36px",
+                  fontSize: "clamp(15px, 3.5vw, 18px)",
+                  fontWeight: "800",
+                  letterSpacing: "0.08em",
+                  cursor: submitting ? "not-allowed" : "pointer",
+                  boxShadow: submitting ? "none" : "0 4px 16px rgba(236,72,153,0.35)",
+                  transition: "all 0.2s",
+                }}
+              >
+                {submitting ? "送出中…" : "🎉 確認參加"}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* 參加者列表 */}
+        <div
+          style={{
+            background: "rgba(255,255,255,0.85)",
+            backdropFilter: "blur(8px)",
+            borderRadius: "24px",
+            padding: "clamp(24px, 6vw, 40px)",
+            boxShadow: "0 8px 40px rgba(236,72,153,0.15), 0 2px 8px rgba(0,0,0,0.06)",
+            border: "1.5px solid rgba(249,168,212,0.5)",
+            marginBottom: "40px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "20px",
+              flexWrap: "wrap",
+              gap: "12px",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "clamp(18px, 4.5vw, 24px)",
+                fontWeight: "900",
+                color: "#be185d",
+                letterSpacing: "0.08em",
+                margin: 0,
+              }}
+            >
+              🎊 參加者名單
+            </h2>
+            <button
+              onClick={fetchRsvp}
+              style={{
+                background: "linear-gradient(135deg, #fce7f3, #fef3c7)",
+                border: "1.5px solid rgba(249,168,212,0.6)",
+                borderRadius: "10px",
+                padding: "8px 16px",
+                fontSize: "13px",
+                fontWeight: "700",
+                color: "#9d174d",
+                cursor: "pointer",
+              }}
+            >
+              🔄 重新整理
+            </button>
+          </div>
+
+          {loadingList ? (
+            <p style={{ textAlign: "center", color: "#db2777", fontSize: "15px" }}>載入中…</p>
+          ) : (
+            <>
+              <div
+                style={{
+                  background: "linear-gradient(135deg, #fdf2f8, #fce7f3)",
+                  borderRadius: "14px",
+                  padding: "16px 20px",
+                  textAlign: "center",
+                  marginBottom: "20px",
+                  border: "1px solid rgba(249,168,212,0.4)",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "clamp(16px, 4vw, 20px)",
+                    fontWeight: "800",
+                    color: "#be185d",
+                    margin: 0,
+                  }}
+                >
+                  目前共有{" "}
+                  <span style={{ fontSize: "1.3em", color: "#db2777" }}>{totalAttendees}</span>{" "}
+                  人要參加！🎉
+                </p>
+              </div>
+
+              {rsvpList.length === 0 ? (
+                <p style={{ textAlign: "center", color: "#a855f7", fontSize: "15px" }}>
+                  還沒有人回覆，快來第一個報名吧！ 🌸
+                </p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {rsvpList.map((item) => (
+                    <div
+                      key={item.name}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "12px 18px",
+                        background: "#fff9fb",
+                        borderRadius: "12px",
+                        border: "1px solid rgba(249,168,212,0.35)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "clamp(14px, 3vw, 16px)",
+                          fontWeight: "700",
+                          color: "#7c3aed",
+                        }}
+                      >
+                        {item.name}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "clamp(13px, 2.8vw, 15px)",
+                          color: "#be185d",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {item.num_attendees} 人
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* 照片牆標題 */}
