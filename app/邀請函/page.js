@@ -264,35 +264,6 @@ export default function InvitationPage() {
             </div>
           </div>
 
-          {/* 回覆提醒 */}
-          <div
-            style={{
-              background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
-              borderRadius: "16px",
-              padding: "20px 24px",
-              marginBottom: "28px",
-              border: "1px solid rgba(74,222,128,0.35)",
-              textAlign: "center",
-            }}
-          >
-            <p
-              style={{
-                color: "#166534",
-                fontSize: "clamp(14px, 3vw, 16px)",
-                lineHeight: "2",
-                margin: 0,
-              }}
-            >
-              麻煩大家在 <strong>4月10日</strong> 前回覆是否參加，
-              <br />
-              讓我們可以準備適合的座位和小驚喜喔～ 🎁
-              <br />
-              <span style={{ color: "#15803d", fontWeight: "600" }}>
-                回覆方式：Line / 電話 / 私訊 都 OK！
-              </span>
-            </p>
-          </div>
-
           {/* 結尾祝詞 */}
           <div style={{ textAlign: "center" }}>
             <p
@@ -344,6 +315,34 @@ export default function InvitationPage() {
           >
             💌 線上回覆出席
           </h2>
+          {/* 回覆提醒 */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
+              borderRadius: "16px",
+              padding: "20px 24px",
+              marginBottom: "28px",
+              border: "1px solid rgba(74,222,128,0.35)",
+              textAlign: "center",
+            }}
+          >
+            <p
+              style={{
+                color: "#166534",
+                fontSize: "clamp(14px, 3vw, 16px)",
+                lineHeight: "2",
+                margin: 0,
+              }}
+            >
+              麻煩大家在 <strong>4月10日</strong> 前回覆是否參加，
+              <br />
+              讓我們可以準備適合的座位和小驚喜喔～ 🎁
+              <br />
+              <span style={{ color: "#15803d", fontWeight: "600" }}>
+                回覆方式：Line / 電話 / 私訊 都 OK！
+              </span>
+            </p>
+          </div>
           <form onSubmit={handleRsvpSubmit}>
             <div style={{ marginBottom: "20px" }}>
               <label
