@@ -3,10 +3,22 @@ import sql from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
+async function ensureTable() {
+  await sql(`
+    CREATE TABLE IF NOT EXISTS rsvp (
+      name          TEXT PRIMARY KEY,
+      num_attendees INTEGER NOT NULL DEFAULT 1,
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+}
+
 // POST: 新增或覆寫 RSVP 紀錄
 // body: { name, num_attendees }
 export async function POST(request) {
   try {
+    await ensureTable();
     const { name, num_attendees } = await request.json();
 
     if (!name?.trim()) {
@@ -41,6 +53,7 @@ export async function POST(request) {
 // GET: 查詢所有 RSVP 紀錄
 export async function GET() {
   try {
+    await ensureTable();
     const rows = await sql(
       `SELECT name, num_attendees, created_at, updated_at FROM rsvp ORDER BY created_at ASC`
     );
