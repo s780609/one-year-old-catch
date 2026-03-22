@@ -336,7 +336,7 @@ export default function InvitationPage() {
             >
               麻煩大家在 <strong>4月10日</strong> 前回覆是否參加，
               <br />
-              讓我們可以準備適合的座位和小驚喜喔～ 🎁
+              讓我們可以準備充足的座位喔～ 🎁
             </p>
           </div>
           <form onSubmit={handleRsvpSubmit}>
