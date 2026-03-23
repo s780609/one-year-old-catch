@@ -354,6 +354,27 @@ export default function InvitationPage() {
                   <span style={{ fontSize: "0.88em", color: "#a16207" }}>（有電梯，方便推車或長輩）</span>
                 </span>
               </div>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                <span>💌</span>
+                <span>
+                  <strong>回覆方式：</strong>
+                  <span
+                    onClick={() => {
+                      document.getElementById("rsvp-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    style={{
+                      color: "#db2777",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      textDecorationStyle: "wavy",
+                      textUnderlineOffset: "4px",
+                    }}
+                  >
+                    👉 點此線上回覆
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -386,6 +407,7 @@ export default function InvitationPage() {
 
         {/* RSVP 回覆表單 */}
         <div
+          id="rsvp-section"
           style={{
             background: "rgba(255,255,255,0.85)",
             backdropFilter: "blur(8px)",
@@ -394,6 +416,7 @@ export default function InvitationPage() {
             boxShadow: "0 8px 40px rgba(236,72,153,0.15), 0 2px 8px rgba(0,0,0,0.06)",
             border: "1.5px solid rgba(249,168,212,0.5)",
             marginBottom: "40px",
+            scrollMarginTop: "20px",
           }}
         >
           <h2
