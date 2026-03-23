@@ -289,7 +289,7 @@ export default function InvitationPage() {
           >
             這次我們準備了經典的抓周儀式
             <br />
-            也安排了好吃的點心、輕鬆遊戲和拍照打卡 📸
+            也安排了好吃的點心 🍰
             <br />
             希望能和最親愛的你們，
             <br />
