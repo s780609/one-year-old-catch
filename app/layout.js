@@ -9,7 +9,7 @@ export const metadata = {
     description: "秧予抓周猜猜看 — 猜猜寶寶會選什麼？",
     images: [
       {
-        url: "/秧予動畫風照片.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "秧予抓周猜猜看",
