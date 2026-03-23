@@ -1,21 +1,114 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 import photo1 from "../assets/秧予/秧予_IMG_0999.jpg";
 import photo2 from "../assets/秧予/秧予_IMG_1499.jpeg";
 import photo3 from "../assets/秧予/秧予_IMG_1799.jpeg";
 import photo4 from "../assets/秧予/秧予_IMG_1885.jpeg";
-import photo5 from "../assets/秧予/秧予_IMG_1928.jpeg";
-import photo6 from "../assets/秧予/秧予_IMG_1937.jpeg";
-import photo7 from "../assets/秧予/秧予_IMG_1966.jpeg";
-import photo8 from "../assets/秧予/秧予_IMG_2032.jpeg";
-import photo9 from "../assets/秧予/秧予_IMG_2034.jpeg";
-import photo10 from "../assets/秧予/秧予_IMG_2047.jpeg";
+import photo5 from "../assets/秧予/秧予_IMG_1891.jpg";
+import photo6 from "../assets/秧予/秧予_IMG_1928.jpeg";
+import photo7 from "../assets/秧予/秧予_IMG_1937.jpeg";
+import photo8 from "../assets/秧予/秧予_IMG_1966.jpeg";
+import photo9 from "../assets/秧予/秧予_IMG_2032.jpeg";
+import photo10 from "../assets/秧予/秧予_IMG_2034.jpeg";
+import photo11 from "../assets/秧予/秧予_IMG_2047.jpeg";
+import photo12 from "../assets/秧予/秧予_IMG_2287.jpeg";
 
-const photos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8, photo9, photo10];
+const photos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8, photo9, photo10, photo11, photo12];
+
+const videos = [
+  { src: "/秧予/秧予_吃1.mp4", label: "吃飯中 1" },
+  { src: "/秧予/秧予_吃2.mp4", label: "吃飯中 2" },
+  { src: "/秧予/秧予_公園1.mp4", label: "公園玩耍 1" },
+  { src: "/秧予/秧予_公園2.mp4", label: "公園玩耍 2" },
+];
+
+function VideoCarousel() {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % videos.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [currentIdx]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [currentIdx]);
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        maxWidth: "480px",
+        margin: "0 auto 28px",
+        aspectRatio: "9 / 16",
+        borderRadius: "20px",
+        overflow: "hidden",
+        boxShadow: "0 4px 20px rgba(236,72,153,0.18), 0 1px 4px rgba(0,0,0,0.08)",
+        border: "2px solid rgba(249,168,212,0.5)",
+        background: "#fce7f3",
+      }}
+    >
+      {videos.map((v, i) => (
+        <video
+          key={i}
+          ref={i === currentIdx ? videoRef : null}
+          src={v.src}
+          muted
+          loop
+          playsInline
+          autoPlay={i === currentIdx}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "opacity 0.7s ease-in-out",
+            opacity: i === currentIdx ? 1 : 0,
+          }}
+        />
+      ))}
+      {/* 指示點 */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "12px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: "6px",
+        }}
+      >
+        {videos.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentIdx(i)}
+            style={{
+              width: i === currentIdx ? "16px" : "8px",
+              height: "8px",
+              borderRadius: "4px",
+              border: "none",
+              cursor: "pointer",
+              transition: "all 0.3s",
+              background: i === currentIdx ? "#ec4899" : "rgba(255,255,255,0.6)",
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function InvitationPage() {
   const [rsvpName, setRsvpName] = useState("");
@@ -565,6 +658,9 @@ export default function InvitationPage() {
             一起看看我們可愛的小寶貝 💕
           </p>
         </div>
+
+        {/* 影片輪播 */}
+        <VideoCarousel />
 
         {/* 照片格網 */}
         <div
