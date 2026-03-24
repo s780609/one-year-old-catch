@@ -43,7 +43,6 @@ export default function TestNeonDBPage() {
   const [editValues, setEditValues] = useState({});
 
   // vote_items 名稱清單（chosen_items 用）
-  const [voteItemNames, setVoteItemNames] = useState([]);
 
   // ---- 訊息 ----
   const showMsg = (text, isError = false) => {
@@ -98,14 +97,6 @@ export default function TestNeonDBPage() {
       }
       if (rowData.success) setRows(rowData.data);
 
-      // chosen_items 時載入 vote_items 名稱
-      if (tableName === "chosen_items") {
-        const vRes = await fetch(`${API}?action=data&table=vote_items`);
-        const vData = await vRes.json();
-        if (vData.success) setVoteItemNames(vData.data.map((r) => r.name));
-      } else {
-        setVoteItemNames([]);
-      }
     } catch (err) {
       showMsg(err.message, true);
     } finally {
@@ -588,47 +579,9 @@ export default function TestNeonDBPage() {
                   <div className="flex flex-wrap gap-3 items-end">
                     {columns
                       .filter((c) => !isAutoColumn(c))
-                      .map((c) => {
-                        const isChosenTable = selectedTable === "chosen_items";
-                        const usedOrders = isChosenTable ? rows.map((r) => r.item_order) : [];
-                        const usedNames = isChosenTable ? rows.map((r) => r.item_name) : [];
-
-                        return (
+                      .map((c) => (
                         <div key={c.column_name}>
                           <label className="block text-xs text-gray-500 mb-1">{c.column_name}</label>
-                          {isChosenTable && c.column_name === "item_order" ? (
-                            <select
-                              value={insertValues[c.column_name] || ""}
-                              onChange={(e) =>
-                                setInsertValues({ ...insertValues, [c.column_name]: e.target.value })
-                              }
-                              className="w-40 px-2 py-1.5 bg-gray-800 border border-gray-700 rounded text-sm
-                                         focus:outline-none focus:border-blue-500"
-                            >
-                              <option value="">-- 順位 --</option>
-                              {[1, 2, 3, 4, 5]
-                                .filter((n) => !usedOrders.includes(n))
-                                .map((n) => (
-                                  <option key={n} value={n}>第 {n} 順位</option>
-                                ))}
-                            </select>
-                          ) : isChosenTable && c.column_name === "item_name" && voteItemNames.length > 0 ? (
-                            <select
-                              value={insertValues[c.column_name] || ""}
-                              onChange={(e) =>
-                                setInsertValues({ ...insertValues, [c.column_name]: e.target.value })
-                              }
-                              className="w-40 px-2 py-1.5 bg-gray-800 border border-gray-700 rounded text-sm
-                                         focus:outline-none focus:border-blue-500"
-                            >
-                              <option value="">-- 選擇物品 --</option>
-                              {voteItemNames
-                                .filter((name) => !usedNames.includes(name))
-                                .map((name) => (
-                                  <option key={name} value={name}>{name}</option>
-                                ))}
-                            </select>
-                          ) : (
                           <input
                             type="text"
                             value={insertValues[c.column_name] || ""}
@@ -639,10 +592,8 @@ export default function TestNeonDBPage() {
                             className="w-40 px-2 py-1.5 bg-gray-800 border border-gray-700 rounded text-sm
                                        focus:outline-none focus:border-blue-500"
                           />
-                          )}
                         </div>
-                        );
-                      })}
+                      ))}
                     <button
                       type="submit"
                       disabled={loading}
@@ -687,21 +638,6 @@ export default function TestNeonDBPage() {
                               {columns.map((c) => (
                                 <td key={c.column_name} className="px-4 py-2.5 whitespace-nowrap">
                                   {isEditing && !isAutoColumn(c) ? (
-                                    selectedTable === "chosen_items" && c.column_name === "item_name" && voteItemNames.length > 0 ? (
-                                      <select
-                                        value={editValues[c.column_name] ?? ""}
-                                        onChange={(e) =>
-                                          setEditValues({ ...editValues, [c.column_name]: e.target.value })
-                                        }
-                                        className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-sm
-                                                   focus:outline-none focus:border-blue-500"
-                                      >
-                                        <option value="">-- 選擇物品 --</option>
-                                        {voteItemNames.map((name) => (
-                                          <option key={name} value={name}>{name}</option>
-                                        ))}
-                                      </select>
-                                    ) : (
                                     <input
                                       type="text"
                                       value={editValues[c.column_name] ?? ""}
@@ -711,7 +647,6 @@ export default function TestNeonDBPage() {
                                       className="w-full px-2 py-1 bg-gray-700 border border-gray-600 rounded text-sm
                                                  focus:outline-none focus:border-blue-500"
                                     />
-                                    )
                                   ) : (
                                     <span className="text-gray-300">
                                       {row[c.column_name] === null ? (
