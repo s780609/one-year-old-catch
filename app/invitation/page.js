@@ -112,7 +112,7 @@ function VideoCarousel() {
 
 export default function InvitationPage() {
   const [rsvpName, setRsvpName] = useState("");
-  const [rsvpCount, setRsvpCount] = useState(1);
+  const [rsvpCount, setRsvpCount] = useState("1");
   const [submitting, setSubmitting] = useState(false);
   const [rsvpList, setRsvpList] = useState([]);
   const [totalAttendees, setTotalAttendees] = useState(0);
@@ -143,18 +143,23 @@ export default function InvitationPage() {
       toast.error("請填寫您的身份！");
       return;
     }
+    const count = parseInt(rsvpCount, 10);
+    if (!count || count < 1) {
+      toast.error("請填寫正確的參加人數！");
+      return;
+    }
     setSubmitting(true);
     try {
       const res = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: rsvpName.trim(), num_attendees: rsvpCount }),
+        body: JSON.stringify({ name: rsvpName.trim(), num_attendees: count }),
       });
       const json = await res.json();
       if (json.success) {
         toast.success("已成功回覆！期待見到您 💗");
         setRsvpName("");
-        setRsvpCount(1);
+        setRsvpCount("1");
         await fetchRsvp();
       } else {
         toast.error(json.error || "回覆失敗，請稍後再試");
@@ -503,7 +508,7 @@ export default function InvitationPage() {
                 min="1"
                 step="1"
                 value={rsvpCount}
-                onChange={(e) => setRsvpCount(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                onChange={(e) => setRsvpCount(e.target.value)}
                 style={{
                   width: "120px",
                   padding: "12px 16px",
