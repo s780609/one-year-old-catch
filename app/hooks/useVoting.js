@@ -26,12 +26,15 @@ export function useVoting(myName, nameCheck) {
   useEffect(() => {
     if (!nameCheck || !myName?.trim()) return;
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     const checkPreviousVotes = async () => {
       setCheckingVotes(true);
       try {
         const res = await fetch(
           `/api/vote?voter=${encodeURIComponent(myName)}&t=${Date.now()}`,
-          { cache: "no-store" }
+          { cache: "no-store", signal: controller.signal }
         );
         const data = await res.json();
         if (data.success && data.votedCount > 0) {
@@ -49,13 +52,27 @@ export function useVoting(myName, nameCheck) {
           }
         }
       } catch (error) {
-        console.error("檢查投票紀錄失敗:", error);
+        if (error.name === "AbortError") {
+          console.warn("檢查投票紀錄逾時，略過檢查直接開放投票");
+          toast("載入較慢，已跳過檢查，可直接投票", {
+            icon: "⏱️",
+            style: { borderRadius: "12px", background: "#F59E0B", color: "#fff", fontWeight: "bold" },
+          });
+        } else {
+          console.error("檢查投票紀錄失敗:", error);
+        }
       } finally {
+        clearTimeout(timeoutId);
         setCheckingVotes(false);
       }
     };
 
     checkPreviousVotes();
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [nameCheck, myName]);
 
   // 投滿 3 票後觸發倒數
