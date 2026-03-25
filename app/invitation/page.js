@@ -19,7 +19,7 @@ import photo12 from "../assets/秧予/秧予_IMG_2287.jpeg";
 
 const photos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8, photo9, photo10, photo11, photo12];
 
-const AI_STYLE_PROMPT = "cute pastel kawaii anime style, soft shading, dreamy atmosphere, detailed baby portrait";
+const AI_STYLE_PROMPT = "cute pastel kawaii anime style, soft shading, dreamy atmosphere, detailed baby portrait, preserve the exact same baby's face, eyes, expression and proportions from the reference image";
 
 function imageToBase64(src) {
   return new Promise((resolve, reject) => {
@@ -143,13 +143,12 @@ export default function InvitationPage() {
     setAiLoading((prev) => ({ ...prev, [index]: true }));
     try {
       const base64 = await imageToBase64(photos[index]);
-      const res = await fetch("/api/openai/image", {
+      const res = await fetch("/api/openai/image-edit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: AI_STYLE_PROMPT,
-          images: [base64],
-          aspectRatio: "1:1",
+          image: base64,
         }),
       });
       const json = await res.json();
