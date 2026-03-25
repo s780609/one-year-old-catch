@@ -19,6 +19,24 @@ import photo12 from "../assets/秧予/秧予_IMG_2287.jpeg";
 
 const photos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8, photo9, photo10, photo11, photo12];
 
+const AI_STYLE_PROMPT = "cute pastel kawaii anime style, soft shading, dreamy atmosphere, detailed baby portrait";
+
+function imageToBase64(src) {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      canvas.getContext("2d").drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = reject;
+    img.src = typeof src === "string" ? src : src.src;
+  });
+}
+
 const videos = [
   { src: "/秧予/秧予_吃1.mp4", label: "吃飯中 1" },
   { src: "/秧予/秧予_吃2.mp4", label: "吃飯中 2" },
@@ -117,6 +135,36 @@ export default function InvitationPage() {
   const [rsvpList, setRsvpList] = useState([]);
   const [totalAttendees, setTotalAttendees] = useState(0);
   const [loadingList, setLoadingList] = useState(true);
+  const [aiImages, setAiImages] = useState({});
+  const [aiLoading, setAiLoading] = useState({});
+
+  async function handleAiRedraw(index) {
+    if (aiLoading[index]) return;
+    setAiLoading((prev) => ({ ...prev, [index]: true }));
+    try {
+      const base64 = await imageToBase64(photos[index]);
+      const res = await fetch("/api/openai/image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: AI_STYLE_PROMPT,
+          images: [base64],
+          aspectRatio: "1:1",
+        }),
+      });
+      const json = await res.json();
+      if (json.success && json.imageUrl) {
+        setAiImages((prev) => ({ ...prev, [index]: json.imageUrl }));
+        toast.success("AI 重繪完成！");
+      } else {
+        toast.error(json.error || "AI 重繪失敗");
+      }
+    } catch {
+      toast.error("AI 重繪失敗，請稍後再試");
+    } finally {
+      setAiLoading((prev) => ({ ...prev, [index]: false }));
+    }
+  }
 
   const fetchRsvp = useCallback(async () => {
     try {
@@ -711,14 +759,70 @@ export default function InvitationPage() {
                 background: "#fce7f3",
               }}
             >
-              <Image
-                src={photo}
-                alt={`秧予照片 ${index + 1}`}
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
-                style={{ objectFit: "cover" }}
-                placeholder="blur"
-              />
+              {aiImages[index] ? (
+                <img
+                  src={aiImages[index]}
+                  alt={`秧予 AI 重繪 ${index + 1}`}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                <Image
+                  src={photo}
+                  alt={`秧予照片 ${index + 1}`}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
+                  style={{ objectFit: "cover" }}
+                  placeholder="blur"
+                />
+              )}
+              {/* AI 重繪按鈕 */}
+              <button
+                onClick={() => handleAiRedraw(index)}
+                disabled={aiLoading[index]}
+                style={{
+                  position: "absolute",
+                  bottom: "8px",
+                  right: "8px",
+                  background: aiLoading[index]
+                    ? "rgba(255,255,255,0.9)"
+                    : "linear-gradient(135deg, #a855f7, #ec4899)",
+                  color: aiLoading[index] ? "#a855f7" : "#fff",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "6px 12px",
+                  fontSize: "12px",
+                  fontWeight: "700",
+                  cursor: aiLoading[index] ? "not-allowed" : "pointer",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                  zIndex: 2,
+                  transition: "all 0.2s",
+                }}
+              >
+                {aiLoading[index] ? "生成中…" : "AI 重繪"}
+              </button>
+              {/* 還原按鈕 */}
+              {aiImages[index] && (
+                <button
+                  onClick={() => setAiImages((prev) => { const n = { ...prev }; delete n[index]; return n; })}
+                  style={{
+                    position: "absolute",
+                    bottom: "8px",
+                    left: "8px",
+                    background: "rgba(255,255,255,0.9)",
+                    color: "#be185d",
+                    border: "none",
+                    borderRadius: "10px",
+                    padding: "6px 12px",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                    zIndex: 2,
+                  }}
+                >
+                  還原
+                </button>
+              )}
             </div>
           ))}
         </div>
