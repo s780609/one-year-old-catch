@@ -21,7 +21,10 @@ export async function POST(request) {
     const body = {
       model: "grok-imagine-image",
       prompt,
-      image,
+      image: {
+        url: image,
+        type: "image_url",
+      },
       n: 1,
       response_format: "url",
     };
