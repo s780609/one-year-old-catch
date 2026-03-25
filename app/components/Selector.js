@@ -128,7 +128,7 @@ export function Selector({
                        hover:from-purple-600 hover:to-blue-600
                        active:scale-95 shadow-sm shadow-purple-200 transition-all"
           >
-            ✨ AI 看未來
+            🫧 夢想泡泡
           </button>
         )}
       </div>

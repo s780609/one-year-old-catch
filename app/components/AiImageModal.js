@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 const Spinner = () => (
@@ -10,6 +10,22 @@ const Spinner = () => (
       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
   </svg>
 );
+
+function ImageSkeleton() {
+  return (
+    <div className="w-full aspect-square rounded-2xl overflow-hidden relative bg-gradient-to-br from-pink-100 to-purple-100">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+        <div className="text-4xl animate-bounce">🫧</div>
+        <Spinner />
+        <p className="text-pink-500 font-medium animate-pulse text-sm">
+          夢想泡泡正在成形中...
+        </p>
+        <p className="text-gray-400 text-xs">通常需要 10-30 秒</p>
+      </div>
+    </div>
+  );
+}
 
 // 壓縮圖片到指定最大寬度，回傳 base64
 function compressImage(src, maxWidth = 512) {
@@ -32,36 +48,30 @@ function compressImage(src, maxWidth = 512) {
 
 export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
   const [generatedImage, setGeneratedImage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [started, setStarted] = useState(false);
+
+  // 開啟即自動生成
+  useEffect(() => {
+    handleGenerate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleGenerate() {
     setLoading(true);
     setError("");
-    setStarted(true);
 
     try {
-      // 1. 取得秧予動畫風照片並壓縮
+      // 1. 取得秧予照片並壓縮作為參考圖
       const animeBase64 = await compressImage("/秧予動畫風照片.jpg");
 
-      // 2. 取得物件圖片並壓縮
-      let itemSrc;
-      if (typeof itemImageSrc === "string") {
-        itemSrc = itemImageSrc;
-      } else if (itemImageSrc?.src) {
-        itemSrc = itemImageSrc.src;
-      }
-      const itemBase64 = itemSrc ? await compressImage(itemSrc) : null;
-
-      // 3. 呼叫 API
-      const res = await fetch("/api/openai/image", {
+      // 2. 呼叫 image-edit API（使用 xAI edits 端點，真正參考圖片）
+      const res = await fetch("/api/openai/image-edit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt,
-          images: [animeBase64, itemBase64].filter(Boolean),
-          aspectRatio: "1:1",
+          image: animeBase64,
         }),
       });
 
@@ -91,37 +101,13 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
         {/* 標題 */}
         <div className="bg-gradient-to-r from-pink-500 to-orange-400 px-6 py-4">
           <h2 className="text-white font-bold text-lg text-center">
-            ✨ 秧予的未來 — {title}
+            🫧 夢想泡泡 — {title}
           </h2>
         </div>
 
         <div className="p-6">
-          {/* 尚未開始 */}
-          {!started && (
-            <div className="text-center space-y-4">
-              <p className="text-gray-600 text-sm">
-                用 AI 生成秧予抓到「{title}」後的可愛未來想像圖！
-              </p>
-              <button
-                onClick={handleGenerate}
-                className="bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold py-3 px-8 rounded-xl
-                           hover:shadow-lg transition-all active:scale-95"
-              >
-                🎨 開始生成
-              </button>
-            </div>
-          )}
-
-          {/* Loading */}
-          {loading && (
-            <div className="flex flex-col items-center gap-4 py-8">
-              <Spinner />
-              <p className="text-pink-500 font-medium animate-pulse">
-                AI 正在繪製秧予的未來...
-              </p>
-              <p className="text-gray-400 text-xs">通常需要 10-30 秒</p>
-            </div>
-          )}
+          {/* Loading — 骨架框 */}
+          {loading && <ImageSkeleton />}
 
           {/* Error */}
           {error && !loading && (
@@ -131,9 +117,9 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
               </div>
               <button
                 onClick={handleGenerate}
-                className="w-full bg-pink-500 text-white font-bold py-3 rounded-xl hover:bg-pink-600 transition"
+                className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all active:scale-95"
               >
-                🔄 重新生成
+                🎨 重新生成
               </button>
             </div>
           )}
@@ -144,7 +130,7 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={generatedImage}
-                alt={`秧予的未來 - ${title}`}
+                alt={`夢想泡泡 - ${title}`}
                 className="w-full rounded-2xl shadow-lg"
               />
               <a
@@ -163,10 +149,9 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
         <div className="px-6 pb-6">
           <button
             onClick={onClose}
-            disabled={loading}
             className="w-full py-3 rounded-xl font-bold text-[15px] transition-all
                        bg-gradient-to-r from-emerald-500 to-teal-500 text-white
-                       hover:shadow-lg active:scale-95 disabled:opacity-50"
+                       hover:shadow-lg active:scale-95"
           >
             ↩ 回去投票
           </button>

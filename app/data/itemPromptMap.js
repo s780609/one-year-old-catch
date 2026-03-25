@@ -127,5 +127,5 @@ export function buildPrompt(itemName) {
   const info = itemFutureMap[itemName];
   if (!info) return null;
 
-  return `使用第一張上傳的照片作為1歲秧予的精確臉部、五官、表情、整體可愛外貌參考（必須高度相似，寶寶特徵保留）。使用第二張上傳的照片作為細節參考。生成一張超可愛Q版（chibi）動畫風格抓週派對照片：1歲小秧予坐在傳統紅色抓週毯中央，胖嘟嘟開心笑著用小手抓起那個${info.item}（物品完全一樣），周圍散落其他抓週物品（筆、算盤、書、玩具等）、彩色氣球、綵帶、小蛋糕、喜氣氛圍。右上方或上方有大大的夢幻粉色/藍色泡泡，泡泡裡顯示長大後的Q版秧予（約22歲，可愛自信的年輕女性，臉部與寶寶高度相似但自然長大，大眼睛甜美笑容），她穿著${info.futureOutfit}，${info.futureScene}。整體風格：日式Q版可愛動畫、明亮色彩、圓潤線條、超萌表情、溫馨喜慶、夢幻未來感，highly detailed, vibrant colors, chibi anime style, adorable, joyful atmosphere, professional digital illustration, 8k quality。`;
+  return `使用上傳的照片作為1歲秧予的精確臉部、五官、表情、整體可愛外貌參考（必須高度相似，寶寶特徵保留）。生成一張超可愛Q版（chibi）動畫風格照片：1歲小秧予穿著可愛迷你版的${info.futureOutfit}，胖嘟嘟開心笑著手拿${info.item}，周圍有彩色氣球、綵帶、小蛋糕、喜氣氛圍。右上方或上方有大大的夢幻粉色/藍色泡泡，泡泡裡顯示長大後的Q版秧予（約22歲，可愛自信的年輕女性，臉部與寶寶高度相似但自然長大，大眼睛甜美笑容），她穿著${info.futureOutfit}，${info.futureScene}。整體風格：日式Q版可愛動畫、明亮色彩、圓潤線條、超萌表情、溫馨喜慶、夢幻未來感，highly detailed, vibrant colors, chibi anime style, adorable, joyful atmosphere, professional digital illustration, 8k quality。`;
 }
