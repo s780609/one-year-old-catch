@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import photo1 from "../assets/秧予/秧予_IMG_0999.jpg";
 import photo2 from "../assets/秧予/秧予_IMG_1499.jpeg";
 import photo3 from "../assets/秧予/秧予_IMG_1799.jpeg";
-import photo4 from "../assets/秧予/秧予_IMG_1885.jpeg";
+import photo4 from "../assets/秧予/秧予_IMG_0998.jpg";
 import photo5 from "../assets/秧予/秧予_IMG_1891.jpg";
 import photo6 from "../assets/秧予/秧予_IMG_1928.jpeg";
 import photo7 from "../assets/秧予/秧予_IMG_1937.jpeg";

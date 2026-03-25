@@ -7,7 +7,7 @@ import 秧予9 from "../assets/秧予/秧予_IMG_1966.jpeg";
 import 秧予10 from "../assets/秧予/秧予_IMG_2047.jpeg";
 import 秧予11 from "../assets/秧予/秧予_IMG_0999.jpg";
 import 秧予12 from "../assets/秧予/秧予_IMG_1799.jpeg";
-import 秧予13 from "../assets/秧予/秧予_IMG_1885.jpeg";
+import 秧予13 from "../assets/秧予/秧予_IMG_0998.jpg";
 import 手槍Img from "../assets/手槍.jpg";
 import 三角尺Img from "../assets/三角尺.jpg";
 import 黑板Img from "../assets/黑板.jpg";
