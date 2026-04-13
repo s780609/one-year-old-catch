@@ -77,26 +77,23 @@ function VideoCarousel() {
         background: "#fce7f3",
       }}
     >
-      {videos.map((v, i) => (
-        <video
-          key={i}
-          ref={i === currentIdx ? videoRef : null}
-          src={v.src}
-          muted
-          loop
-          playsInline
-          autoPlay={i === currentIdx}
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            transition: "opacity 0.7s ease-in-out",
-            opacity: i === currentIdx ? 1 : 0,
-          }}
-        />
-      ))}
+      <video
+        key={currentIdx}
+        ref={videoRef}
+        src={videos[currentIdx].src}
+        muted
+        loop
+        playsInline
+        autoPlay
+        preload="auto"
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+        }}
+      />
       {/* 指示點 */}
       <div
         style={{
