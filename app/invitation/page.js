@@ -270,7 +270,34 @@ export default function InvitationPage() {
       </section>
 
       <div className="max-w-[640px] mx-auto px-4 -mt-20 pb-24 space-y-5 relative z-10">
-        {/* 活動資訊卡：手機首屏最重要 */}
+        {/* 寶貝介紹卡 */}
+        <section
+          className="rounded-3xl bg-white/90 backdrop-blur-sm p-6 text-center"
+          style={{ boxShadow: cardRing }}
+        >
+          <p className="text-neutral-600 text-sm leading-7">轉眼間，我們的小寶貝</p>
+          <p
+            className="text-3xl font-bold tracking-tight text-pink-700 my-2"
+            style={{ fontFamily: "'Noto Serif TC', serif" }}
+          >
+            許秧予 <span className="text-neutral-400 text-base font-medium">（女）</span>
+          </p>
+          <p className="text-neutral-600 text-sm leading-7">已經要滿一歲生日了！</p>
+          <p className="font-mono uppercase tracking-wider text-[11px] text-neutral-500 mt-3">
+            🎂 2025·05·07 · 乙巳年四月初十
+          </p>
+          <p className="text-neutral-700 text-[15px] leading-8 mt-5 text-pretty max-w-[32ch] mx-auto">
+            準備了經典的抓周儀式，也安排了好吃的點心，希望能和最親愛的你們一起慶祝。
+          </p>
+          <p
+            className="text-base font-semibold text-pink-700 tracking-tight mt-6 pt-5"
+            style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)", fontFamily: "'Noto Serif TC', serif" }}
+          >
+            愛你們的 · 秧予爸媽 敬上 💗
+          </p>
+        </section>
+
+        {/* 活動資訊卡 */}
         <section
           className="rounded-3xl bg-white/90 backdrop-blur-sm p-5"
           style={{ boxShadow: cardRing }}
@@ -299,33 +326,6 @@ export default function InvitationPage() {
           >
             💌 回覆出席
           </button>
-        </section>
-
-        {/* 寶貝介紹卡 */}
-        <section
-          className="rounded-3xl bg-white/80 backdrop-blur-sm p-6 text-center"
-          style={{ boxShadow: cardRing }}
-        >
-          <p className="text-neutral-600 text-sm leading-7">轉眼間，我們的小寶貝</p>
-          <p
-            className="text-3xl font-bold tracking-tight text-pink-700 my-2"
-            style={{ fontFamily: "'Noto Serif TC', serif" }}
-          >
-            許秧予 <span className="text-neutral-400 text-base font-medium">（女）</span>
-          </p>
-          <p className="text-neutral-600 text-sm leading-7">已經要滿一歲生日了！</p>
-          <p className="font-mono uppercase tracking-wider text-[11px] text-neutral-500 mt-3">
-            🎂 2025·05·07 · 乙巳年四月初十
-          </p>
-          <p className="text-neutral-700 text-[15px] leading-8 mt-5 text-pretty max-w-[32ch] mx-auto">
-            準備了經典的抓周儀式，也安排了好吃的點心，希望能和最親愛的你們一起慶祝。
-          </p>
-          <p
-            className="text-base font-semibold text-pink-700 tracking-tight mt-6 pt-5"
-            style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)", fontFamily: "'Noto Serif TC', serif" }}
-          >
-            愛你們的 · 秧予爸媽 敬上 💗
-          </p>
         </section>
 
         {/* RSVP 表單 */}
