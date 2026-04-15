@@ -18,6 +18,7 @@ import photo11 from "../assets/秧予/秧予_IMG_2047.jpeg";
 import photo12 from "../assets/秧予/秧予_IMG_2287.jpeg";
 
 const photos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8, photo9, photo10, photo11, photo12];
+const heroPhoto = photo11;
 
 const AI_STYLE_PROMPT = "cute pastel kawaii anime style, soft shading, dreamy atmosphere, detailed baby portrait, preserve the exact same baby's face, eyes, expression and proportions from the reference image";
 
@@ -64,7 +65,7 @@ function VideoCarousel() {
 
   return (
     <div
-      className="relative w-full max-w-[420px] mx-auto mb-8 rounded-2xl overflow-hidden bg-neutral-950/[0.025]"
+      className="relative w-full max-w-[420px] mx-auto rounded-3xl overflow-hidden bg-neutral-950/[0.025]"
       style={{
         aspectRatio: "9 / 16",
         boxShadow:
@@ -184,173 +185,138 @@ export default function InvitationPage() {
     }
   }
 
-  const cardRingShadow =
-    "0 0 0 1px rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04), 0 12px 32px -12px rgb(236 72 153 / 0.14)";
+  function scrollToRsvp() {
+    document.getElementById("rsvp-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  const cardRing = "0 0 0 1px rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04), 0 12px 32px -12px rgb(236 72 153 / 0.14)";
   const insetRing = "inset 0 0 0 1px rgb(3 7 18 / 0.08)";
 
   return (
     <main
       className="min-h-screen text-neutral-900"
-      style={{
-        background:
-          "linear-gradient(180deg, #fff8fb 0%, #fff0f6 35%, #fef3c7 100%)",
-      }}
+      style={{ background: "linear-gradient(180deg, #fff8fb 0%, #fff0f6 40%, #fef3c7 100%)" }}
     >
       <Toaster position="top-center" />
 
-      {/* 極簡頂部細線 */}
-      <div
-        className="w-full"
-        style={{
-          height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, rgb(236 72 153 / 0.4), rgb(251 191 36 / 0.4), rgb(236 72 153 / 0.4), transparent)",
-        }}
-      />
-
-      {/* Hero — 分欄式標題 */}
-      <section className="max-w-screen-md mx-auto px-6 pt-16 md:pt-24 pb-10">
-        <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-4">
-          邀請函 · 2026
-        </p>
-        <div className="grid md:grid-cols-5 gap-6 md:gap-10 items-start">
-          <div className="md:col-span-3">
+      {/* Hero：滿版照片 + 漸層覆蓋 + 標題 */}
+      <section className="relative w-full overflow-hidden">
+        <div className="relative w-full max-w-[640px] mx-auto aspect-[3/4] sm:aspect-[4/5]">
+          <Image
+            src={heroPhoto}
+            alt="秧予"
+            fill
+            priority
+            sizes="(max-width: 640px) 100vw, 640px"
+            placeholder="blur"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+            <p className="font-mono uppercase tracking-[0.2em] text-[10px] text-white/85">
+              Yangyu · 2026·04·18
+            </p>
+            <span className="rounded-full bg-white/15 backdrop-blur px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-white/90 ring-1 ring-white/20">
+              1st birthday
+            </span>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 px-5 pb-28">
             <h1
-              className="text-[clamp(32px,7vw,56px)] font-bold tracking-tight leading-[1.05] text-pink-700"
+              className="text-[clamp(44px,12vw,72px)] font-bold tracking-tight leading-[0.95] text-white drop-shadow-lg"
               style={{ fontFamily: "'Noto Serif TC', serif" }}
             >
               小秧秧
               <br />
               一歲囉！
             </h1>
-          </div>
-          <div className="md:col-span-2 md:pt-3">
-            <p className="text-pink-600 font-semibold text-lg tracking-tight mb-2">
-              抓周派對來啦 🎉
-            </p>
-            <p className="text-neutral-600 text-sm leading-7 text-pretty max-w-[32ch]">
-              誠摯邀請您和家人一起來同樂，一起記錄秧予人生第一個大里程碑。
+            <p className="text-white/95 text-sm mt-3 leading-7 text-pretty max-w-[26ch] drop-shadow">
+              抓周派對來啦 🎉 邀請您和家人一起同樂。
             </p>
           </div>
         </div>
       </section>
 
-      {/* canvas grid 分隔線 */}
-      <div className="w-full" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }} />
-
-      <div className="max-w-screen-md mx-auto px-6 pt-12 pb-16 space-y-12">
-        {/* 邀請卡主體 */}
+      <div className="max-w-[640px] mx-auto px-4 -mt-20 pb-24 space-y-5 relative z-10">
+        {/* 活動資訊卡：手機首屏最重要 */}
         <section
-          className="rounded-3xl bg-white/80 backdrop-blur-sm p-7 md:p-12"
-          style={{ boxShadow: cardRingShadow }}
+          className="rounded-3xl bg-white/90 backdrop-blur-sm p-5"
+          style={{ boxShadow: cardRing }}
         >
-          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-6">
-            活動介紹
+          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-4">
+            活動資訊
           </p>
+          <div className="space-y-3">
+            <InfoRow icon="📅" label="日期" value="2026 年 4 月 18 日（六）" />
+            <InfoRow icon="🕑" label="時間" value="下午 2:00 開始" />
+            <InfoRow
+              icon="📍"
+              label="地點"
+              value="新北市五股區成泰路二段 91 巷 15-3 號 14 樓"
+              hint="有電梯，方便推車或長輩"
+            />
+            <InfoRow icon="👗" label="服裝" value="輕鬆休閒即可" />
+          </div>
 
-          {/* 寶貝介紹 — sunken container */}
-          <div
-            className="rounded-2xl bg-neutral-950/[0.025] p-6 md:p-8 text-center mb-8"
-            style={{ boxShadow: "inset 0 0 0 1px rgb(236 72 153 / 0.08)" }}
+          <button
+            onClick={scrollToRsvp}
+            className="mt-6 w-full rounded-2xl py-4 text-base font-semibold text-white tracking-tight
+                       bg-gradient-to-r from-pink-500 to-amber-500 transition-all
+                       active:scale-[0.98] hover:shadow-lg"
+            style={{ boxShadow: "0 8px 20px -6px rgb(236 72 153 / 0.45)" }}
           >
-            <p className="text-neutral-600 text-sm leading-7">轉眼間，我們的小寶貝</p>
-            <p
-              className="text-3xl md:text-4xl font-bold tracking-tight text-pink-700 my-3"
-              style={{ fontFamily: "'Noto Serif TC', serif" }}
-            >
-              許秧予 <span className="text-neutral-400 text-lg font-medium">（女）</span>
-            </p>
-            <p className="text-neutral-600 text-sm leading-7">已經要滿一歲生日了！</p>
-            <p className="eyebrow text-neutral-500 mt-3 font-mono tracking-wider text-[11px]">
-              🎂 2025·05·07 · 乙巳年四月初十
-            </p>
-          </div>
+            💌 回覆出席
+          </button>
+        </section>
 
-          {/* 活動說明 */}
-          <p className="text-neutral-700 text-[15px] leading-8 text-pretty text-center max-w-[36ch] mx-auto mb-10">
-            這次我們準備了經典的抓周儀式，也安排了好吃的點心，希望能和最親愛的你們一起慶祝。
+        {/* 寶貝介紹卡 */}
+        <section
+          className="rounded-3xl bg-white/80 backdrop-blur-sm p-6 text-center"
+          style={{ boxShadow: cardRing }}
+        >
+          <p className="text-neutral-600 text-sm leading-7">轉眼間，我們的小寶貝</p>
+          <p
+            className="text-3xl font-bold tracking-tight text-pink-700 my-2"
+            style={{ fontFamily: "'Noto Serif TC', serif" }}
+          >
+            許秧予 <span className="text-neutral-400 text-base font-medium">（女）</span>
           </p>
-
-          {/* 活動詳情 — 清單樣式 */}
-          <div className="mb-8">
-            <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-4">
-              活動詳情
-            </p>
-            <dl className="divide-y divide-neutral-950/[0.06]">
-              <DetailRow icon="📅" label="日期" value="2026 年 4 月 18 日（六）" />
-              <DetailRow icon="🕑" label="時間" value="下午 2:00 開始" />
-              <DetailRow
-                icon="📍"
-                label="地點"
-                value="新北市五股區成泰路二段 91 巷 15-3 號 14 樓"
-              />
-              <DetailRow
-                icon="👗"
-                label="服裝建議"
-                value="輕鬆休閒即可"
-                hint="有電梯，方便推車或長輩"
-              />
-              <DetailRow
-                icon="💌"
-                label="回覆方式"
-                value={
-                  <button
-                    type="button"
-                    onClick={() =>
-                      document
-                        .getElementById("rsvp-section")
-                        ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                    }
-                    className="text-pink-600 font-semibold underline underline-offset-4 hover:text-pink-700 transition-colors"
-                  >
-                    👉 點此線上回覆
-                  </button>
-                }
-              />
-            </dl>
-          </div>
-
-          {/* 結尾祝詞 */}
-          <div className="text-center pt-4" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }}>
-            <p className="text-neutral-600 text-sm leading-7 mb-3 text-pretty max-w-[28ch] mx-auto pt-6">
-              謝謝你們一直以來的疼愛與陪伴，真的很期待在派對上看到你們！
-            </p>
-            <p
-              className="text-lg font-semibold text-pink-700 tracking-tight"
-              style={{ fontFamily: "'Noto Serif TC', serif" }}
-            >
-              愛你們的 · 秧予爸媽 敬上 💗
-            </p>
-          </div>
+          <p className="text-neutral-600 text-sm leading-7">已經要滿一歲生日了！</p>
+          <p className="font-mono uppercase tracking-wider text-[11px] text-neutral-500 mt-3">
+            🎂 2025·05·07 · 乙巳年四月初十
+          </p>
+          <p className="text-neutral-700 text-[15px] leading-8 mt-5 text-pretty max-w-[32ch] mx-auto">
+            準備了經典的抓周儀式，也安排了好吃的點心，希望能和最親愛的你們一起慶祝。
+          </p>
+          <p
+            className="text-base font-semibold text-pink-700 tracking-tight mt-6 pt-5"
+            style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)", fontFamily: "'Noto Serif TC', serif" }}
+          >
+            愛你們的 · 秧予爸媽 敬上 💗
+          </p>
         </section>
 
         {/* RSVP 表單 */}
         <section
           id="rsvp-section"
-          className="rounded-3xl bg-white/80 backdrop-blur-sm p-7 md:p-10 scroll-mt-6"
-          style={{ boxShadow: cardRingShadow }}
+          className="rounded-3xl bg-white/90 backdrop-blur-sm p-5 scroll-mt-6"
+          style={{ boxShadow: cardRing }}
         >
-          <div className="mb-6">
-            <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-2">
-              線上回覆出席
-            </p>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
-                回覆出席
-              </h2>
-              <span className="text-neutral-500 text-sm font-medium">讓我們準備充足座位</span>
-            </div>
-          </div>
+          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-2">
+            線上回覆
+          </p>
+          <h2 className="text-2xl font-bold tracking-tight leading-tight">
+            <span className="text-neutral-900">回覆出席 </span>
+            <span className="text-neutral-500 text-base font-medium">讓我們備好座位</span>
+          </h2>
 
-          {/* 截止提醒 */}
           <div
-            className="rounded-2xl bg-emerald-50/60 px-5 py-4 mb-8 text-sm text-emerald-800 leading-7"
-            style={{ boxShadow: "inset 0 0 0 1px rgb(16 185 129 / 0.15)" }}
+            className="rounded-2xl bg-emerald-50/70 px-4 py-3 mt-4 mb-5 text-sm text-emerald-800 leading-6"
+            style={{ boxShadow: "inset 0 0 0 1px rgb(16 185 129 / 0.18)" }}
           >
-            麻煩在 <strong className="tabular-nums">4 月 10 日</strong> 前回覆 🎁
+            請於 <strong className="tabular-nums">4 月 10 日</strong> 前回覆 🎁
           </div>
 
-          <form onSubmit={handleRsvpSubmit} className="space-y-5">
+          <form onSubmit={handleRsvpSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600 mb-2">
                 我是小秧秧的…
@@ -360,7 +326,7 @@ export default function InvitationPage() {
                 value={rsvpName}
                 onChange={(e) => setRsvpName(e.target.value)}
                 placeholder="例如：姑姑、阿公阿嬤、表哥…"
-                className="w-full px-4 py-3 rounded-xl bg-white text-neutral-900 text-sm
+                className="w-full px-4 py-3.5 rounded-2xl bg-white text-neutral-900 text-[15px]
                            outline-none transition-all
                            focus:shadow-[inset_0_0_0_1.5px_rgb(236_72_153_/_0.5)]"
                 style={{ boxShadow: insetRing }}
@@ -373,76 +339,72 @@ export default function InvitationPage() {
               </label>
               <input
                 type="number"
+                inputMode="numeric"
                 min="1"
                 step="1"
                 value={rsvpCount}
                 onChange={(e) => setRsvpCount(e.target.value)}
-                className="w-32 px-4 py-3 rounded-xl bg-white text-neutral-900 text-sm tabular-nums
+                className="w-28 px-4 py-3.5 rounded-2xl bg-white text-neutral-900 text-[15px] tabular-nums
                            outline-none transition-all
                            focus:shadow-[inset_0_0_0_1.5px_rgb(236_72_153_/_0.5)]"
                 style={{ boxShadow: insetRing }}
               />
             </div>
 
-            <div className="pt-2 text-center">
-              <button
-                type="submit"
-                disabled={submitting}
-                className={`rounded-full px-8 py-2.5 text-sm font-semibold text-white tracking-tight
-                           transition-all
-                           ${submitting ? "bg-pink-300 cursor-not-allowed" : "bg-gradient-to-r from-pink-500 to-amber-500 hover:shadow-md hover:-translate-y-0.5"}`}
-                style={
-                  submitting
-                    ? undefined
-                    : { boxShadow: "0 4px 14px -4px rgb(236 72 153 / 0.45)" }
-                }
-              >
-                {submitting ? "送出中…" : "🎉 確認參加"}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={submitting}
+              className={`w-full rounded-2xl py-4 text-base font-semibold text-white tracking-tight
+                         transition-all active:scale-[0.98]
+                         ${submitting ? "bg-pink-300 cursor-not-allowed" : "bg-gradient-to-r from-pink-500 to-amber-500 hover:shadow-lg"}`}
+              style={
+                submitting
+                  ? undefined
+                  : { boxShadow: "0 8px 20px -6px rgb(236 72 153 / 0.45)" }
+              }
+            >
+              {submitting ? "送出中…" : "🎉 確認參加"}
+            </button>
           </form>
         </section>
 
         {/* 參加者名單 */}
         <section
-          className="rounded-3xl bg-white/80 backdrop-blur-sm p-7 md:p-10"
-          style={{ boxShadow: cardRingShadow }}
+          className="rounded-3xl bg-white/90 backdrop-blur-sm p-5"
+          style={{ boxShadow: cardRing }}
         >
-          <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-2">
+              <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-1">
                 參加名單
               </p>
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
-                  🎊 已報名
-                </h2>
+              <h2 className="text-2xl font-bold tracking-tight">
+                <span className="text-neutral-900">🎊 已報名 </span>
                 <span className="text-neutral-500 text-sm font-medium">即時更新</span>
-              </div>
+              </h2>
             </div>
             <button
               onClick={fetchRsvp}
-              className="rounded-full px-4 py-1.5 text-xs font-semibold text-neutral-700 bg-white
-                         hover:bg-neutral-50 transition-all"
+              aria-label="重新整理"
+              className="shrink-0 rounded-full w-10 h-10 flex items-center justify-center text-base bg-white active:scale-95 transition-all"
               style={{ boxShadow: insetRing }}
             >
-              🔄 重新整理
+              🔄
             </button>
           </div>
 
           {loadingList ? (
-            <p className="text-center text-neutral-400 text-sm py-4">載入中…</p>
+            <p className="text-center text-neutral-400 text-sm py-6">載入中…</p>
           ) : (
             <>
-              {/* 總人數 — Stripe 風格的大數字 */}
               <div
-                className="rounded-2xl bg-neutral-950/[0.025] px-6 py-5 mb-6 flex items-baseline gap-3"
+                className="rounded-2xl bg-neutral-950/[0.025] px-5 py-4 mb-4 flex items-baseline gap-3"
                 style={{ boxShadow: "inset 0 0 0 1px rgb(3 7 18 / 0.06)" }}
               >
-                <span className="text-5xl md:text-6xl font-bold tracking-tight text-pink-700 tabular-nums">
+                <span className="text-5xl font-bold tracking-tight text-pink-700 tabular-nums leading-none">
                   {totalAttendees}
                 </span>
-                <span className="text-neutral-600 text-sm leading-7">人即將參加 🎉</span>
+                <span className="text-neutral-600 text-sm">人即將參加 🎉</span>
               </div>
 
               {rsvpList.length === 0 ? (
@@ -450,140 +412,133 @@ export default function InvitationPage() {
                   還沒有人回覆，快來第一個報名吧！ 🌸
                 </p>
               ) : (
-                <ul className="divide-y divide-neutral-950/[0.06]">
+                <div className="flex flex-wrap gap-2">
                   {rsvpList.map((item) => (
-                    <li
+                    <span
                       key={item.name}
-                      className="flex items-center justify-between py-3"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-pink-50 px-3 py-1.5 text-sm text-pink-700"
+                      style={{ boxShadow: "inset 0 0 0 1px rgb(236 72 153 / 0.18)" }}
                     >
-                      <span className="text-sm font-medium text-neutral-800 tracking-tight">
-                        {item.name}
-                      </span>
-                      <span className="text-xs font-mono tabular-nums text-neutral-500">
-                        × {item.num_attendees}
-                      </span>
-                    </li>
+                      <span className="font-medium tracking-tight">{item.name}</span>
+                      <span className="text-xs font-mono tabular-nums text-pink-500/80">× {item.num_attendees}</span>
+                    </span>
                   ))}
-                </ul>
+                </div>
               )}
             </>
           )}
         </section>
-      </div>
 
-      {/* canvas grid 分隔線 */}
-      <div className="w-full" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }} />
-
-      {/* 成長紀錄 */}
-      <section className="max-w-screen-md mx-auto px-6 pt-14 pb-16">
-        <div className="mb-8">
-          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-2">
-            成長紀錄
-          </p>
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
-              📸 秧予成長紀錄
+        {/* 成長紀錄 */}
+        <section>
+          <div className="px-1 mb-4 mt-4">
+            <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-1">
+              成長紀錄
+            </p>
+            <h2 className="text-2xl font-bold tracking-tight">
+              <span className="text-neutral-900">📸 秧予成長紀錄 </span>
+              <span className="text-neutral-500 text-sm font-medium">一起看看我們可愛的小寶貝</span>
             </h2>
-            <span className="text-neutral-500 text-sm font-medium">一起看看我們可愛的小寶貝</span>
           </div>
-        </div>
 
-        {/* 影片輪播 */}
-        <VideoCarousel />
+          <div className="mb-5">
+            <VideoCarousel />
+          </div>
 
-        {/* 照片牆 */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-          {photos.map((photo, index) => (
-            <div
-              key={index}
-              className="relative aspect-square rounded-2xl overflow-hidden bg-neutral-950/[0.025] p-1.5"
-              style={{
-                boxShadow:
-                  "0 0 0 1px rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04), 0 8px 24px -8px rgb(236 72 153 / 0.18)",
-              }}
-            >
-              <div className="relative w-full h-full rounded-xl overflow-hidden">
-                {aiImages[index] ? (
-                  <img
-                    src={aiImages[index]}
-                    alt={`秧予 AI 重繪 ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <Image
-                    src={photo}
-                    alt={`秧予照片 ${index + 1}`}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
-                    className="object-cover"
-                    placeholder="blur"
-                  />
-                )}
-              </div>
-
-              {/* AI 重繪 按鈕 */}
-              <button
-                onClick={() => handleAiRedraw(index)}
-                disabled={aiLoading[index]}
-                className={`absolute bottom-3 right-3 rounded-full px-3 py-1 text-[11px] font-semibold
-                           tracking-tight transition-all z-10
-                           ${aiLoading[index]
-                             ? "bg-white/90 text-purple-500 cursor-not-allowed"
-                             : "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-md"}`}
-                style={{ boxShadow: "0 2px 8px rgb(0 0 0 / 0.15)" }}
+          <div className="grid grid-cols-2 gap-2.5">
+            {photos.map((photo, index) => (
+              <div
+                key={index}
+                className="relative aspect-square rounded-2xl overflow-hidden bg-neutral-950/[0.025] p-1.5"
+                style={{
+                  boxShadow:
+                    "0 0 0 1px rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04), 0 8px 24px -8px rgb(236 72 153 / 0.18)",
+                }}
               >
-                {aiLoading[index] ? "生成中…" : "AI 重繪"}
-              </button>
+                <div className="relative w-full h-full rounded-xl overflow-hidden">
+                  {aiImages[index] ? (
+                    <img
+                      src={aiImages[index]}
+                      alt={`秧予 AI 重繪 ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={photo}
+                      alt={`秧予照片 ${index + 1}`}
+                      fill
+                      sizes="(max-width: 640px) 50vw, 200px"
+                      className="object-cover"
+                      placeholder="blur"
+                    />
+                  )}
+                </div>
 
-              {aiImages[index] && (
                 <button
-                  onClick={() =>
-                    setAiImages((prev) => {
-                      const n = { ...prev };
-                      delete n[index];
-                      return n;
-                    })
-                  }
-                  className="absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-semibold
-                             tracking-tight bg-white/90 text-neutral-700 hover:bg-white transition-all z-10"
+                  onClick={() => handleAiRedraw(index)}
+                  disabled={aiLoading[index]}
+                  className={`absolute bottom-3 right-3 rounded-full px-3 py-1 text-[11px] font-semibold
+                             tracking-tight transition-all z-10
+                             ${aiLoading[index]
+                               ? "bg-white/90 text-purple-500 cursor-not-allowed"
+                               : "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-md"}`}
                   style={{ boxShadow: "0 2px 8px rgb(0 0 0 / 0.15)" }}
                 >
-                  還原
+                  {aiLoading[index] ? "生成中…" : "AI 重繪"}
                 </button>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
 
-      {/* 底部極簡頁尾 */}
-      <div className="w-full" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }} />
-      <div className="max-w-screen-md mx-auto px-6 py-10 text-center">
-        <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60">
-          💗 2026·04·18 敬候光臨
-        </p>
-        <p className="text-neutral-500 text-xs mt-2">期待與您共同慶祝秧予一歲生日</p>
+                {aiImages[index] && (
+                  <button
+                    onClick={() =>
+                      setAiImages((prev) => {
+                        const n = { ...prev };
+                        delete n[index];
+                        return n;
+                      })
+                    }
+                    className="absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-semibold
+                               tracking-tight bg-white/90 text-neutral-700 hover:bg-white transition-all z-10"
+                    style={{ boxShadow: "0 2px 8px rgb(0 0 0 / 0.15)" }}
+                  >
+                    還原
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 頁尾 */}
+        <div className="pt-6 text-center">
+          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70">
+            💗 2026·04·18 敬候光臨
+          </p>
+          <p className="text-neutral-500 text-xs mt-2">期待與您共同慶祝秧予一歲生日</p>
+        </div>
       </div>
 
-      {/* 頁尾細線 */}
-      <div
-        className="w-full"
-        style={{
-          height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, rgb(236 72 153 / 0.4), rgb(251 191 36 / 0.4), rgb(236 72 153 / 0.4), transparent)",
-        }}
-      />
+      {/* 手機浮動 RSVP 按鈕 */}
+      <button
+        onClick={scrollToRsvp}
+        className="fixed bottom-5 right-5 z-40 rounded-full px-5 py-3 text-sm font-semibold text-white
+                   bg-gradient-to-r from-pink-500 to-amber-500 active:scale-95 transition-all sm:hidden"
+        style={{ boxShadow: "0 10px 30px -8px rgb(236 72 153 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.2)" }}
+      >
+        💌 回覆出席
+      </button>
     </main>
   );
 }
 
-function DetailRow({ icon, label, value, hint }) {
+function InfoRow({ icon, label, value, hint }) {
   return (
-    <div className="flex items-start gap-4 py-4">
-      <span className="text-xl shrink-0 leading-7">{icon}</span>
+    <div
+      className="flex items-start gap-3 rounded-2xl bg-neutral-950/[0.02] px-4 py-3"
+      style={{ boxShadow: "inset 0 0 0 1px rgb(3 7 18 / 0.05)" }}
+    >
+      <span className="text-lg shrink-0 leading-7">{icon}</span>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-mono uppercase tracking-wider text-neutral-500 mb-0.5">
+        <p className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 mb-0.5">
           {label}
         </p>
         <div className="text-[15px] text-neutral-800 leading-7">{value}</div>
