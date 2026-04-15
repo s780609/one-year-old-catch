@@ -12,22 +12,20 @@ const Spinner = () => (
 );
 
 function ImageSkeleton() {
+  // 外層 rounded-2xl (16px) + padding 0，內部就用 rounded-xl (12px) 作 concentric
   return (
-    <div className="w-full aspect-square rounded-2xl overflow-hidden relative bg-gradient-to-br from-pink-100 to-purple-100">
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+    <div className="w-full aspect-square rounded-xl overflow-hidden relative bg-gradient-to-br from-pink-50 to-violet-50 edge-ring">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
         <div className="text-4xl animate-bounce">🫧</div>
         <Spinner />
-        <p className="text-pink-500 font-medium animate-pulse text-sm">
-          夢想泡泡正在成形中...
-        </p>
-        <p className="text-gray-400 text-xs">通常需要 10-30 秒</p>
+        <p className="text-pink-500 font-medium text-sm">夢想泡泡正在成形中…</p>
+        <p className="eyebrow text-neutral-400">通常 10–30 秒</p>
       </div>
     </div>
   );
 }
 
-// 壓縮圖片到指定最大寬度，回傳 base64
 function compressImage(src, maxWidth = 512) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -51,7 +49,6 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // 開啟即自動生成
   useEffect(() => {
     handleGenerate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,10 +59,8 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
     setError("");
 
     try {
-      // 1. 取得秧予照片並壓縮作為參考圖
       const animeBase64 = await compressImage("/秧予動畫風照片.jpg");
 
-      // 2. 呼叫 image-edit API（使用 xAI edits 端點，真正參考圖片）
       const res = await fetch("/api/openai/image-edit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,50 +89,55 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/60 backdrop-blur-sm p-4"
       onClick={(e) => { if (e.target === e.currentTarget && !loading) onClose(); }}>
-      <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden"
-        onClick={(e) => e.stopPropagation()}>
-        {/* 標題 */}
-        <div className="bg-gradient-to-r from-pink-500 to-orange-400 px-6 py-4">
-          <h2 className="text-white font-bold text-lg text-center">
-            🫧 夢想泡泡 — {title}
+      <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden"
+           style={{ boxShadow: "0 0 0 1px rgb(3 7 18 / 0.08), 0 24px 48px -12px rgb(3 7 18 / 0.3)" }}
+           onClick={(e) => e.stopPropagation()}>
+        {/* 標題列 */}
+        <div className="px-6 py-4 flex items-baseline gap-2"
+             style={{ boxShadow: "inset 0 -1px 0 rgb(3 7 18 / 0.06)" }}>
+          <p className="eyebrow">夢想泡泡</p>
+          <h2 className="text-base font-semibold text-neutral-950 tracking-tight truncate">
+            {title}
           </h2>
         </div>
 
-        <div className="p-6">
-          {/* Loading — 骨架框 */}
+        <div className="p-5">
           {loading && <ImageSkeleton />}
 
-          {/* Error */}
           {error && !loading && (
             <div className="space-y-4">
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-600 text-sm whitespace-pre-wrap break-all">
-                ❌ {error}
+              <div className="rounded-xl p-4 text-sm text-red-700 whitespace-pre-wrap break-all"
+                   style={{ background: "rgb(254 226 226 / 0.6)", boxShadow: "inset 0 0 0 1px rgb(239 68 68 / 0.25)" }}>
+                {error}
               </div>
               <button
                 onClick={handleGenerate}
-                className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all active:scale-95"
+                className="w-full rounded-full py-2.5 text-sm font-semibold
+                           bg-gradient-to-r from-pink-500 to-orange-400 text-white
+                           hover:shadow-md transition-all active:scale-[0.98]"
+                style={{ boxShadow: "0 1px 2px rgb(236 72 153 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05)" }}
               >
-                🎨 重新生成
+                重新生成
               </button>
             </div>
           )}
 
-          {/* 生成結果 */}
           {generatedImage && !loading && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={generatedImage}
                 alt={`夢想泡泡 - ${title}`}
-                className="w-full rounded-2xl shadow-lg"
+                className="w-full rounded-xl"
+                style={{ boxShadow: "inset 0 0 0 1px rgb(3 7 18 / 0.05)" }}
               />
               <a
                 href={generatedImage}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center text-sm text-pink-500 hover:text-pink-700 underline"
+                className="block text-center text-xs font-medium text-pink-500 hover:text-pink-600 underline underline-offset-4"
               >
                 開啟原圖
               </a>
@@ -145,15 +145,15 @@ export function AiImageModal({ title, prompt, itemImageSrc, onClose }) {
           )}
         </div>
 
-        {/* 底部按鈕 */}
-        <div className="px-6 pb-6">
+        <div className="px-5 pb-5">
           <button
             onClick={onClose}
-            className="w-full py-3 rounded-xl font-bold text-[15px] transition-all
+            className="w-full rounded-full py-2.5 text-sm font-semibold
                        bg-gradient-to-r from-emerald-500 to-teal-500 text-white
-                       hover:shadow-lg active:scale-95"
+                       hover:shadow-md active:scale-[0.98] transition-all"
+            style={{ boxShadow: "0 1px 2px rgb(16 185 129 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05)" }}
           >
-            ↩ 回去投票
+            回去投票
           </button>
         </div>
       </div>

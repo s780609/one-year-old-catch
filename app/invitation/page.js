@@ -64,17 +64,11 @@ function VideoCarousel() {
 
   return (
     <div
+      className="relative w-full max-w-[420px] mx-auto mb-8 rounded-2xl overflow-hidden bg-neutral-950/[0.025]"
       style={{
-        position: "relative",
-        width: "100%",
-        maxWidth: "480px",
-        margin: "0 auto 28px",
         aspectRatio: "9 / 16",
-        borderRadius: "20px",
-        overflow: "hidden",
-        boxShadow: "0 4px 20px rgba(236,72,153,0.18), 0 1px 4px rgba(0,0,0,0.08)",
-        border: "2px solid rgba(249,168,212,0.5)",
-        background: "#fce7f3",
+        boxShadow:
+          "inset 0 0 0 1px rgb(3 7 18 / 0.06), 0 0 0 1px rgb(3 7 18 / 0.05), 0 12px 32px -12px rgb(236 72 153 / 0.18)",
       }}
     >
       <video
@@ -86,38 +80,16 @@ function VideoCarousel() {
         playsInline
         autoPlay
         preload="auto"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-        }}
+        className="absolute inset-0 w-full h-full object-cover"
       />
-      {/* 指示點 */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "12px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: "6px",
-        }}
-      >
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
         {videos.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrentIdx(i)}
-            style={{
-              width: i === currentIdx ? "16px" : "8px",
-              height: "8px",
-              borderRadius: "4px",
-              border: "none",
-              cursor: "pointer",
-              transition: "all 0.3s",
-              background: i === currentIdx ? "#ec4899" : "rgba(255,255,255,0.6)",
-            }}
+            aria-label={`影片 ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all duration-300
+              ${i === currentIdx ? "bg-pink-500 w-5" : "bg-white/70 w-1.5 hover:bg-white"}`}
           />
         ))}
       </div>
@@ -143,10 +115,7 @@ export default function InvitationPage() {
       const res = await fetch("/api/openai/image-edit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: AI_STYLE_PROMPT,
-          image: base64,
-        }),
+        body: JSON.stringify({ prompt: AI_STYLE_PROMPT, image: base64 }),
       });
       const json = await res.json();
       if (json.success && json.imageUrl) {
@@ -171,7 +140,7 @@ export default function InvitationPage() {
         setTotalAttendees(json.totalAttendees);
       }
     } catch {
-      // 靜默處理
+      /* silent */
     } finally {
       setLoadingList(false);
     }
@@ -214,307 +183,176 @@ export default function InvitationPage() {
       setSubmitting(false);
     }
   }
+
+  const cardRingShadow =
+    "0 0 0 1px rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04), 0 12px 32px -12px rgb(236 72 153 / 0.14)";
+  const insetRing = "inset 0 0 0 1px rgb(3 7 18 / 0.08)";
+
   return (
     <main
+      className="min-h-screen text-neutral-900"
       style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #fff0f6 0%, #ffe4f0 40%, #fce7f3 70%, #fff9fb 100%)",
-        fontFamily: "'Noto Serif TC', 'serif'",
+        background:
+          "linear-gradient(180deg, #fff8fb 0%, #fff0f6 35%, #fef3c7 100%)",
       }}
     >
       <Toaster position="top-center" />
-      {/* 裝飾花邊頂部 */}
+
+      {/* 極簡頂部細線 */}
       <div
+        className="w-full"
         style={{
-          background: "linear-gradient(90deg, #f9a8d4, #fbbf24, #f9a8d4)",
-          height: "6px",
+          height: "1px",
+          background:
+            "linear-gradient(90deg, transparent, rgb(236 72 153 / 0.4), rgb(251 191 36 / 0.4), rgb(236 72 153 / 0.4), transparent)",
         }}
       />
 
-      <div
-        style={{
-          maxWidth: "680px",
-          margin: "0 auto",
-          padding: "48px 24px 64px",
-        }}
-      >
-        {/* 標題區 */}
-        <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <div style={{ fontSize: "48px", marginBottom: "12px" }}>🎀👶🎂</div>
-          <h1
-            style={{
-              fontSize: "clamp(26px, 6vw, 36px)",
-              fontWeight: "900",
-              color: "#be185d",
-              letterSpacing: "0.05em",
-              lineHeight: "1.4",
-              textShadow: "0 2px 8px rgba(190,24,93,0.15)",
-              marginBottom: "8px",
-            }}
-          >
-            小秧秧一歲囉！
-          </h1>
-          <p
-            style={{
-              fontSize: "clamp(18px, 4vw, 22px)",
-              color: "#db2777",
-              fontWeight: "700",
-              letterSpacing: "0.08em",
-            }}
-          >
-            抓周派對來啦～ 🎉
-          </p>
+      {/* Hero — 分欄式標題 */}
+      <section className="max-w-screen-md mx-auto px-6 pt-16 md:pt-24 pb-10">
+        <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-4">
+          邀請函 · 2026
+        </p>
+        <div className="grid md:grid-cols-5 gap-6 md:gap-10 items-start">
+          <div className="md:col-span-3">
+            <h1
+              className="text-[clamp(32px,7vw,56px)] font-bold tracking-tight leading-[1.05] text-pink-700"
+              style={{ fontFamily: "'Noto Serif TC', serif" }}
+            >
+              小秧秧
+              <br />
+              一歲囉！
+            </h1>
+          </div>
+          <div className="md:col-span-2 md:pt-3">
+            <p className="text-pink-600 font-semibold text-lg tracking-tight mb-2">
+              抓周派對來啦 🎉
+            </p>
+            <p className="text-neutral-600 text-sm leading-7 text-pretty max-w-[32ch]">
+              誠摯邀請您和家人一起來同樂，一起記錄秧予人生第一個大里程碑。
+            </p>
+          </div>
         </div>
+      </section>
 
+      {/* canvas grid 分隔線 */}
+      <div className="w-full" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }} />
+
+      <div className="max-w-screen-md mx-auto px-6 pt-12 pb-16 space-y-12">
         {/* 邀請卡主體 */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.85)",
-            backdropFilter: "blur(8px)",
-            borderRadius: "24px",
-            padding: "clamp(24px, 6vw, 48px)",
-            boxShadow: "0 8px 40px rgba(236,72,153,0.15), 0 2px 8px rgba(0,0,0,0.06)",
-            border: "1.5px solid rgba(249,168,212,0.5)",
-            marginBottom: "40px",
-          }}
+        <section
+          className="rounded-3xl bg-white/80 backdrop-blur-sm p-7 md:p-12"
+          style={{ boxShadow: cardRingShadow }}
         >
-          {/* 開場白 */}
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: "clamp(15px, 3.5vw, 18px)",
-              color: "#6b21a8",
-              lineHeight: "1.9",
-              marginBottom: "28px",
-              fontWeight: "500",
-            }}
-          >
-            誠摯邀請您和家人一起來同樂♡
+          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-6">
+            活動介紹
           </p>
 
-          {/* 寶貝介紹 */}
+          {/* 寶貝介紹 — sunken container */}
           <div
-            style={{
-              background: "linear-gradient(135deg, #fdf2f8, #fce7f3)",
-              borderRadius: "16px",
-              padding: "20px 24px",
-              textAlign: "center",
-              marginBottom: "28px",
-              border: "1px solid rgba(249,168,212,0.4)",
-            }}
+            className="rounded-2xl bg-neutral-950/[0.025] p-6 md:p-8 text-center mb-8"
+            style={{ boxShadow: "inset 0 0 0 1px rgb(236 72 153 / 0.08)" }}
           >
-            <p style={{ color: "#9d174d", fontSize: "clamp(14px, 3vw, 16px)", lineHeight: "2", margin: 0 }}>
-              轉眼間，我們的小寶貝
-              <br />
-              <span
-                style={{
-                  fontSize: "clamp(20px, 5vw, 26px)",
-                  fontWeight: "900",
-                  color: "#be185d",
-                  display: "block",
-                  margin: "6px 0",
-                  letterSpacing: "0.1em",
-                }}
-              >
-                許秧予（女）
-              </span>
-              已經要滿一歲生日了！
-              <br />
-              <span style={{ color: "#a855f7", fontSize: "clamp(13px, 2.8vw, 15px)" }}>
-                🎂 西曆 2025年5月7日（農曆乙巳年四月初十）
-              </span>
+            <p className="text-neutral-600 text-sm leading-7">轉眼間，我們的小寶貝</p>
+            <p
+              className="text-3xl md:text-4xl font-bold tracking-tight text-pink-700 my-3"
+              style={{ fontFamily: "'Noto Serif TC', serif" }}
+            >
+              許秧予 <span className="text-neutral-400 text-lg font-medium">（女）</span>
+            </p>
+            <p className="text-neutral-600 text-sm leading-7">已經要滿一歲生日了！</p>
+            <p className="eyebrow text-neutral-500 mt-3 font-mono tracking-wider text-[11px]">
+              🎂 2025·05·07 · 乙巳年四月初十
             </p>
           </div>
 
           {/* 活動說明 */}
-          <p
-            style={{
-              color: "#7c3aed",
-              fontSize: "clamp(14px, 3vw, 16px)",
-              lineHeight: "1.9",
-              textAlign: "center",
-              marginBottom: "28px",
-            }}
-          >
-            這次我們準備了經典的抓周儀式
-            <br />
-            也安排了好吃的點心 🍰
-            <br />
-            希望能和最親愛的你們，
-            <br />
-            一起記錄秧予人生第一個大里程碑～ 🌟
+          <p className="text-neutral-700 text-[15px] leading-8 text-pretty text-center max-w-[36ch] mx-auto mb-10">
+            這次我們準備了經典的抓周儀式，也安排了好吃的點心，希望能和最親愛的你們一起慶祝。
           </p>
 
-          {/* 活動詳情 */}
-          <div
-            style={{
-              background: "linear-gradient(135deg, #fff7ed, #fef3c7)",
-              borderRadius: "16px",
-              padding: "24px",
-              marginBottom: "28px",
-              border: "1px solid rgba(251,191,36,0.4)",
-            }}
-          >
-            <h2
-              style={{
-                textAlign: "center",
-                fontSize: "clamp(16px, 3.5vw, 20px)",
-                fontWeight: "800",
-                color: "#92400e",
-                marginBottom: "16px",
-                letterSpacing: "0.1em",
-              }}
-            >
-              ✨ 活動詳情 ✨
-            </h2>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-                fontSize: "clamp(14px, 3vw, 16px)",
-                color: "#78350f",
-                lineHeight: "1.7",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <span>📅</span>
-                <span>
-                  <strong>日期：</strong>2026年4月18日（六）
-                </span>
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <span>🕑</span>
-                <span>
-                  <strong>時間：</strong>下午 2:00 開始
-                </span>
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <span>📍</span>
-                <span>
-                  <strong>地點：</strong>新北市五股區成泰路二段91巷15-3號14樓
-                </span>
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <span>👗</span>
-                <span>
-                  <strong>服裝建議：</strong>輕鬆休閒即可
-                  <br />
-                  <span style={{ fontSize: "0.88em", color: "#a16207" }}>（有電梯，方便推車或長輩）</span>
-                </span>
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <span>💌</span>
-                <span>
-                  <strong>回覆方式：</strong>
-                  <span
-                    onClick={() => {
-                      document.getElementById("rsvp-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }}
-                    style={{
-                      color: "#db2777",
-                      fontWeight: "700",
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                      textDecorationStyle: "wavy",
-                      textUnderlineOffset: "4px",
-                    }}
+          {/* 活動詳情 — 清單樣式 */}
+          <div className="mb-8">
+            <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-4">
+              活動詳情
+            </p>
+            <dl className="divide-y divide-neutral-950/[0.06]">
+              <DetailRow icon="📅" label="日期" value="2026 年 4 月 18 日（六）" />
+              <DetailRow icon="🕑" label="時間" value="下午 2:00 開始" />
+              <DetailRow
+                icon="📍"
+                label="地點"
+                value="新北市五股區成泰路二段 91 巷 15-3 號 14 樓"
+              />
+              <DetailRow
+                icon="👗"
+                label="服裝建議"
+                value="輕鬆休閒即可"
+                hint="有電梯，方便推車或長輩"
+              />
+              <DetailRow
+                icon="💌"
+                label="回覆方式"
+                value={
+                  <button
+                    type="button"
+                    onClick={() =>
+                      document
+                        .getElementById("rsvp-section")
+                        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                    }
+                    className="text-pink-600 font-semibold underline underline-offset-4 hover:text-pink-700 transition-colors"
                   >
                     👉 點此線上回覆
-                  </span>
-                </span>
-              </div>
-            </div>
+                  </button>
+                }
+              />
+            </dl>
           </div>
 
           {/* 結尾祝詞 */}
-          <div style={{ textAlign: "center" }}>
-            <p
-              style={{
-                color: "#7c3aed",
-                fontSize: "clamp(14px, 3vw, 16px)",
-                lineHeight: "2",
-                marginBottom: "12px",
-              }}
-            >
-              謝謝你們一直以來的疼愛與陪伴
-              <br />
-              真的很期待在派對上看到你們！
+          <div className="text-center pt-4" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }}>
+            <p className="text-neutral-600 text-sm leading-7 mb-3 text-pretty max-w-[28ch] mx-auto pt-6">
+              謝謝你們一直以來的疼愛與陪伴，真的很期待在派對上看到你們！
             </p>
             <p
-              style={{
-                fontSize: "clamp(16px, 4vw, 20px)",
-                fontWeight: "800",
-                color: "#be185d",
-                letterSpacing: "0.08em",
-              }}
+              className="text-lg font-semibold text-pink-700 tracking-tight"
+              style={{ fontFamily: "'Noto Serif TC', serif" }}
             >
-              愛你們的 秧予爸媽 敬上 💗
+              愛你們的 · 秧予爸媽 敬上 💗
             </p>
           </div>
-        </div>
+        </section>
 
-        {/* RSVP 回覆表單 */}
-        <div
+        {/* RSVP 表單 */}
+        <section
           id="rsvp-section"
-          style={{
-            background: "rgba(255,255,255,0.85)",
-            backdropFilter: "blur(8px)",
-            borderRadius: "24px",
-            padding: "clamp(24px, 6vw, 40px)",
-            boxShadow: "0 8px 40px rgba(236,72,153,0.15), 0 2px 8px rgba(0,0,0,0.06)",
-            border: "1.5px solid rgba(249,168,212,0.5)",
-            marginBottom: "40px",
-            scrollMarginTop: "20px",
-          }}
+          className="rounded-3xl bg-white/80 backdrop-blur-sm p-7 md:p-10 scroll-mt-6"
+          style={{ boxShadow: cardRingShadow }}
         >
-          <h2
-            style={{
-              textAlign: "center",
-              fontSize: "clamp(18px, 4.5vw, 24px)",
-              fontWeight: "900",
-              color: "#be185d",
-              letterSpacing: "0.08em",
-              marginBottom: "24px",
-            }}
-          >
-            💌 線上回覆出席
-          </h2>
-          {/* 回覆提醒 */}
-          <div
-            style={{
-              background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
-              borderRadius: "16px",
-              padding: "20px 24px",
-              marginBottom: "28px",
-              border: "1px solid rgba(74,222,128,0.35)",
-              textAlign: "center",
-            }}
-          >
-            <p
-              style={{
-                color: "#166534",
-                fontSize: "clamp(14px, 3vw, 16px)",
-                lineHeight: "2",
-                margin: 0,
-              }}
-            >
-              麻煩大家在 <strong>4月10日</strong> 前回覆是否參加，
-              <br />
-              讓我們可以準備充足的座位喔～ 🎁
+          <div className="mb-6">
+            <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-2">
+              線上回覆出席
             </p>
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
+                回覆出席
+              </h2>
+              <span className="text-neutral-500 text-sm font-medium">讓我們準備充足座位</span>
+            </div>
           </div>
-          <form onSubmit={handleRsvpSubmit}>
-            <div style={{ marginBottom: "20px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "clamp(14px, 3vw, 16px)",
-                  fontWeight: "700",
-                  color: "#9d174d",
-                  marginBottom: "8px",
-                }}
-              >
+
+          {/* 截止提醒 */}
+          <div
+            className="rounded-2xl bg-emerald-50/60 px-5 py-4 mb-8 text-sm text-emerald-800 leading-7"
+            style={{ boxShadow: "inset 0 0 0 1px rgb(16 185 129 / 0.15)" }}
+          >
+            麻煩在 <strong className="tabular-nums">4 月 10 日</strong> 前回覆 🎁
+          </div>
+
+          <form onSubmit={handleRsvpSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600 mb-2">
                 我是小秧秧的…
               </label>
               <input
@@ -522,29 +360,15 @@ export default function InvitationPage() {
                 value={rsvpName}
                 onChange={(e) => setRsvpName(e.target.value)}
                 placeholder="例如：姑姑、阿公阿嬤、表哥…"
-                style={{
-                  width: "100%",
-                  padding: "12px 16px",
-                  borderRadius: "12px",
-                  border: "1.5px solid rgba(249,168,212,0.7)",
-                  fontSize: "clamp(14px, 3vw, 16px)",
-                  color: "#4a1942",
-                  background: "#fff9fb",
-                  outline: "none",
-                  boxSizing: "border-box",
-                }}
+                className="w-full px-4 py-3 rounded-xl bg-white text-neutral-900 text-sm
+                           outline-none transition-all
+                           focus:shadow-[inset_0_0_0_1.5px_rgb(236_72_153_/_0.5)]"
+                style={{ boxShadow: insetRing }}
               />
             </div>
-            <div style={{ marginBottom: "24px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "clamp(14px, 3vw, 16px)",
-                  fontWeight: "700",
-                  color: "#9d174d",
-                  marginBottom: "8px",
-                }}
-              >
+
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-neutral-600 mb-2">
                 參加人數
               </label>
               <input
@@ -553,268 +377,176 @@ export default function InvitationPage() {
                 step="1"
                 value={rsvpCount}
                 onChange={(e) => setRsvpCount(e.target.value)}
-                style={{
-                  width: "120px",
-                  padding: "12px 16px",
-                  borderRadius: "12px",
-                  border: "1.5px solid rgba(249,168,212,0.7)",
-                  fontSize: "clamp(14px, 3vw, 16px)",
-                  color: "#4a1942",
-                  background: "#fff9fb",
-                  outline: "none",
-                }}
+                className="w-32 px-4 py-3 rounded-xl bg-white text-neutral-900 text-sm tabular-nums
+                           outline-none transition-all
+                           focus:shadow-[inset_0_0_0_1.5px_rgb(236_72_153_/_0.5)]"
+                style={{ boxShadow: insetRing }}
               />
             </div>
-            <div style={{ textAlign: "center" }}>
+
+            <div className="pt-2 text-center">
               <button
                 type="submit"
                 disabled={submitting}
-                style={{
-                  background: submitting
-                    ? "#f9a8d4"
-                    : "linear-gradient(135deg, #ec4899, #f59e0b)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "14px",
-                  padding: "14px 36px",
-                  fontSize: "clamp(15px, 3.5vw, 18px)",
-                  fontWeight: "800",
-                  letterSpacing: "0.08em",
-                  cursor: submitting ? "not-allowed" : "pointer",
-                  boxShadow: submitting ? "none" : "0 4px 16px rgba(236,72,153,0.35)",
-                  transition: "all 0.2s",
-                }}
+                className={`rounded-full px-8 py-2.5 text-sm font-semibold text-white tracking-tight
+                           transition-all
+                           ${submitting ? "bg-pink-300 cursor-not-allowed" : "bg-gradient-to-r from-pink-500 to-amber-500 hover:shadow-md hover:-translate-y-0.5"}`}
+                style={
+                  submitting
+                    ? undefined
+                    : { boxShadow: "0 4px 14px -4px rgb(236 72 153 / 0.45)" }
+                }
               >
                 {submitting ? "送出中…" : "🎉 確認參加"}
               </button>
             </div>
           </form>
-        </div>
+        </section>
 
-        {/* 參加者列表 */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.85)",
-            backdropFilter: "blur(8px)",
-            borderRadius: "24px",
-            padding: "clamp(24px, 6vw, 40px)",
-            boxShadow: "0 8px 40px rgba(236,72,153,0.15), 0 2px 8px rgba(0,0,0,0.06)",
-            border: "1.5px solid rgba(249,168,212,0.5)",
-            marginBottom: "40px",
-          }}
+        {/* 參加者名單 */}
+        <section
+          className="rounded-3xl bg-white/80 backdrop-blur-sm p-7 md:p-10"
+          style={{ boxShadow: cardRingShadow }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "20px",
-              flexWrap: "wrap",
-              gap: "12px",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "clamp(18px, 4.5vw, 24px)",
-                fontWeight: "900",
-                color: "#be185d",
-                letterSpacing: "0.08em",
-                margin: 0,
-              }}
-            >
-              🎊 參加者名單
-            </h2>
+          <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
+            <div>
+              <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-2">
+                參加名單
+              </p>
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
+                  🎊 已報名
+                </h2>
+                <span className="text-neutral-500 text-sm font-medium">即時更新</span>
+              </div>
+            </div>
             <button
               onClick={fetchRsvp}
-              style={{
-                background: "linear-gradient(135deg, #fce7f3, #fef3c7)",
-                border: "1.5px solid rgba(249,168,212,0.6)",
-                borderRadius: "10px",
-                padding: "8px 16px",
-                fontSize: "13px",
-                fontWeight: "700",
-                color: "#9d174d",
-                cursor: "pointer",
-              }}
+              className="rounded-full px-4 py-1.5 text-xs font-semibold text-neutral-700 bg-white
+                         hover:bg-neutral-50 transition-all"
+              style={{ boxShadow: insetRing }}
             >
               🔄 重新整理
             </button>
           </div>
 
           {loadingList ? (
-            <p style={{ textAlign: "center", color: "#db2777", fontSize: "15px" }}>載入中…</p>
+            <p className="text-center text-neutral-400 text-sm py-4">載入中…</p>
           ) : (
             <>
+              {/* 總人數 — Stripe 風格的大數字 */}
               <div
-                style={{
-                  background: "linear-gradient(135deg, #fdf2f8, #fce7f3)",
-                  borderRadius: "14px",
-                  padding: "16px 20px",
-                  textAlign: "center",
-                  marginBottom: "20px",
-                  border: "1px solid rgba(249,168,212,0.4)",
-                }}
+                className="rounded-2xl bg-neutral-950/[0.025] px-6 py-5 mb-6 flex items-baseline gap-3"
+                style={{ boxShadow: "inset 0 0 0 1px rgb(3 7 18 / 0.06)" }}
               >
-                <p
-                  style={{
-                    fontSize: "clamp(16px, 4vw, 20px)",
-                    fontWeight: "800",
-                    color: "#be185d",
-                    margin: 0,
-                  }}
-                >
-                  目前共有{" "}
-                  <span style={{ fontSize: "1.3em", color: "#db2777" }}>{totalAttendees}</span>{" "}
-                  人要參加！🎉
-                </p>
+                <span className="text-5xl md:text-6xl font-bold tracking-tight text-pink-700 tabular-nums">
+                  {totalAttendees}
+                </span>
+                <span className="text-neutral-600 text-sm leading-7">人即將參加 🎉</span>
               </div>
 
               {rsvpList.length === 0 ? (
-                <p style={{ textAlign: "center", color: "#a855f7", fontSize: "15px" }}>
+                <p className="text-center text-neutral-500 text-sm py-4">
                   還沒有人回覆，快來第一個報名吧！ 🌸
                 </p>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <ul className="divide-y divide-neutral-950/[0.06]">
                   {rsvpList.map((item) => (
-                    <div
+                    <li
                       key={item.name}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "12px 18px",
-                        background: "#fff9fb",
-                        borderRadius: "12px",
-                        border: "1px solid rgba(249,168,212,0.35)",
-                      }}
+                      className="flex items-center justify-between py-3"
                     >
-                      <span
-                        style={{
-                          fontSize: "clamp(14px, 3vw, 16px)",
-                          fontWeight: "700",
-                          color: "#7c3aed",
-                        }}
-                      >
+                      <span className="text-sm font-medium text-neutral-800 tracking-tight">
                         {item.name}
                       </span>
-                      <span
-                        style={{
-                          fontSize: "clamp(13px, 2.8vw, 15px)",
-                          color: "#be185d",
-                          fontWeight: "600",
-                        }}
-                      >
-                        {item.num_attendees} 人
+                      <span className="text-xs font-mono tabular-nums text-neutral-500">
+                        × {item.num_attendees}
                       </span>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               )}
             </>
           )}
-        </div>
+        </section>
+      </div>
 
-        {/* 照片牆標題 */}
-        <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <h2
-            style={{
-              fontSize: "clamp(20px, 5vw, 26px)",
-              fontWeight: "900",
-              color: "#be185d",
-              letterSpacing: "0.08em",
-            }}
-          >
-            📸 秧予成長紀錄
-          </h2>
-          <p style={{ color: "#db2777", fontSize: "14px", marginTop: "6px" }}>
-            一起看看我們可愛的小寶貝 💕
+      {/* canvas grid 分隔線 */}
+      <div className="w-full" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }} />
+
+      {/* 成長紀錄 */}
+      <section className="max-w-screen-md mx-auto px-6 pt-14 pb-16">
+        <div className="mb-8">
+          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60 mb-2">
+            成長紀錄
           </p>
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
+              📸 秧予成長紀錄
+            </h2>
+            <span className="text-neutral-500 text-sm font-medium">一起看看我們可愛的小寶貝</span>
+          </div>
         </div>
 
         {/* 影片輪播 */}
         <VideoCarousel />
 
-        {/* 照片格網 */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            gap: "16px",
-          }}
-        >
+        {/* 照片牆 */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
           {photos.map((photo, index) => (
             <div
               key={index}
+              className="relative aspect-square rounded-2xl overflow-hidden bg-neutral-950/[0.025] p-1.5"
               style={{
-                borderRadius: "16px",
-                overflow: "hidden",
-                boxShadow: "0 4px 20px rgba(236,72,153,0.18), 0 1px 4px rgba(0,0,0,0.08)",
-                border: "2px solid rgba(249,168,212,0.5)",
-                aspectRatio: "1 / 1",
-                position: "relative",
-                background: "#fce7f3",
+                boxShadow:
+                  "0 0 0 1px rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04), 0 8px 24px -8px rgb(236 72 153 / 0.18)",
               }}
             >
-              {aiImages[index] ? (
-                <img
-                  src={aiImages[index]}
-                  alt={`秧予 AI 重繪 ${index + 1}`}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              ) : (
-                <Image
-                  src={photo}
-                  alt={`秧予照片 ${index + 1}`}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
-                  style={{ objectFit: "cover" }}
-                  placeholder="blur"
-                />
-              )}
-              {/* AI 重繪按鈕 */}
+              <div className="relative w-full h-full rounded-xl overflow-hidden">
+                {aiImages[index] ? (
+                  <img
+                    src={aiImages[index]}
+                    alt={`秧予 AI 重繪 ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={photo}
+                    alt={`秧予照片 ${index + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
+                    className="object-cover"
+                    placeholder="blur"
+                  />
+                )}
+              </div>
+
+              {/* AI 重繪 按鈕 */}
               <button
                 onClick={() => handleAiRedraw(index)}
                 disabled={aiLoading[index]}
-                style={{
-                  position: "absolute",
-                  bottom: "8px",
-                  right: "8px",
-                  background: aiLoading[index]
-                    ? "rgba(255,255,255,0.9)"
-                    : "linear-gradient(135deg, #a855f7, #ec4899)",
-                  color: aiLoading[index] ? "#a855f7" : "#fff",
-                  border: "none",
-                  borderRadius: "10px",
-                  padding: "6px 12px",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  cursor: aiLoading[index] ? "not-allowed" : "pointer",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                  zIndex: 2,
-                  transition: "all 0.2s",
-                }}
+                className={`absolute bottom-3 right-3 rounded-full px-3 py-1 text-[11px] font-semibold
+                           tracking-tight transition-all z-10
+                           ${aiLoading[index]
+                             ? "bg-white/90 text-purple-500 cursor-not-allowed"
+                             : "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-md"}`}
+                style={{ boxShadow: "0 2px 8px rgb(0 0 0 / 0.15)" }}
               >
                 {aiLoading[index] ? "生成中…" : "AI 重繪"}
               </button>
-              {/* 還原按鈕 */}
+
               {aiImages[index] && (
                 <button
-                  onClick={() => setAiImages((prev) => { const n = { ...prev }; delete n[index]; return n; })}
-                  style={{
-                    position: "absolute",
-                    bottom: "8px",
-                    left: "8px",
-                    background: "rgba(255,255,255,0.9)",
-                    color: "#be185d",
-                    border: "none",
-                    borderRadius: "10px",
-                    padding: "6px 12px",
-                    fontSize: "12px",
-                    fontWeight: "700",
-                    cursor: "pointer",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                    zIndex: 2,
-                  }}
+                  onClick={() =>
+                    setAiImages((prev) => {
+                      const n = { ...prev };
+                      delete n[index];
+                      return n;
+                    })
+                  }
+                  className="absolute bottom-3 left-3 rounded-full px-3 py-1 text-[11px] font-semibold
+                             tracking-tight bg-white/90 text-neutral-700 hover:bg-white transition-all z-10"
+                  style={{ boxShadow: "0 2px 8px rgb(0 0 0 / 0.15)" }}
                 >
                   還原
                 </button>
@@ -822,30 +554,41 @@ export default function InvitationPage() {
             </div>
           ))}
         </div>
+      </section>
 
-        {/* 底部裝飾 */}
-        <div style={{ textAlign: "center", marginTop: "48px" }}>
-          <div style={{ fontSize: "32px", marginBottom: "8px" }}>🎀🌸🎂🌸🎀</div>
-          <p
-            style={{
-              color: "#db2777",
-              fontSize: "14px",
-              opacity: 0.7,
-              letterSpacing: "0.1em",
-            }}
-          >
-            期待與您共同慶祝秧予一歲生日 💗
-          </p>
-        </div>
+      {/* 底部極簡頁尾 */}
+      <div className="w-full" style={{ borderTop: "1px solid rgb(3 7 18 / 0.06)" }} />
+      <div className="max-w-screen-md mx-auto px-6 py-10 text-center">
+        <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/60">
+          💗 2026·04·18 敬候光臨
+        </p>
+        <p className="text-neutral-500 text-xs mt-2">期待與您共同慶祝秧予一歲生日</p>
       </div>
 
-      {/* 裝飾花邊底部 */}
+      {/* 頁尾細線 */}
       <div
+        className="w-full"
         style={{
-          background: "linear-gradient(90deg, #f9a8d4, #fbbf24, #f9a8d4)",
-          height: "6px",
+          height: "1px",
+          background:
+            "linear-gradient(90deg, transparent, rgb(236 72 153 / 0.4), rgb(251 191 36 / 0.4), rgb(236 72 153 / 0.4), transparent)",
         }}
       />
     </main>
+  );
+}
+
+function DetailRow({ icon, label, value, hint }) {
+  return (
+    <div className="flex items-start gap-4 py-4">
+      <span className="text-xl shrink-0 leading-7">{icon}</span>
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-mono uppercase tracking-wider text-neutral-500 mb-0.5">
+          {label}
+        </p>
+        <div className="text-[15px] text-neutral-800 leading-7">{value}</div>
+        {hint && <p className="text-xs text-neutral-400 mt-0.5">（{hint}）</p>}
+      </div>
+    </div>
   );
 }

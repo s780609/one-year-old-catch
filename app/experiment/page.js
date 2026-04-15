@@ -1,39 +1,67 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 
 const TABS = [
-  { key: "chat", label: "💬 文字對話" },
-  { key: "image", label: "🎨 圖片生成" },
-  { key: "video", label: "🎬 影片生成" },
+  { key: "chat", label: "文字對話", icon: "💬" },
+  { key: "image", label: "圖片生成", icon: "🎨" },
+  { key: "video", label: "影片生成", icon: "🎬" },
 ];
 
 const ASPECT_RATIOS = ["1:1", "16:9", "9:16", "4:3", "3:4"];
 
-const ALLOWED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/gif",
-  "image/webp",
-];
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+const INSET_RING = "inset 0 0 0 1px rgb(3 7 18 / 0.08)";
+const CARD_RING =
+  "0 0 0 1px rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04), 0 6px 18px -6px rgb(3 7 18 / 0.08)";
 
 function Spinner() {
   return (
-    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
+    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path
         className="opacity-75"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
       />
     </svg>
+  );
+}
+
+function FieldLabel({ children, hint }) {
+  return (
+    <div className="mb-2 flex items-baseline justify-between gap-2">
+      <label className="font-mono uppercase tracking-wider text-[11px] text-neutral-600">
+        {children}
+      </label>
+      {hint && <span className="text-[11px] text-neutral-400">{hint}</span>}
+    </div>
+  );
+}
+
+function SegmentedControl({ options, value, onChange }) {
+  return (
+    <div
+      className="inline-flex rounded-full bg-neutral-100 p-1"
+      style={{ boxShadow: INSET_RING }}
+    >
+      {options.map((opt) => {
+        const active = value === opt;
+        return (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => onChange(opt)}
+            className={`px-3 py-1 rounded-full text-xs font-semibold tabular-nums tracking-tight transition-all
+              ${active ? "bg-white text-neutral-900" : "text-neutral-500 hover:text-neutral-800"}`}
+            style={active ? { boxShadow: CARD_RING } : undefined}
+          >
+            {opt}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -48,11 +76,11 @@ function SingleImageUpload({ image, onImageChange, onRemove, fileInputRef }) {
 
   return (
     <div>
-      <label className="block font-semibold text-gray-700 mb-1">
-        圖片（選填）
-      </label>
+      <FieldLabel hint="選填">附加圖片</FieldLabel>
       <div
-        className="border-2 border-dashed border-pink-300 rounded-xl p-5 text-center cursor-pointer hover:bg-pink-50 transition"
+        className="rounded-2xl bg-neutral-950/[0.025] p-6 text-center cursor-pointer
+                   hover:bg-neutral-950/[0.04] transition-all"
+        style={{ boxShadow: INSET_RING }}
         onClick={() => fileInputRef.current?.click()}
         onDrop={(e) => {
           e.preventDefault();
@@ -61,23 +89,31 @@ function SingleImageUpload({ image, onImageChange, onRemove, fileInputRef }) {
         onDragOver={(e) => e.preventDefault()}
       >
         {image ? (
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={image} alt="preview" className="max-h-48 rounded-lg object-contain" />
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); onRemove(); }}
-              className="text-xs text-red-400 hover:text-red-600 underline"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove();
+              }}
+              className="text-xs text-neutral-500 hover:text-red-600 underline underline-offset-4 transition-colors"
             >
               移除圖片
             </button>
           </div>
         ) : (
-          <p className="text-gray-400 text-sm">點擊或拖曳圖片至此處上傳</p>
+          <p className="text-neutral-400 text-xs font-medium">點擊或拖曳圖片至此處上傳</p>
         )}
       </div>
-      <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
-        onChange={(e) => loadImageFile(e.target.files?.[0])} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => loadImageFile(e.target.files?.[0])}
+      />
     </div>
   );
 }
@@ -87,8 +123,7 @@ function MultiImageUpload({ images, onImagesChange, fileInputRef }) {
     Array.from(files).forEach((file) => {
       if (!ALLOWED_IMAGE_TYPES.includes(file.type)) return;
       const reader = new FileReader();
-      reader.onload = (ev) =>
-        onImagesChange((prev) => [...prev, ev.target.result]);
+      reader.onload = (ev) => onImagesChange((prev) => [...prev, ev.target.result]);
       reader.readAsDataURL(file);
     });
   }
@@ -99,11 +134,11 @@ function MultiImageUpload({ images, onImagesChange, fileInputRef }) {
 
   return (
     <div>
-      <label className="block font-semibold text-gray-700 mb-1">
-        參考圖片（選填，可多張）
-      </label>
+      <FieldLabel hint="選填，可多張">參考圖片</FieldLabel>
       <div
-        className="border-2 border-dashed border-pink-300 rounded-xl p-5 text-center cursor-pointer hover:bg-pink-50 transition"
+        className="rounded-2xl bg-neutral-950/[0.025] p-5 cursor-pointer
+                   hover:bg-neutral-950/[0.04] transition-all"
+        style={{ boxShadow: INSET_RING }}
         onClick={() => fileInputRef.current?.click()}
         onDrop={(e) => {
           e.preventDefault();
@@ -116,26 +151,49 @@ function MultiImageUpload({ images, onImagesChange, fileInputRef }) {
             {images.map((img, i) => (
               <div key={i} className="relative group">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img} alt={`ref-${i}`} className="h-28 rounded-lg object-cover" />
+                <img
+                  src={img}
+                  alt={`ref-${i}`}
+                  className="h-24 rounded-lg object-cover"
+                  style={{ boxShadow: INSET_RING }}
+                />
                 <button
                   type="button"
-                  onClick={(e) => { e.stopPropagation(); removeImage(i); }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeImage(i);
+                  }}
+                  className="absolute -top-1.5 -right-1.5 bg-neutral-900 text-white rounded-full w-5 h-5 text-[10px]
+                             flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   ✕
                 </button>
               </div>
             ))}
-            <div className="h-28 w-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-2xl">
+            <div
+              className="h-24 w-20 rounded-lg flex items-center justify-center text-neutral-400 text-xl"
+              style={{ boxShadow: "inset 0 0 0 1px rgb(3 7 18 / 0.08)" }}
+            >
               +
             </div>
           </div>
         ) : (
-          <p className="text-gray-400 text-sm">點擊或拖曳圖片至此處上傳（可多張）</p>
+          <p className="text-neutral-400 text-xs font-medium text-center py-2">
+            點擊或拖曳圖片至此處上傳（可多張）
+          </p>
         )}
       </div>
-      <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden"
-        onChange={(e) => { loadFiles(e.target.files); e.target.value = ""; }} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          loadFiles(e.target.files);
+          e.target.value = "";
+        }}
+      />
     </div>
   );
 }
@@ -150,14 +208,9 @@ export default function ExperimentPage() {
   const fileInputRef = useRef(null);
   const multiFileInputRef = useRef(null);
 
-  // Chat state
   const [chatResult, setChatResult] = useState("");
-
-  // Image gen state
   const [generatedImage, setGeneratedImage] = useState("");
   const [imageAspectRatio, setImageAspectRatio] = useState("1:1");
-
-  // Video gen state
   const [videoUrl, setVideoUrl] = useState("");
   const [videoStatus, setVideoStatus] = useState("");
   const [videoDuration, setVideoDuration] = useState(5);
@@ -168,7 +221,6 @@ export default function ExperimentPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // Poll video status
   const pollVideo = useCallback(async (requestId) => {
     try {
       const res = await fetch(`/api/openai/video/${requestId}`);
@@ -191,7 +243,6 @@ export default function ExperimentPage() {
         setError(`影片生成${data.status === "failed" ? "失敗" : "已過期"}`);
         setLoading(false);
       } else {
-        // Still pending, poll again
         setTimeout(() => pollVideo(requestId), 5000);
       }
     } catch (err) {
@@ -199,12 +250,6 @@ export default function ExperimentPage() {
       setLoading(false);
       setVideoStatus("failed");
     }
-  }, []);
-
-  // Cleanup polling on unmount
-  useEffect(() => {
-    return () => {
-          };
   }, []);
 
   async function handleSubmit(e) {
@@ -226,38 +271,28 @@ export default function ExperimentPage() {
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
         const data = await res.json();
-        if (data.success) {
-          setChatResult(data.result);
-        } else {
-          throw new Error(data.error || "Unknown error");
-        }
+        if (data.success) setChatResult(data.result);
+        else throw new Error(data.error || "Unknown error");
         setLoading(false);
       } else if (tab === "image") {
         setGeneratedImage("");
         const res = await fetch("/api/openai/image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt,
-            images,
-            aspectRatio: imageAspectRatio,
-          }),
+          body: JSON.stringify({ prompt, images, aspectRatio: imageAspectRatio }),
         });
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
         const data = await res.json();
-        if (data.success) {
-          setGeneratedImage(data.imageUrl);
-        } else {
-          throw new Error(data.error || "Unknown error");
-        }
+        if (data.success) setGeneratedImage(data.imageUrl);
+        else throw new Error(data.error || "Unknown error");
         setLoading(false);
       } else if (tab === "video") {
         setVideoUrl("");
         setVideoStatus("pending");
-                const res = await fetch("/api/openai/video", {
+        const res = await fetch("/api/openai/video", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -272,11 +307,8 @@ export default function ExperimentPage() {
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
         const data = await res.json();
-        if (data.success && data.requestId) {
-          pollVideo(data.requestId);
-        } else {
-          throw new Error(data.error || "Unknown error");
-        }
+        if (data.success && data.requestId) pollVideo(data.requestId);
+        else throw new Error(data.error || "Unknown error");
       }
     } catch (err) {
       setError(err.message);
@@ -284,51 +316,67 @@ export default function ExperimentPage() {
     }
   }
 
-  const buttonLabel =
-    tab === "chat"
-      ? "送出對話"
-      : tab === "image"
-        ? "生成圖片"
-        : "生成影片";
+  const buttonLabel = tab === "chat" ? "送出對話" : tab === "image" ? "生成圖片" : "生成影片";
 
   return (
-    <main className="min-h-screen py-10 px-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-2 text-pink-600">
-          🤖 AI 實驗頁面
-        </h1>
-        <p className="text-center text-gray-500 mb-6 text-sm">
-          支援文字對話、圖片生成、影片生成，皆可附加圖片作為參考。
-        </p>
+    <main className="min-h-screen bg-neutral-50 text-neutral-900 antialiased">
+      {/* 頂部極簡分隔線 */}
+      <div className="w-full" style={{ borderBottom: "1px solid rgb(3 7 18 / 0.06)" }} />
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 justify-center">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => {
-                setTab(t.key);
-                setError("");
-              }}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
-                tab === t.key
-                  ? "bg-pink-500 text-white shadow"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
+      <div className="max-w-screen-md mx-auto px-6 pt-14 pb-20">
+        {/* Hero — split headline */}
+        <div className="mb-10">
+          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-neutral-500 mb-3">
+            實驗沙盒
+          </p>
+          <div className="grid md:grid-cols-5 gap-4 md:gap-8 items-start">
+            <h1 className="md:col-span-3 text-3xl md:text-5xl font-bold tracking-tight text-neutral-900 leading-[1.05]">
+              🤖 AI 實驗頁面
+            </h1>
+            <p className="md:col-span-2 text-neutral-600 text-sm leading-7 text-pretty max-w-[34ch] md:pt-2">
+              文字對話、圖片生成、影片生成都在這。每個模式皆可附加圖片作為參考。
+            </p>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Prompt */}
+        {/* Tabs — segmented control */}
+        <div className="mb-8">
+          <div
+            className="inline-flex rounded-full bg-neutral-100 p-1"
+            style={{ boxShadow: INSET_RING }}
+          >
+            {TABS.map((t) => {
+              const active = tab === t.key;
+              return (
+                <button
+                  key={t.key}
+                  onClick={() => {
+                    setTab(t.key);
+                    setError("");
+                  }}
+                  className={`px-4 py-1.5 rounded-full text-sm font-semibold tracking-tight transition-all
+                    ${active ? "bg-white text-neutral-900" : "text-neutral-500 hover:text-neutral-800"}`}
+                  style={active ? { boxShadow: CARD_RING } : undefined}
+                >
+                  <span className="mr-1.5">{t.icon}</span>
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Form card */}
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-3xl bg-white p-7 md:p-8 space-y-6"
+          style={{ boxShadow: CARD_RING }}
+        >
           <div>
-            <label className="block font-semibold text-gray-700 mb-1">
-              Prompt
-            </label>
+            <FieldLabel>指令 Prompt</FieldLabel>
             <textarea
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-pink-300 min-h-[120px]"
+              className="w-full rounded-xl bg-white p-3.5 text-sm leading-7 resize-none outline-none
+                         transition-all focus:shadow-[inset_0_0_0_1.5px_rgb(236_72_153_/_0.5)] min-h-[128px]"
               placeholder={
                 tab === "chat"
                   ? "輸入你的問題或指令…"
@@ -339,10 +387,10 @@ export default function ExperimentPage() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               disabled={loading}
+              style={{ boxShadow: INSET_RING }}
             />
           </div>
 
-          {/* Image upload */}
           {tab === "chat" ? (
             <SingleImageUpload
               image={image}
@@ -358,59 +406,37 @@ export default function ExperimentPage() {
             />
           )}
 
-          {/* Image gen options */}
           {tab === "image" && (
             <div>
-              <label className="block font-semibold text-gray-700 mb-1">
-                比例
-              </label>
-              <div className="flex gap-2 flex-wrap">
-                {ASPECT_RATIOS.map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setImageAspectRatio(r)}
-                    className={`px-3 py-1 rounded-lg text-sm transition ${
-                      imageAspectRatio === r
-                        ? "bg-pink-500 text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
+              <FieldLabel>比例</FieldLabel>
+              <SegmentedControl
+                options={ASPECT_RATIOS}
+                value={imageAspectRatio}
+                onChange={setImageAspectRatio}
+              />
             </div>
           )}
 
-          {/* Video gen options */}
           {tab === "video" && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
-                  比例
-                </label>
-                <div className="flex gap-2 flex-wrap">
-                  {ASPECT_RATIOS.map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => setVideoAspectRatio(r)}
-                      className={`px-3 py-1 rounded-lg text-sm transition ${
-                        videoAspectRatio === r
-                          ? "bg-pink-500 text-white"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      {r}
-                    </button>
-                  ))}
-                </div>
+                <FieldLabel>比例</FieldLabel>
+                <SegmentedControl
+                  options={ASPECT_RATIOS}
+                  value={videoAspectRatio}
+                  onChange={setVideoAspectRatio}
+                />
               </div>
+
               <div>
-                <label className="block font-semibold text-gray-700 mb-1">
-                  影片長度（秒）：{videoDuration}s
-                </label>
+                <div className="mb-2 flex items-baseline justify-between">
+                  <label className="font-mono uppercase tracking-wider text-[11px] text-neutral-600">
+                    長度
+                  </label>
+                  <span className="font-mono tabular-nums text-xs text-neutral-900 font-semibold">
+                    {videoDuration}s
+                  </span>
+                </div>
                 <input
                   type="range"
                   min="1"
@@ -419,7 +445,7 @@ export default function ExperimentPage() {
                   onChange={(e) => setVideoDuration(Number(e.target.value))}
                   className="w-full accent-pink-500"
                 />
-                <div className="flex justify-between text-xs text-gray-400">
+                <div className="flex justify-between text-[10px] font-mono tabular-nums text-neutral-400 mt-1">
                   <span>1s</span>
                   <span>15s</span>
                 </div>
@@ -427,90 +453,123 @@ export default function ExperimentPage() {
             </div>
           )}
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading || !prompt.trim()}
-            className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-pink-200 text-white font-bold py-3 rounded-xl transition"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <Spinner />
-                {tab === "video" && videoStatus === "pending"
-                  ? "影片生成中，請稍候…"
-                  : "處理中…"}
-              </span>
-            ) : (
-              buttonLabel
-            )}
-          </button>
+          {/* Submit — pill */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading || !prompt.trim()}
+              className="w-full rounded-full px-6 py-2.5 text-sm font-semibold text-white tracking-tight
+                         transition-all disabled:cursor-not-allowed disabled:bg-neutral-300
+                         bg-neutral-900 hover:bg-neutral-800 hover:-translate-y-0.5"
+              style={
+                loading || !prompt.trim()
+                  ? undefined
+                  : { boxShadow: "0 4px 14px -4px rgb(3 7 18 / 0.35)" }
+              }
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Spinner />
+                  {tab === "video" && videoStatus === "pending"
+                    ? "影片生成中，請稍候…"
+                    : "處理中…"}
+                </span>
+              ) : (
+                buttonLabel
+              )}
+            </button>
+          </div>
         </form>
 
         {/* Error */}
         {error && (
-          <div className="mt-6 bg-red-50 border border-red-200 rounded-xl p-4 text-red-600 text-sm whitespace-pre-wrap">
-            ❌ {error}
+          <div
+            className="mt-6 rounded-2xl bg-red-50/80 px-5 py-4 text-red-700 text-sm leading-7 whitespace-pre-wrap"
+            style={{ boxShadow: "inset 0 0 0 1px rgb(239 68 68 / 0.15)" }}
+          >
+            <span className="font-mono uppercase tracking-wider text-[10px] mr-2 opacity-70">
+              錯誤
+            </span>
+            {error}
           </div>
         )}
 
         {/* Chat result */}
         {tab === "chat" && chatResult && (
-          <div className="mt-6 bg-white border border-pink-200 rounded-xl p-5 shadow-sm">
-            <h2 className="font-bold text-gray-700 mb-2">AI 回應結果</h2>
-            <p className="text-gray-800 text-sm whitespace-pre-wrap leading-relaxed">
+          <div className="mt-8 rounded-3xl bg-white p-7" style={{ boxShadow: CARD_RING }}>
+            <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-neutral-500 mb-3">
+              AI 回應
+            </p>
+            <p className="text-neutral-800 text-sm leading-7 whitespace-pre-wrap text-pretty">
               {chatResult}
             </p>
           </div>
         )}
 
-        {/* Generated image result */}
+        {/* Image result */}
         {tab === "image" && generatedImage && (
-          <div className="mt-6 bg-white border border-pink-200 rounded-xl p-5 shadow-sm">
-            <h2 className="font-bold text-gray-700 mb-2">生成的圖片</h2>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={generatedImage}
-              alt="generated"
-              className="w-full rounded-lg"
-            />
-            <a
-              href={generatedImage}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-3 text-sm text-pink-500 hover:text-pink-700 underline"
+          <div className="mt-8 rounded-3xl bg-white p-4 md:p-5" style={{ boxShadow: CARD_RING }}>
+            <div className="flex items-baseline justify-between mb-3 px-2">
+              <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-neutral-500">
+                生成圖片
+              </p>
+              <a
+                href={generatedImage}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-semibold text-neutral-600 hover:text-neutral-900 underline underline-offset-4"
+              >
+                開啟原圖 →
+              </a>
+            </div>
+            <div
+              className="rounded-2xl overflow-hidden bg-neutral-950/[0.025]"
+              style={{ boxShadow: INSET_RING }}
             >
-              開啟原圖
-            </a>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={generatedImage} alt="generated" className="w-full" />
+            </div>
           </div>
         )}
 
         {/* Video result */}
         {tab === "video" && videoUrl && (
-          <div className="mt-6 bg-white border border-pink-200 rounded-xl p-5 shadow-sm">
-            <h2 className="font-bold text-gray-700 mb-2">生成的影片</h2>
-            <video
-              src={videoUrl}
-              controls
-              autoPlay
-              loop
-              className="w-full rounded-lg"
-            />
-            <a
-              href={videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-3 text-sm text-pink-500 hover:text-pink-700 underline"
+          <div className="mt-8 rounded-3xl bg-white p-4 md:p-5" style={{ boxShadow: CARD_RING }}>
+            <div className="flex items-baseline justify-between mb-3 px-2">
+              <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-neutral-500">
+                生成影片
+              </p>
+              <a
+                href={videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-semibold text-neutral-600 hover:text-neutral-900 underline underline-offset-4"
+              >
+                下載影片 →
+              </a>
+            </div>
+            <div
+              className="rounded-2xl overflow-hidden bg-neutral-950/[0.025]"
+              style={{ boxShadow: INSET_RING }}
             >
-              下載影片
-            </a>
+              <video src={videoUrl} controls autoPlay loop className="w-full" />
+            </div>
           </div>
         )}
 
-        {/* Video pending status */}
+        {/* Video pending */}
         {tab === "video" && loading && videoStatus === "pending" && (
-          <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-yellow-700 text-sm flex items-center gap-2">
+          <div
+            className="mt-6 rounded-2xl bg-amber-50/80 px-5 py-4 text-amber-800 text-sm flex items-center gap-3"
+            style={{ boxShadow: "inset 0 0 0 1px rgb(245 158 11 / 0.2)" }}
+          >
             <Spinner />
-            影片正在生成中，每 5 秒自動檢查進度…
+            <span>
+              <span className="font-mono uppercase tracking-wider text-[10px] mr-2 opacity-70">
+                處理中
+              </span>
+              影片正在生成中，每 5 秒自動檢查進度…
+            </span>
           </div>
         )}
       </div>

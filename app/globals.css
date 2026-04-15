@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+/* ===== 字體：Inter Variable（rsms.me）+ Geist Mono + Noto Sans TC ===== */
+@import url('https://rsms.me/inter/inter.css');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 
 :root {
   --warm-cream: #FFF8F0;
@@ -13,56 +15,131 @@
   --deep-rose: #E91E63;
 }
 
-body {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-weight: 500;
-  background: linear-gradient(135deg, var(--warm-cream) 0%, var(--warm-peach) 50%, #FFDAB9 100%);
-  min-height: 100vh;
+/* Inter Variable 使用 variable-axis；關閉 cv11（tailed lowercase L）與 ss02 */
+@supports (font-variation-settings: normal) {
+  :root { --font-sans-display: 'Inter var', 'Inter', 'Noto Sans TC', sans-serif; }
+}
+:root { --font-sans-display: 'Inter', 'Noto Sans TC', sans-serif; }
+
+html {
+  font-family: var(--font-sans-display);
+  font-feature-settings: 'cv11' 0, 'ss02' 0;
 }
 
-/* 自訂卡片懸浮效果 */
+body {
+  font-family: var(--font-sans-display);
+  font-weight: 450;
+  color: #18181b; /* neutral-900 */
+  background: linear-gradient(135deg, #fff8f0 0%, #fff1ec 50%, #ffe4ec 100%);
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 設計系統 utilities ===== */
+@layer components {
+  /* Eyebrow text：Geist Mono + uppercase + tracking-wider + text-xs + gray-600 */
+  .eyebrow {
+    font-family: 'Geist Mono', 'SFMono-Regular', 'Consolas', monospace;
+    font-size: 0.75rem; /* text-xs */
+    line-height: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #4b5563; /* gray-600 */
+  }
+
+  /* Sunken container：下沉容器，低 opacity 灰底 + inset ring */
+  .sunken {
+    background-color: rgb(3 7 18 / 0.025);
+    box-shadow: inset 0 0 0 1px rgb(3 7 18 / 0.05);
+  }
+
+  /* Outer ring card：取代 border + shadow 的髒邊 */
+  .ring-card {
+    box-shadow:
+      0 0 0 1px rgb(3 7 18 / 0.08),
+      0 1px 2px rgb(3 7 18 / 0.04),
+      0 8px 24px -8px rgb(3 7 18 / 0.08);
+  }
+
+  /* Inset ring：清淡邊緣定義 */
+  .edge-ring {
+    box-shadow: inset 0 0 0 1px rgb(3 7 18 / 0.05);
+  }
+
+  /* Pill button 基礎 */
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 550;
+    line-height: 1.25rem;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+
+  /* 粉色主 CTA pill */
+  .btn-pill-primary {
+    background: linear-gradient(135deg, #ec4899, #f97316);
+    color: white;
+    box-shadow: 0 1px 2px rgb(236 72 153 / 0.2), 0 0 0 1px rgb(3 7 18 / 0.05);
+  }
+  .btn-pill-primary:hover { box-shadow: 0 2px 8px rgb(236 72 153 / 0.3), 0 0 0 1px rgb(3 7 18 / 0.08); }
+  .btn-pill-primary:active { transform: scale(0.97); }
+
+  /* 次要 pill */
+  .btn-pill-ghost {
+    background: white;
+    color: #3f3f46;
+    box-shadow: inset 0 0 0 1px rgb(3 7 18 / 0.08);
+  }
+  .btn-pill-ghost:hover { background: #fdf2f8; color: #be185d; box-shadow: inset 0 0 0 1px rgb(190 24 93 / 0.2); }
+  .btn-pill-ghost:active { transform: scale(0.97); }
+}
+
+/* 大字自動收窄 tracking（>= 24px）可用 tailwind tracking-tight，此處為 CSS 版本 */
+.tracking-display {
+  letter-spacing: -0.02em;
+}
+
+/* ===== 既有動畫保留 ===== */
 .card-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
-/* 投票按鈕脈動動畫 */
 @keyframes gentle-pulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  50% { transform: scale(1.02); }
 }
-.pulse-gentle {
-  animation: gentle-pulse 2s ease-in-out infinite;
-}
+.pulse-gentle { animation: gentle-pulse 2.4s ease-in-out infinite; }
 
-/* 漂浮撒花動畫 */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
-.float-animation {
-  animation: float 3s ease-in-out infinite;
-}
+.float-animation { animation: float 3s ease-in-out infinite; }
 
-/* 已投票卡片的光暈 */
 .voted-glow {
-  box-shadow: 0 0 20px rgba(76, 175, 80, 0.4), 0 0 40px rgba(76, 175, 80, 0.1);
+  box-shadow: 0 0 0 1px rgb(16 185 129 / 0.45), 0 0 24px rgb(16 185 129 / 0.25);
 }
 
-/* 選中按鈕的打勾動畫 */
 @keyframes check-bounce {
   0% { transform: scale(0); }
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
-.check-animate {
-  animation: check-bounce 0.4s ease-out;
-}
+.check-animate { animation: check-bounce 0.4s ease-out; }
 
-/* ===== 倒數計時動畫 ===== */
+/* 倒數計時 */
 @keyframes countdown-pop {
   0% { transform: scale(0.3); opacity: 0; }
   50% { transform: scale(1.15); opacity: 1; }
@@ -73,25 +150,15 @@ body {
   animation: countdown-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes overlay-fade-in {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-.countdown-overlay {
-  animation: overlay-fade-in 0.5s ease-out;
-}
+@keyframes overlay-fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+.countdown-overlay { animation: overlay-fade-in 0.5s ease-out; }
 
-@keyframes final-zoom {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.countdown-final {
-  animation: final-zoom 0.5s ease-out;
-}
+@keyframes final-zoom { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.countdown-final { animation: final-zoom 0.5s ease-out; }
 
-/* ===== 結果頁面專用樣式 ===== */
+/* 結果頁底：保留深色主題但較素雅 */
 .result-page-bg {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
   min-height: 100vh;
 }
 
@@ -100,9 +167,7 @@ body {
   25% { transform: translateY(-6px) rotate(-3deg); }
   75% { transform: translateY(-3px) rotate(3deg); }
 }
-.trophy-bounce {
-  animation: trophy-bounce 2s ease-in-out infinite;
-}
+.trophy-bounce { animation: trophy-bounce 2s ease-in-out infinite; }
 
 @keyframes gold-shimmer {
   0% { background-position: -200% center; }
@@ -131,11 +196,11 @@ body {
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
-.podium-gold { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.15); }
-.podium-silver { box-shadow: 0 0 20px rgba(192, 192, 192, 0.35), 0 0 40px rgba(192, 192, 192, 0.1); }
-.podium-bronze { box-shadow: 0 0 20px rgba(205, 127, 50, 0.35), 0 0 40px rgba(205, 127, 50, 0.1); }
+.podium-gold { box-shadow: 0 0 0 1px rgb(234 179 8 / 0.5), 0 12px 32px rgb(234 179 8 / 0.25); }
+.podium-silver { box-shadow: 0 0 0 1px rgb(203 213 225 / 0.5), 0 12px 32px rgb(203 213 225 / 0.2); }
+.podium-bronze { box-shadow: 0 0 0 1px rgb(180 83 9 / 0.5), 0 12px 32px rgb(180 83 9 / 0.2); }
 
-/* ===== 開場動畫 ===== */
+/* 開場動畫 */
 @keyframes intro-pop {
   0% { transform: scale(0.5); opacity: 0; }
   60% { transform: scale(1.05); opacity: 1; }
@@ -145,31 +210,40 @@ body {
   animation: intro-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* 內容淡入上移 */
 @keyframes fade-in-up {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-.fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
-}
+.fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
 
-/* 選名字確認進度條 */
 @keyframes name-confirm-fill {
   from { width: 0%; }
   to { width: 100%; }
 }
-.name-confirm-fill {
-  animation: name-confirm-fill 1.2s ease-out forwards;
-}
+.name-confirm-fill { animation: name-confirm-fill 1.2s ease-out forwards; }
 
-/* YouTube 風格的頁面載入進度條 */
 @keyframes top-loading-bar {
   0% { width: 0%; opacity: 1; }
   60% { width: 75%; }
   90% { width: 90%; }
   100% { width: 90%; opacity: 1; }
 }
-.top-loading-bar {
-  animation: top-loading-bar 2.5s ease-out forwards;
+.top-loading-bar { animation: top-loading-bar 2.5s ease-out forwards; }
+
+/* ===== Canvas grid 裝飾線 ===== */
+.canvas-grid-h {
+  border-top: 1px solid rgb(3 7 18 / 0.06);
+  border-bottom: 1px solid rgb(3 7 18 / 0.06);
 }
+.canvas-grid-v::before,
+.canvas-grid-v::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: rgb(3 7 18 / 0.06);
+  pointer-events: none;
+}
+.canvas-grid-v::before { left: 0; }
+.canvas-grid-v::after { right: 0; }

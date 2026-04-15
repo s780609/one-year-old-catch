@@ -29,18 +29,19 @@ export function Selector({
   const hasVoted = votedItems.includes(title);
   const isDisabledUnvoted = disabled && !hasVoted;
 
+  // 外層 rounded-2xl (16px)；padding 8px；內部圖片區 rounded-lg (8px)
   return (
     <div
-      className={`relative flex flex-col rounded-2xl overflow-hidden
-        bg-white shadow-md transition-all duration-200
-        ${hasVoted
-          ? "ring-2 ring-emerald-400 shadow-emerald-100 shadow-lg"
-          : isDisabledUnvoted
-            ? "opacity-40 grayscale"
-            : "active:scale-[0.98]"
-        }`}
+      className={`relative flex flex-col rounded-2xl overflow-hidden bg-white
+                  transition-all duration-200
+                  ${isDisabledUnvoted ? "opacity-40 grayscale" : "active:scale-[0.98]"}`}
+      style={
+        hasVoted
+          ? { boxShadow: "0 0 0 1.5px rgb(16 185 129 / 0.55), 0 8px 24px -8px rgb(16 185 129 / 0.25)" }
+          : { boxShadow: "0 0 0 1px rgb(3 7 18 / 0.08), 0 1px 2px rgb(3 7 18 / 0.04), 0 6px 18px -6px rgb(3 7 18 / 0.08)" }
+      }
     >
-      {/* ── 圖片區 ── */}
+      {/* 圖片區：concentric radius（外 16 - padding 0 = 仍 16，但內層只圓上緣） */}
       <div className="relative aspect-[3/4] overflow-hidden
                       bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50">
         {typeof src === "string" && src.endsWith(".mp4") ? (
@@ -60,12 +61,11 @@ export function Selector({
           />
         )}
 
-        {/* 已投票：綠色半透明遮罩 */}
         {hasVoted && (
           <div className="absolute inset-0 bg-emerald-500/15 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center
-                            shadow-lg check-animate">
-              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none"
+            <div className="w-11 h-11 rounded-full bg-emerald-500 flex items-center justify-center check-animate"
+                 style={{ boxShadow: "0 0 0 1px rgb(3 7 18 / 0.1), 0 6px 16px rgb(16 185 129 / 0.4)" }}>
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
@@ -74,23 +74,23 @@ export function Selector({
         )}
       </div>
 
-      {/* ── 名稱區 ── */}
-      <div className={`px-2 py-2 text-center
+      {/* 名稱區 */}
+      <div className={`px-3 py-2 text-center
         ${hasVoted
           ? "bg-gradient-to-r from-emerald-500 to-teal-500"
           : "bg-white"
         }`}>
-        <p className={`font-black text-[14px] leading-snug tracking-wide
+        <p className={`font-semibold text-sm leading-snug tracking-tight
           ${hasVoted
-            ? "text-white drop-shadow-sm"
-            : "bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 bg-clip-text text-transparent"
+            ? "text-white"
+            : "text-neutral-900"
           }`}>
           {title}
         </p>
       </div>
 
-      {/* ── 操作按鈕 ── */}
-      <div className="px-2.5 pb-2.5 bg-white space-y-1.5">
+      {/* 操作按鈕區：concentric radius 內部 rounded-lg (8px) */}
+      <div className="px-2 pb-2 bg-white space-y-1.5">
         {!hasVoted ? (
           <button
             onClick={() => {
@@ -98,42 +98,45 @@ export function Selector({
               onVote(title);
             }}
             disabled={isDisabledUnvoted || isVoting}
-            className={`w-full h-10 rounded-xl text-[13px] font-bold flex items-center justify-center gap-1.5 transition-all
+            className={`w-full h-9 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all
               ${isDisabledUnvoted
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-pink-500 to-orange-400 text-white active:scale-95 shadow-sm shadow-pink-200"
+                ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-pink-500 to-orange-400 text-white active:scale-95"
               }`}
+            style={isDisabledUnvoted
+              ? { boxShadow: "inset 0 0 0 1px rgb(3 7 18 / 0.05)" }
+              : { boxShadow: "0 1px 2px rgb(236 72 153 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05)" }
+            }
           >
-            {isVoting ? <Spinner /> : <><span className="text-base">🗳️</span> 選這個</>}
+            {isVoting ? <Spinner /> : "選這個"}
           </button>
         ) : (
           <button
             onClick={() => onCancel(title)}
             disabled={isVoting}
-            className="w-full h-10 rounded-xl text-[13px] font-bold flex items-center justify-center gap-1.5
-                       bg-gray-50 text-gray-400 border border-gray-200
-                       hover:bg-red-50 hover:text-red-400 hover:border-red-200
+            className="w-full h-9 rounded-lg text-xs font-semibold flex items-center justify-center gap-1
+                       bg-white text-neutral-500
+                       hover:bg-rose-50 hover:text-rose-500
                        active:scale-95 transition-all"
+            style={{ boxShadow: "inset 0 0 0 1px rgb(3 7 18 / 0.08)" }}
           >
-            {isVoting ? <Spinner /> : <><span>↩</span> 取消</>}
+            {isVoting ? <Spinner /> : "取消"}
           </button>
         )}
 
-        {/* AI 圖片生成按鈕 */}
         {buildPrompt(title) && (
           <button
             onClick={() => setShowAiModal(true)}
-            className="w-full h-9 rounded-xl text-[12px] font-bold flex items-center justify-center gap-1
-                       bg-gradient-to-r from-purple-500 to-blue-500 text-white
-                       hover:from-purple-600 hover:to-blue-600
-                       active:scale-95 shadow-sm shadow-purple-200 transition-all"
+            className="w-full h-8 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1
+                       bg-gradient-to-r from-violet-500 to-indigo-500 text-white
+                       hover:shadow-md active:scale-95 transition-all"
+            style={{ boxShadow: "0 1px 2px rgb(99 102 241 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05)" }}
           >
             🫧 夢想泡泡
           </button>
         )}
       </div>
 
-      {/* AI 圖片 Modal */}
       {showAiModal && (
         <AiImageModal
           title={title}
