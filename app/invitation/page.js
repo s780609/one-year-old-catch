@@ -43,46 +43,79 @@ const videos = [
   { src: "/秧予/秧予_吃2.mp4", label: "吃飯中 2" },
   { src: "/秧予/秧予_公園1.mp4", label: "公園玩耍 1" },
   { src: "/秧予/秧予_公園2.mp4", label: "公園玩耍 2" },
+  { src: "/秧予/秧予_睡1.mp4", label: "睡覺中" },
 ];
+
+const PRELOAD_AHEAD = 2;
 
 function VideoCarousel() {
   const [currentIdx, setCurrentIdx] = useState(0);
-  const videoRef = useRef(null);
+  const [videoReady, setVideoReady] = useState(false);
+  const videoRefs = useRef(new Map());
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % videos.length);
-    }, 6000);
+    }, 9000);
     return () => clearInterval(timer);
   }, [currentIdx]);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    }
+    setVideoReady(false);
+    videoRefs.current.forEach((el, idx) => {
+      if (!el) return;
+      if (idx === currentIdx) {
+        el.currentTime = 0;
+        el.play().catch(() => {});
+      } else {
+        el.pause();
+      }
+    });
   }, [currentIdx]);
+
+  function isInPreloadWindow(i) {
+    for (let step = 0; step <= PRELOAD_AHEAD; step++) {
+      if (i === (currentIdx + step) % videos.length) return true;
+    }
+    return false;
+  }
 
   return (
     <div
-      className="relative w-full max-w-[420px] mx-auto rounded-3xl overflow-hidden bg-neutral-950/[0.025]"
+      className="relative w-full max-w-[420px] mx-auto rounded-3xl overflow-hidden
+                 bg-gradient-to-br from-rose-100 via-pink-50 to-orange-100"
       style={{
         aspectRatio: "9 / 16",
         boxShadow:
           "inset 0 0 0 1px rgb(3 7 18 / 0.06), 0 0 0 1px rgb(3 7 18 / 0.05), 0 12px 32px -12px rgb(236 72 153 / 0.18)",
       }}
     >
-      <video
-        key={currentIdx}
-        ref={videoRef}
-        src={videos[currentIdx].src}
-        muted
-        loop
-        playsInline
-        autoPlay
-        preload="auto"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {videos.map((v, i) => {
+        const isCurrent = i === currentIdx;
+        const shouldPreload = isInPreloadWindow(i);
+        return (
+          <video
+            key={i}
+            ref={(el) => {
+              if (el) videoRefs.current.set(i, el);
+              else videoRefs.current.delete(i);
+            }}
+            src={v.src}
+            muted
+            loop
+            playsInline
+            preload={shouldPreload ? "auto" : "none"}
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out
+              ${isCurrent
+                ? videoReady
+                  ? "blur-0 scale-100 opacity-100"
+                  : "blur-lg scale-110 opacity-80"
+                : "opacity-0"
+              }`}
+            onCanPlay={isCurrent ? () => setVideoReady(true) : undefined}
+          />
+        );
+      })}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
         {videos.map((_, i) => (
           <button
