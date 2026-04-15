@@ -38,25 +38,14 @@ export default function ResultBlock({ title, imageSrc, voteCount, voters, rank, 
       {/* 圖片 */}
       <div className={`aspect-square p-2 flex items-center justify-center
                        ${darkMode ? "bg-white/5" : "bg-gradient-to-b from-gray-50 to-gray-100"}`}>
-        {typeof imageSrc === "string" && imageSrc.endsWith(".mp4") ? (
-          <video
-            src={imageSrc}
-            muted
-            loop
-            autoPlay
-            playsInline
-            className="w-full h-full object-contain"
-          />
-        ) : (
-          <ImageLoader
-            src={imageSrc}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              objectFit: "contain",
-            }}
-          />
-        )}
+        <ImageLoader
+          src={imageSrc}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain",
+          }}
+        />
       </div>
 
       {/* 名稱 + 票數 */}
