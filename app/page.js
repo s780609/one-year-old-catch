@@ -30,7 +30,6 @@ export default function Home() {
   const [isComposing, setIsComposing] = useState(false);
   const nameTimerRef = useRef(null);
 
-  // 名字至少兩個字、且不在組字中，才開始 1.2 秒倒數顯示確認
   useEffect(() => {
     if (nameTimerRef.current) clearTimeout(nameTimerRef.current);
     if (myName?.trim().length >= 2 && !isComposing) {
@@ -52,7 +51,6 @@ export default function Home() {
     return () => { clearTimeout(fadeTimer); clearTimeout(hideTimer); };
   }, [nameCheck]);
 
-  // 投票邏輯
   const {
     count,
     votedItems,
@@ -71,7 +69,6 @@ export default function Home() {
     <main className="min-h-screen">
       <Toaster position="top-center" />
 
-      {/* 已投過票覆蓋層 */}
       {showAlreadyVoted && (
         <AlreadyVotedOverlay
           myName={myName}
@@ -81,27 +78,36 @@ export default function Home() {
         />
       )}
 
-      {/* 倒數計時覆蓋層 */}
       {showCountdown && <CountdownOverlay countdownNumber={countdownNumber} />}
 
       {/* 投票完成橫幅 */}
       {count >= 3 && (
-        <div className="sticky top-0 z-50 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 text-center shadow-lg">
-          <p className="text-lg mb-2">🎉 投票完成！</p>
-          <button
-            onClick={() => router.push("/result", { scroll: false })}
-            className="bg-white text-green-700 font-bold py-2 px-6 rounded-full
-                       hover:bg-green-50 transition-all shadow-md"
-          >
-            去看結果 →
-          </button>
+        <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md"
+             style={{ boxShadow: "inset 0 -1px 0 rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04)" }}>
+          <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+            <div className="flex items-baseline gap-2 min-w-0">
+              <p className="text-sm font-semibold text-neutral-950 tracking-tight truncate">
+                🎉 投票完成
+              </p>
+              <p className="text-xs text-neutral-500 hidden sm:block truncate">
+                已用完 3 票，去看看大家都選了什麼
+              </p>
+            </div>
+            <button
+              onClick={() => router.push("/result", { scroll: false })}
+              className="shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold
+                         bg-gradient-to-r from-pink-500 to-orange-400 text-white
+                         hover:shadow-md hover:shadow-pink-500/20 transition-all"
+              style={{ boxShadow: "0 1px 2px rgb(236 72 153 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05)" }}
+            >
+              去看結果 →
+            </button>
+          </div>
         </div>
       )}
 
-      {/* 開場動畫 */}
       {!nameCheck && showIntro && <IntroAnimation fading={introFading} />}
 
-      {/* 選人介面 */}
       {!nameCheck && !showIntro && (
         <NameSelector
           myName={myName}
@@ -113,25 +119,35 @@ export default function Home() {
         />
       )}
 
-      {/* 投票介面 */}
       {nameCheck && (
-        <div className="pb-8">
+        <div className="pb-10">
           <VotingStatusBar myName={myName} count={count} isVoting={isVoting} />
 
-          {/* 檢查投票紀錄中 */}
           {checkingVotes && (
             <div className="flex items-center justify-center py-6 gap-2 text-pink-500">
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor"
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              <span className="font-medium">正在載入你的投票紀錄...</span>
+              <span className="text-sm font-medium">正在載入你的投票紀錄…</span>
             </div>
           )}
 
+          {/* Section heading：同首頁漸層風格 */}
+          <div className="max-w-screen-xl mx-auto px-4 pt-6 pb-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-black">
+              <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                挑三樣你覺得秧予會抓的
+              </span>
+            </h2>
+            <p className="text-gray-600 mt-1 text-sm md:text-base">
+              投滿 <span className="text-teal-500 font-bold">3</span> 張即可送出
+            </p>
+          </div>
+
           {/* 投票卡片網格 */}
-          <div className="max-w-screen-xl mx-auto px-3 pt-4">
+          <div className="max-w-screen-xl mx-auto px-3">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {items.map((item) => (
                 <Selector

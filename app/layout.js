@@ -3,17 +3,17 @@ import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   metadataBase: new URL("https://one-year-old-catch.vercel.app"),
-  title: "🎂 秧予抓周猜猜看",
-  description: "秧予抓周猜猜看 — 猜猜寶寶會選什麼？",
+  title: "🎂 猜猜秧予抓什麼",
+  description: "猜猜秧予抓什麼 — 猜猜寶寶會選什麼？",
   openGraph: {
-    title: "🎂 秧予抓周猜猜看",
-    description: "秧予抓周猜猜看 — 猜猜寶寶會選什麼？",
+    title: "🎂 猜猜秧予抓什麼",
+    description: "猜猜秧予抓什麼 — 猜猜寶寶會選什麼？",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "秧予抓周猜猜看",
+        alt: "猜猜秧予抓什麼",
       },
     ],
     type: "website",
@@ -23,7 +23,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="zh-TW">
-      <body className="antialiased">
+      <body className="antialiased font-sans text-neutral-900">
         {children}
         <Analytics />
       </body>

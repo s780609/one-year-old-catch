@@ -18,7 +18,7 @@ export function NameSelector({ myName, setMyName, nameConfirmed, setNameConfirme
           <h1 className="text-2xl md:text-3xl font-black">
             <span>🎂 </span>
             <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
-              秧予抓周猜猜看
+              猜猜秧予抓什麼
             </span>
           </h1>
           <p className="text-gray-600 mt-1 text-sm md:text-base">

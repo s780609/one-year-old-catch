@@ -8,13 +8,16 @@ export function PhotoCarousel() {
   const { currentIndex, setCurrentIndex, videoRef } = useCarousel(carouselItems);
 
   return (
-    <div className="relative w-52 h-52 md:w-60 md:h-60 mb-6">
+    <div className="relative w-48 h-48 md:w-56 md:h-56 mb-6">
       {carouselItems.map((item, i) => (
         <div
           key={i}
-          className={`absolute inset-0 rounded-full overflow-hidden border-4 border-white shadow-xl
+          className={`absolute inset-0 rounded-2xl overflow-hidden bg-white
             transition-all duration-700 ease-in-out
             ${i === currentIndex ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+          style={{
+            boxShadow: "0 0 0 1px rgb(3 7 18 / 0.08), 0 12px 28px -8px rgb(3 7 18 / 0.18)",
+          }}
         >
           {item.type === "video" ? (
             <video
@@ -46,10 +49,10 @@ export function PhotoCarousel() {
           <button
             key={i}
             onClick={() => setCurrentIndex(i)}
-            className={`w-2 h-2 rounded-full transition-all duration-300
+            className={`h-1.5 rounded-full transition-all duration-300
               ${i === currentIndex
-                ? (item.type === "video" ? "bg-pink-500 w-4" : "bg-teal-500 w-4")
-                : "bg-gray-300 hover:bg-gray-400"
+                ? (item.type === "video" ? "bg-pink-500 w-5" : "bg-emerald-500 w-5")
+                : "bg-neutral-300 w-1.5 hover:bg-neutral-400"
               }`}
           />
         ))}
