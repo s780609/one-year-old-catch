@@ -9,7 +9,7 @@ export function useCarousel(items) {
   // 依類型決定停留時長，影片 6 秒、照片 3 秒
   useEffect(() => {
     const current = items[currentIndex];
-    const delay = current?.type === "video" ? 6000 : 3000;
+    const delay = current?.type === "video" ? 9000 : 4000;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % items.length);
     }, delay);
