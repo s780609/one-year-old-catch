@@ -24,11 +24,12 @@ import 飛機 from "../assets/飛機.jpg";
 import 相機 from "../assets/相機.jpg";
 import 調色盤 from "../assets/調色盤.jpg";
 import 特斯拉 from "../assets/特斯拉.jpg";
+import Vtuber from "../assets/Vtuber.jpg";
 const imageMap = {
   急救箱, 算盤, 相機, 阿公阿嬤的禮物, 鎚子,
   樂器, 鍵盤, 飛機, 書, 麥克風,
   調色盤, 廚師帽, 手槍, 板手, 博士帽,
-  場記板, 黑板, 三角尺, 特斯拉, Vtuber: "/投票物件/Vtuber.mp4",
+  場記板, 黑板, 三角尺, 特斯拉, Vtuber,
 };
 
 const MEDAL = ["🥇", "🥈", "🥉"];
@@ -202,16 +203,6 @@ function PodiumCard({ rank, item, imageMap }) {
                        ${rank === 1 ? "border-yellow-400" : rank === 2 ? "border-gray-300" : "border-amber-600"}
                        shadow-lg mb-3 flex items-center justify-center p-1.5`}>
         {imageMap[item.name] && (
-          typeof imageMap[item.name] === "string" && imageMap[item.name].endsWith(".mp4") ? (
-            <video
-              src={imageMap[item.name]}
-              muted
-              loop
-              autoPlay
-              playsInline
-              className="w-full h-full object-contain"
-            />
-          ) : (
             <ImageLoader
               src={imageMap[item.name]}
               alt={item.name}
@@ -221,7 +212,6 @@ function PodiumCard({ rank, item, imageMap }) {
                 objectFit: "contain",
               }}
             />
-          )
         )}
       </div>
 
