@@ -91,6 +91,7 @@ export const carouselItems = [
   { type: "video", src: "/秧予/秧予_吃2.mp4" },
   { type: "video", src: "/秧予/秧予_公園1.mp4" },
   { type: "video", src: "/秧予/秧予_公園2.mp4" },
+  { type: "video", src: "/秧予/秧予_睡1.mp4" },
   { type: "image", src: 秧予11 },
   { type: "image", src: 秧予12 },
   { type: "image", src: 秧予13 },
