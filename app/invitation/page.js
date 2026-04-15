@@ -297,14 +297,17 @@ export default function InvitationPage() {
           </p>
         </section>
 
-        {/* 活動資訊卡 */}
+        {/* 下午場：抓周派對 */}
         <section
           className="rounded-3xl bg-white/90 backdrop-blur-sm p-5"
           style={{ boxShadow: cardRing }}
         >
-          <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-4">
-            活動資訊
-          </p>
+          <div className="flex items-baseline gap-2 mb-4">
+            <span className="rounded-full bg-pink-100 px-2.5 py-0.5 text-[11px] font-mono uppercase tracking-wider text-pink-700">
+              下午場
+            </span>
+            <h2 className="text-lg font-bold tracking-tight text-neutral-900">🎈 抓周派對</h2>
+          </div>
           <div className="space-y-3">
             <InfoRow icon="📅" label="日期" value="2026 年 4 月 18 日（六）" />
             <InfoRow icon="🕑" label="時間" value="下午 2:00 開始" />
@@ -538,6 +541,36 @@ export default function InvitationPage() {
                 )}
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* 晚上場：周歲宴 */}
+        <section
+          className="rounded-3xl bg-white/90 backdrop-blur-sm p-5"
+          style={{ boxShadow: cardRing }}
+        >
+          <div className="flex items-baseline gap-2 mb-4">
+            <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-mono uppercase tracking-wider text-amber-800">
+              晚上場
+            </span>
+            <h2 className="text-lg font-bold tracking-tight text-neutral-900">🥂 周歲宴</h2>
+          </div>
+          <div className="space-y-3">
+            <InfoRow icon="🕔" label="時間" value="下午 5:00 一樓報到" />
+            <InfoRow icon="📍" label="地點" value="新莊宏匯廣場" />
+            <InfoRow
+              icon="🗝️"
+              label="報到"
+              value={
+                <>
+                  跟櫃台人員說{" "}
+                  <strong className="text-pink-700">「周歲宴」</strong>
+                  {" "}或{" "}
+                  <strong className="text-pink-700 tabular-nums">「1002」</strong>
+                </>
+              }
+            />
+            <InfoRow icon="💳" label="小提醒" value="小朋友記得帶健保卡" />
           </div>
         </section>
 
