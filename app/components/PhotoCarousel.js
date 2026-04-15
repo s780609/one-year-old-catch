@@ -20,18 +20,19 @@ export function PhotoCarousel() {
           }}
         >
           {item.type === "video" ? (
-            <video
-              ref={i === currentIndex ? videoRef : null}
-              src={item.src}
-              muted
-              loop
-              playsInline
-              autoPlay={i === currentIndex}
-              className="w-full h-full object-cover"
-              onLoadedData={(e) => {
-                if (i === currentIndex) e.target.play();
-              }}
-            />
+            i === currentIndex ? (
+              <video
+                key={`video-${i}`}
+                ref={videoRef}
+                src={item.src}
+                muted
+                loop
+                playsInline
+                autoPlay
+                preload="auto"
+                className="w-full h-full object-cover"
+              />
+            ) : null
           ) : (
             <ImageLoader
               src={item.src}
