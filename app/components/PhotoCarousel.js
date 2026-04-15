@@ -38,8 +38,8 @@ export function PhotoCarousel() {
                 playsInline
                 autoPlay
                 preload="auto"
-                className={`w-full h-full object-cover transition-opacity duration-500
-                  ${videoReady ? "opacity-100" : "opacity-0"}`}
+                className={`w-full h-full object-cover transition-all duration-700 ease-out
+                  ${videoReady ? "blur-0 scale-100 opacity-100" : "blur-lg scale-110 opacity-80"}`}
                 onCanPlay={() => setVideoReady(true)}
               />
             ) : null
