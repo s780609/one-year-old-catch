@@ -84,7 +84,7 @@ export default function Home() {
       {count >= 3 && (
         <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md"
              style={{ boxShadow: "inset 0 -1px 0 rgb(3 7 18 / 0.06), 0 1px 2px rgb(3 7 18 / 0.04)" }}>
-          <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div className="max-w-screen-xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
             <div className="flex items-baseline gap-2 min-w-0">
               <p className="text-sm font-semibold text-neutral-950 tracking-tight truncate">
                 🎉 投票完成
@@ -95,9 +95,9 @@ export default function Home() {
             </div>
             <button
               onClick={() => router.push("/result", { scroll: false })}
-              className="shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold
+              className="shrink-0 rounded-full px-4 py-2 text-xs md:text-sm font-semibold
                          bg-gradient-to-r from-pink-500 to-orange-400 text-white
-                         hover:shadow-md hover:shadow-pink-500/20 transition-all"
+                         active:scale-95 hover:shadow-md hover:shadow-pink-500/20 transition-all"
               style={{ boxShadow: "0 1px 2px rgb(236 72 153 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05)" }}
             >
               去看結果 →
@@ -136,7 +136,7 @@ export default function Home() {
 
           {/* Section heading：同首頁漸層風格 */}
           <div className="max-w-screen-xl mx-auto px-4 pt-6 pb-4 text-center">
-            <h2 className="text-2xl md:text-3xl font-black">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black leading-tight">
               <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
                 挑三樣你覺得秧予會抓的
               </span>
@@ -148,7 +148,7 @@ export default function Home() {
 
           {/* 投票卡片網格 */}
           <div className="max-w-screen-xl mx-auto px-3">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3">
               {items.map((item) => (
                 <Selector
                   key={item}

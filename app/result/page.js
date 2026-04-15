@@ -86,49 +86,52 @@ export default function Result() {
       {itemsData && (
         <div className="min-h-screen pb-10">
           {/* 頂部標題列 */}
-          <div className="bg-black/30 backdrop-blur-md border-b border-white/10 py-4 px-4 sticky top-0 z-40">
-            <div className="max-w-screen-xl mx-auto flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl trophy-bounce">🏆</span>
-                <div>
-                  <h1 className="text-xl font-black gold-shimmer">
+          <div className="bg-black/30 backdrop-blur-md border-b border-white/10 py-3 md:py-4 px-3 md:px-4 sticky top-0 z-40">
+            <div className="max-w-screen-xl mx-auto flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                <span className="text-2xl md:text-3xl trophy-bounce shrink-0">🏆</span>
+                <div className="min-w-0">
+                  <h1 className="text-base md:text-xl font-black gold-shimmer truncate">
                     投票排行榜
                   </h1>
-                  <p className="text-white/50 text-xs">
+                  <p className="text-white/50 text-[10px] md:text-xs truncate">
                     共 {totalVotes} 票 · 每 5 秒自動更新
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5 md:gap-2 shrink-0">
                 <button
                   onClick={() => router.push("/")}
+                  aria-label="回去投票"
                   className="bg-white/10 hover:bg-white/20 text-white
-                             font-medium py-2 px-4 rounded-full text-sm
-                             backdrop-blur transition-all border border-white/10"
+                             font-medium py-2 px-3 md:px-4 rounded-full text-xs md:text-sm
+                             backdrop-blur transition-all border border-white/10 active:scale-95"
                 >
-                  🗳️ 回去投票
+                  <span className="md:hidden">🗳️</span>
+                  <span className="hidden md:inline">🗳️ 回去投票</span>
                 </button>
                 <button
                   onClick={() => router.push("/chosenresult")}
                   className="bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900
-                             font-bold py-2 px-4 rounded-full text-sm
-                             hover:shadow-lg hover:shadow-amber-500/30 hover:scale-105 transition-all"
+                             font-bold py-2 px-3 md:px-4 rounded-full text-xs md:text-sm
+                             hover:shadow-lg hover:shadow-amber-500/30 hover:scale-105 active:scale-95 transition-all"
                 >
-                  🎯 秧予抓的結果
+                  <span className="md:hidden">🎯 結果</span>
+                  <span className="hidden md:inline">🎯 秧予抓的結果</span>
                 </button>
               </div>
             </div>
           </div>
 
           {/* 前三名 Podium */}
-          <div className="max-w-screen-md mx-auto px-4 pt-8 pb-6">
-            <div className="text-center mb-6 slide-up">
-              <h2 className="text-white/90 text-2xl font-black tracking-wide">
+          <div className="max-w-screen-md mx-auto px-3 sm:px-4 pt-6 md:pt-8 pb-6">
+            <div className="text-center mb-5 md:mb-6 slide-up">
+              <h2 className="text-white/90 text-xl md:text-2xl font-black tracking-wide">
                 🔥 目前領先
               </h2>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 md:gap-5 items-end">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-5 items-end">
               {top3[1] && (
                 <div className="slide-up" style={{ animationDelay: "0.2s" }}>
                   <PodiumCard rank={2} item={top3[1]} imageMap={imageMap} />
@@ -157,7 +160,7 @@ export default function Result() {
 
           {/* 其餘項目 */}
           <div className="max-w-screen-xl mx-auto px-3">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3">
               {rest.map((item, idx) => (
                 <div
                   key={item.name}

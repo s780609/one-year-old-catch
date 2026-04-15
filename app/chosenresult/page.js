@@ -134,7 +134,7 @@ function LiveVoteResult() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md md:max-w-3xl">
       {/* 寶寶即時抓周順序 */}
       {chosenItems.length > 0 && (
         <div className="mb-8">
@@ -277,7 +277,7 @@ function PastEventDetail({ event }) {
       </div>
 
       {/* 寶寶實際抓周結果 */}
-      <div className="w-full max-w-md mb-8">
+      <div className="w-full max-w-md md:max-w-3xl mb-8">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xl">🍼</span>
           <h3 className="text-lg font-black text-gray-700">寶寶實際抓的順序</h3>
@@ -305,7 +305,7 @@ function PastEventDetail({ event }) {
 
       {/* 投票排行榜 TOP 5 */}
       {sortedVotes.length > 0 && (
-        <div className="w-full max-w-md mb-8">
+        <div className="w-full max-w-md md:max-w-3xl mb-8">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-2xl">🗳️</span>
             <h3 className="text-lg font-black text-gray-700">投票排行榜 TOP 5</h3>
@@ -351,7 +351,7 @@ function PastEventDetail({ event }) {
           </button>
 
           {showVotes && (
-            <div className="w-full max-w-lg space-y-3 animate-fade-in">
+            <div className="w-full max-w-lg md:max-w-3xl space-y-3 animate-fade-in">
               <p className="text-center text-sm text-gray-400 mb-2">
                 共 {sortedVotes.reduce((sum, v) => sum + v.count, 0)} 票
               </p>
@@ -407,7 +407,7 @@ export default function ChosenResult() {
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8">
       {/* 回排行榜按鈕 */}
-      <div className="w-full max-w-lg mb-2 flex justify-start">
+      <div className="w-full max-w-lg md:max-w-3xl mb-2 flex justify-start">
         <button
           onClick={() => router.push("/result")}
           aria-label="返回排行榜頁面"
