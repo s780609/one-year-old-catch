@@ -5,19 +5,11 @@ import { ImageLoader } from "./ImageLoader";
 import { useCarousel } from "../hooks/useCarousel";
 import { carouselItems } from "../data/voteData";
 
-function VideoSkeleton() {
-  return (
-    <div className="absolute inset-0 bg-gradient-to-br from-rose-100 via-pink-50 to-orange-100 animate-pulse flex items-center justify-center">
-      <div className="text-3xl opacity-60">🎂</div>
-    </div>
-  );
-}
-
 export function PhotoCarousel() {
   const { currentIndex, setCurrentIndex, videoRef } = useCarousel(carouselItems);
   const [videoReady, setVideoReady] = useState(false);
 
-  // 每次切到新 slot 先顯示骨架，等 video 可播時才淡出
+  // 切到新 video slot 時淡入
   useEffect(() => {
     setVideoReady(false);
   }, [currentIndex]);
@@ -27,7 +19,8 @@ export function PhotoCarousel() {
       {carouselItems.map((item, i) => (
         <div
           key={i}
-          className={`absolute inset-0 rounded-2xl overflow-hidden bg-white
+          className={`absolute inset-0 rounded-2xl overflow-hidden
+            bg-gradient-to-br from-rose-100 via-pink-50 to-orange-100
             transition-all duration-700 ease-in-out
             ${i === currentIndex ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
           style={{
@@ -36,22 +29,19 @@ export function PhotoCarousel() {
         >
           {item.type === "video" ? (
             i === currentIndex ? (
-              <>
-                <video
-                  key={`video-${i}`}
-                  ref={videoRef}
-                  src={item.src}
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  preload="auto"
-                  className={`w-full h-full object-cover transition-opacity duration-300
-                    ${videoReady ? "opacity-100" : "opacity-0"}`}
-                  onCanPlay={() => setVideoReady(true)}
-                />
-                {!videoReady && <VideoSkeleton />}
-              </>
+              <video
+                key={`video-${i}`}
+                ref={videoRef}
+                src={item.src}
+                muted
+                loop
+                playsInline
+                autoPlay
+                preload="auto"
+                className={`w-full h-full object-cover transition-opacity duration-500
+                  ${videoReady ? "opacity-100" : "opacity-0"}`}
+                onCanPlay={() => setVideoReady(true)}
+              />
             ) : null
           ) : (
             <ImageLoader
