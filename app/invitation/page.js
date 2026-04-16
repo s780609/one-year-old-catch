@@ -572,6 +572,16 @@ export default function InvitationPage() {
             />
             <InfoRow icon="💳" label="小提醒" value="小朋友記得帶健保卡" />
           </div>
+
+          <a
+            href="/seating"
+            className="mt-6 w-full rounded-2xl py-4 text-base font-semibold text-white tracking-tight
+                       bg-gradient-to-r from-amber-500 to-orange-500 transition-all
+                       active:scale-[0.98] hover:shadow-lg flex items-center justify-center gap-2"
+            style={{ boxShadow: "0 8px 20px -6px rgb(245 158 11 / 0.45)" }}
+          >
+            🪑 查看座位表
+          </a>
         </section>
 
         {/* 頁尾 */}
