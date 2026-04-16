@@ -61,7 +61,7 @@ const tables = [
   {
     id: "A03",
     size: "small",
-    guests: "長鴻長廷",
+    guests: "長綋長亭",
     count: "4 人",
   },
   {
