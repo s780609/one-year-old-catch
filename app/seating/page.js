@@ -14,7 +14,7 @@ const tables = [
   },
   {
     id: "A21",
-    name: "大圓桌",
+    name: "大長桌",
     size: "large",
     capacity: "8大1BC",
     guests: "大舅公一家 + 阿祖 + 姨嬤",
@@ -22,7 +22,7 @@ const tables = [
   },
   {
     id: "A22",
-    name: "大圓桌",
+    name: "大長桌",
     size: "large",
     capacity: "9大",
     guests: "大姑婆 4 人 + 小姑婆 4 人",
@@ -513,7 +513,7 @@ export default function SeatingPage() {
         <section>
           <div className="px-1 mb-4">
             <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-pink-700/70 mb-1">
-              大圓桌區
+              大長桌區
             </p>
             <h2 className="text-2xl font-bold tracking-tight">
               <span className="text-neutral-900">🎪 大桌 </span>
