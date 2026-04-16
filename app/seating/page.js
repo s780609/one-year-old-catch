@@ -8,7 +8,7 @@ const tables = [
     name: "主桌",
     size: "large",
     capacity: "8大1BC",
-    guests: "自家 + 乾媽乾爹",
+    guests: "自家 + 乾阿嬤乾阿公",
     count: "約 9 人",
     highlight: true,
   },
@@ -31,13 +31,13 @@ const tables = [
   {
     id: "A09",
     size: "small",
-    guests: "洋溢阿北一家",
+    guests: "揚逸阿北一家",
     count: "4 人",
   },
   {
     id: "A08",
     size: "small",
-    guests: "小如大嫂一家",
+    guests: "小如阿姆一家",
     count: "4 人",
   },
   {
@@ -49,7 +49,7 @@ const tables = [
   {
     id: "A06",
     size: "small",
-    guests: "大叔叔 + 高家姐妹",
+    guests: "大叔公 + 高家姐妹",
     count: "4 人",
   },
   {
