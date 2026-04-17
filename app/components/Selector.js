@@ -132,7 +132,7 @@ export function Selector({
                        hover:shadow-md active:scale-95 transition-all"
             style={{ boxShadow: "0 1px 2px rgb(99 102 241 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05)" }}
           >
-            🫧 夢想泡泡
+            💭 夢想泡泡
           </button>
         )}
       </div>
