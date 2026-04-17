@@ -374,6 +374,11 @@ export default function SeatingPage() {
                 </>
               }
             />
+            <InfoRow
+              icon="🙋"
+              label="帶位"
+              value="可以跟服務生報桌號，由他們帶入場"
+            />
           </div>
         </section>
 
