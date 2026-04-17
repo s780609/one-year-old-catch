@@ -11,7 +11,7 @@ import 黑板 from "../assets/黑板.jpg";
 import 鎚子 from "../assets/鎚子.jpg";
 import 書 from "../assets/書.jpg";
 import 鍵盤 from "../assets/鍵盤.jpg";
-import 阿公阿嬤的禮物 from "../assets/阿公阿嬤的禮物.jpg";
+import 阿公阿嬤的禮物 from "../assets/阿公阿嬤的禮物_秧予.jpg";
 import 麥克風 from "../assets/麥克風.jpg";
 import 算盤 from "../assets/算盤.jpg";
 import 板手 from "../assets/板手.jpg";

@@ -14,7 +14,7 @@ import 黑板Img from "../assets/黑板.jpg";
 import 鎚子Img from "../assets/鎚子.jpg";
 import 書Img from "../assets/書.jpg";
 import 鍵盤Img from "../assets/鍵盤.jpg";
-import 阿公阿嬤的禮物Img from "../assets/阿公阿嬤的禮物.jpg";
+import 阿公阿嬤的禮物Img from "../assets/阿公阿嬤的禮物_秧予.jpg";
 import 麥克風Img from "../assets/麥克風.jpg";
 import 算盤Img from "../assets/算盤.jpg";
 import 板手Img from "../assets/板手.jpg";
@@ -35,7 +35,7 @@ export const imageMap = {
   鎚子: "/投票物件/鎚子.mp4",
   書: "/投票物件/書.mp4",
   鍵盤: "/投票物件/鍵盤.mp4",
-  阿公阿嬤的禮物: "/投票物件/阿公阿嬤的禮物.mp4",
+  阿公阿嬤的禮物: "/投票物件/阿公阿嬤的禮物_秧予.mp4",
   麥克風: "/投票物件/麥克風.mp4",
   算盤: "/投票物件/算盤.mp4",
   板手: "/投票物件/板手.mp4",
