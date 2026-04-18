@@ -360,7 +360,7 @@ export default function SeatingPage() {
           <div className="space-y-3">
             <InfoRow icon="📅" label="日期" value="2026 年 4 月 18 日（六）" />
             <InfoRow icon="🕔" label="時間" value="下午 5:00 一樓報到" />
-            <InfoRow icon="📍" label="地點" value="新莊宏匯廣場" />
+            <InfoRow icon="📍" label="地點" value="新莊饗饗" />
             <InfoRow
               icon="🗝️"
               label="報到"
