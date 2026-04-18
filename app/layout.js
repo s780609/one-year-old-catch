@@ -10,7 +10,7 @@ export const metadata = {
     description: "猜猜秧予抓什麼 — 猜猜寶寶會選什麼？",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-home.jpg",
         width: 1200,
         height: 630,
         alt: "猜猜秧予抓什麼",

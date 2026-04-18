@@ -8,7 +8,7 @@ export const metadata = {
     url: "https://one-year-old-catch.vercel.app/seating",
     images: [
       {
-        url: "https://one-year-old-catch.vercel.app/og-image.jpg",
+        url: "/og-seating.jpg",
         width: 1200,
         height: 630,
         alt: "秧予周歲宴座位表",
